@@ -1,0 +1,703 @@
+.screen {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.4s var(--ease-out),
+    opacity 0.3s;
+}
+
+.nav {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px 8px;
+}
+
+.navTitle {
+  font: 600 14px/1 inherit;
+}
+
+.roundBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 100px;
+  background: var(--dark-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+  transition: background 0.2s;
+}
+
+.roundBtn:hover {
+  background: #23232c;
+}
+
+.previewWrap {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 18px;
+}
+
+.preview {
+  container-type: inline-size;
+  border-radius: 22px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s;
+  touch-action: none;
+}
+
+.previewDraggable {
+  cursor: grab;
+}
+
+.previewDraggable:active {
+  cursor: grabbing;
+}
+
+.previewInner {
+  position: absolute;
+  inset: 0;
+  padding: 17px 19px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.previewKind {
+  font: 600 10.5px/1 inherit;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.previewBalance {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.previewPeso {
+  font: 600 24px/1 inherit;
+}
+
+.previewValue {
+  font: 700 clamp(24px, 11cqw, 38px) / 1 inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: -0.038em;
+  font-variant-numeric: tabular-nums;
+}
+
+.previewNick {
+  margin-top: 9px;
+  font: 700 13.5px/1 inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 20ch;
+}
+
+.sheet {
+  flex: 1;
+  min-height: 0;
+  background: var(--paper);
+  border-radius: 26px 26px 0 0;
+  overflow: hidden;
+}
+
+.scroll {
+  height: 100%;
+  overflow-y: auto;
+  padding: 18px 20px 30px;
+}
+
+.label {
+  font: 600 11px/1 inherit;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-3);
+}
+
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.labelHint {
+  font: 400 10.5px/1.3 inherit;
+  color: var(--muted-5);
+  text-align: right;
+}
+
+.spaced {
+  margin-top: 22px;
+}
+
+.grid3 {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+}
+
+.grid2 {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.tile {
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  background: none;
+  padding: 0;
+  transition:
+    border-color 0.2s,
+    transform 0.16s;
+  display: block;
+  width: 100%;
+}
+
+.tile:active {
+  transform: scale(0.96);
+}
+
+.thumbSmall {
+  height: 52px;
+  position: relative;
+}
+
+.thumbLarge {
+  height: 60px;
+  position: relative;
+}
+
+.tileCaption {
+  padding: 6px 8px;
+  background: var(--sand-1);
+  font: 600 10.5px/1 inherit;
+  color: var(--ink);
+  text-align: center;
+}
+
+.tileCaptionStacked {
+  padding: 7px 9px 8px;
+  background: var(--sand-1);
+  text-align: left;
+}
+
+.tileName {
+  font: 600 11.5px/1 inherit;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tileSub {
+  margin-top: 3px;
+  font: 400 9.5px/1.25 inherit;
+  color: var(--muted-3);
+}
+
+.tileCaptionCentred {
+  padding: 6px 7px 7px;
+  background: var(--sand-1);
+  text-align: center;
+}
+
+.tileNameSmall {
+  font: 600 10.5px/1 inherit;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.tileSubSmall {
+  margin-top: 3px;
+  font: 400 8.5px/1.2 inherit;
+  color: var(--muted-3);
+}
+
+.pillRow {
+  margin-top: 9px;
+  display: flex;
+  gap: 7px;
+}
+
+.pill {
+  flex: 1;
+  height: 36px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  font: 600 11.5px/1 inherit;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.chipToggle {
+  margin-top: 12px;
+  height: 44px;
+  width: 100%;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font: 600 12.5px/1 inherit;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+/* ── photo panel ── */
+.photoPanel {
+  margin-top: 20px;
+  border-radius: 20px;
+  background: var(--sand-1);
+  padding: 15px 16px;
+}
+
+.photoHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.photoTitle {
+  font: 700 13.5px/1 inherit;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.ratio {
+  height: 26px;
+  padding: 0 11px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font: 700 11px/1 inherit;
+  white-space: nowrap;
+  flex: none;
+}
+
+.ratioAa {
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+.photoCopy {
+  margin-top: 5px;
+  font: 400 11.5px/1.4 inherit;
+  color: var(--muted-1);
+  text-wrap: pretty;
+}
+
+.photoActions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.uploadBtn {
+  flex: 1;
+  height: 42px;
+  border-radius: 100px;
+  background: var(--ink);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: 600 12.5px/1 inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.16s;
+}
+
+.uploadBtn:active {
+  transform: scale(0.97);
+}
+
+.autoFix {
+  height: 42px;
+  padding: 0 15px;
+  border-radius: 100px;
+  background: var(--blue-pale);
+  color: var(--blue-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 12.5px/1 inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  flex: none;
+}
+
+.dropPhoto {
+  width: 42px;
+  height: 42px;
+  border-radius: 100px;
+  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+}
+
+.photoControls {
+  margin-top: 14px;
+}
+
+.controlHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.controlLabel {
+  font: 600 10.5px/1 inherit;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted-3);
+}
+
+.recentre {
+  font: 600 11px/1 inherit;
+  color: var(--blue);
+  cursor: pointer;
+  padding: 4px;
+  flex: none;
+}
+
+.zoom {
+  margin-top: 8px;
+  width: 100%;
+  accent-color: var(--ink);
+}
+
+.segRow {
+  margin-top: 8px;
+  display: flex;
+  gap: 7px;
+}
+
+.seg {
+  flex: 1;
+  height: 34px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  font: 600 11.5px/1 inherit;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.splitRow {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.photoNote {
+  margin-top: 13px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-4);
+  font: 400 11px/1.5 inherit;
+  color: var(--muted-2);
+  text-wrap: pretty;
+}
+
+/* ── palette / fields ── */
+.swatches {
+  margin-top: 10px;
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  width: 52px;
+  height: 52px;
+  border-radius: 100px;
+  overflow: hidden;
+  display: flex;
+  cursor: pointer;
+  border: 2.5px solid transparent;
+  padding: 0;
+  transition:
+    border-color 0.2s,
+    transform 0.16s;
+}
+
+.swatch:active {
+  transform: scale(0.94);
+}
+
+.swatchHalf {
+  flex: 1;
+}
+
+.optionRow {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.option {
+  flex: 1;
+  height: 38px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 12px/1 inherit;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.fields {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field {
+  border-radius: 16px;
+  background: var(--sand-1);
+  padding: 12px 15px;
+}
+
+.fieldLabel {
+  font: 500 10.5px/1 inherit;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-3);
+}
+
+.fieldInput {
+  margin-top: 4px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: 600 16px/1.2 inherit;
+}
+
+.fieldPair {
+  display: flex;
+  gap: 10px;
+}
+
+.fieldPair > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.save {
+  margin-top: 20px;
+  height: 52px;
+  width: 100%;
+  border-radius: 100px;
+  background: var(--ink);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 15px/1 inherit;
+  cursor: pointer;
+  transition: transform 0.16s;
+}
+
+.save:active {
+  transform: scale(0.97);
+}
+
+.delete {
+  margin-top: 10px;
+  height: 46px;
+  width: 100%;
+  border-radius: 100px;
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 13.5px/1 inherit;
+  cursor: pointer;
+}
+
+.topInset {
+  height: var(--screen-top);
+  flex: none;
+}
+
+/*
+ * The editor is a long list of controls against one preview. From 900px the preview stops
+ * scrolling away: it holds a column while the controls scroll beside it.
+ */
+@media (min-width: 760px) {
+  .screen {
+    display: grid;
+    grid-template-columns: minmax(264px, 380px) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    column-gap: var(--pane-gap);
+    padding: 0 var(--pane-gap) var(--pane-gap);
+    align-items: start;
+  }
+
+  .topInset,
+  .nav {
+    grid-column: 1 / -1;
+  }
+
+  .nav {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .previewWrap {
+    grid-column: 1;
+    grid-row: 3;
+    align-self: start;
+    justify-content: flex-start;
+    padding: 0;
+  }
+
+  .sheet {
+    grid-column: 2;
+    grid-row: 3;
+    height: 100%;
+    border-radius: 24px;
+  }
+
+  .scroll {
+    padding: 22px 24px 28px;
+  }
+
+  .navTitle {
+    font-size: 17px;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* More room means more swatches per row, not wider ones. */
+@media (min-width: 1180px) {
+  .grid3 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .grid2 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .scroll {
+    padding: 26px 28px 32px;
+  }
+}
+
+@media (pointer: coarse) {
+  .roundBtn,
+  .dropPhoto {
+    width: 44px;
+    height: 44px;
+  }
+
+  .recentre {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+  }
+
+  .tile {
+    /* the caption already gives these height; keep the art from shrinking the target */
+    min-height: 44px;
+  }
+}
+
+/* ── bank starting points ── */
+.bankRow {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.bankChip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 12px 0 8px;
+  border-radius: 100px;
+  background: var(--sand-1);
+  color: var(--ink);
+  font: 600 12px/1 inherit;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.16s var(--ease-out);
+}
+
+.bankChip:active {
+  transform: scale(0.95);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bankChip:hover {
+    background: var(--sand-3);
+  }
+}
+
+.bankSwatch {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  border-radius: 100px;
+  overflow: hidden;
+  flex: none;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.bankSwatch > span {
+  flex: 1;
+}
+
+@media (pointer: coarse) {
+  .bankChip {
+    height: 40px;
+  }
+}

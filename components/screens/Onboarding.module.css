@@ -1,0 +1,400 @@
+.screen {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.5s var(--ease-out),
+    opacity 0.34s;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 26px;
+  flex: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brandMark {
+  width: 19px;
+  height: 19px;
+  position: relative;
+}
+
+.brandName {
+  font: 700 15px/1 inherit;
+  letter-spacing: -0.02em;
+}
+
+.skip {
+  font: 500 12.5px/1 inherit;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  padding: 8px;
+}
+
+.step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  transition:
+    transform 0.4s var(--ease-out),
+    opacity 0.3s;
+}
+
+.stepPadded {
+  padding: 22px 26px 30px;
+}
+
+.stepPaddedTight {
+  padding: 18px 26px 30px;
+}
+
+/* ── step 0: the fan ── */
+.fanArea {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.fan {
+  position: relative;
+  width: 300px;
+  height: 250px;
+  transform: scale(min(1, calc((100vw - 32px) / 300)));
+  transform-origin: center;
+}
+
+.fanCard {
+  position: absolute;
+  left: 34px;
+  width: 232px;
+  height: 142px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.42);
+  animation: bwFan 0.85s cubic-bezier(0.2, 1, 0.25, 1) both;
+}
+
+.intro {
+  padding: 0 30px 34px;
+  flex: none;
+}
+
+.introHead {
+  font: 800 38px/1.02 inherit;
+  letter-spacing: -0.035em;
+  text-wrap: pretty;
+}
+
+.introBody {
+  margin-top: 14px;
+  font: 400 14.5px/1.5 inherit;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 290px;
+  text-wrap: pretty;
+}
+
+.cta {
+  margin-top: 26px;
+  height: 56px;
+  width: 100%;
+  border-radius: 100px;
+  background: var(--accent);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font: 700 16px/1 inherit;
+  cursor: pointer;
+  transition:
+    transform 0.16s var(--ease-out),
+    box-shadow 0.2s;
+  box-shadow: 0 12px 30px rgba(255, 202, 40, 0.28);
+}
+
+.cta:active {
+  transform: scale(0.965);
+}
+
+/* ── steps 1–3 ── */
+.head {
+  font: 800 30px/1.06 inherit;
+  letter-spacing: -0.03em;
+}
+
+.headTight {
+  font: 800 27px/1.06 inherit;
+  letter-spacing: -0.03em;
+}
+
+.sub {
+  margin-top: 9px;
+  font: 400 13.5px/1.45 inherit;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 280px;
+  text-wrap: pretty;
+}
+
+.nameField {
+  margin-top: 26px;
+  border-radius: 18px;
+  background: var(--dark-2);
+  padding: 14px 16px;
+}
+
+.darkFieldLabel {
+  font: 500 10.5px/1 inherit;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+  display: block;
+}
+
+.nameInput {
+  margin-top: 6px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font: 700 24px/1.2 inherit;
+  letter-spacing: -0.02em;
+}
+
+.greeting {
+  margin-top: 16px;
+  font: 600 15px/1 inherit;
+  color: var(--accent);
+}
+
+.kindGrid {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.kind {
+  border-radius: 18px;
+  padding: 14px 13px 15px;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    transform 0.16s,
+    background 0.2s,
+    border-color 0.2s;
+  border: 1.5px solid transparent;
+}
+
+.kind:active {
+  transform: scale(0.97);
+}
+
+.kindDot {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kindLabel {
+  margin-top: 11px;
+  font: 600 13.5px/1.2 inherit;
+  color: #fff;
+}
+
+.kindHint {
+  margin-top: 3px;
+  font: 400 11px/1.3 inherit;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.continueBtn {
+  height: 54px;
+  width: 100%;
+  border-radius: 100px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 15.5px/1 inherit;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.16s;
+}
+
+.continueBtn:active {
+  transform: scale(0.97);
+}
+
+.previewWrap {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  flex: none;
+}
+
+.preview {
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.45);
+}
+
+.previewInner {
+  position: absolute;
+  inset: 0;
+  padding: 15px 17px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.previewKind {
+  font: 600 10px/1 inherit;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(11, 11, 12, 0.5);
+}
+
+.previewAmount {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  color: var(--ink);
+}
+
+.previewPeso {
+  font: 600 20px/1 inherit;
+}
+
+.previewValue {
+  font: 700 33px/1 inherit;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+
+.previewNick {
+  margin-top: 8px;
+  font: 700 13px/1 inherit;
+  color: var(--ink);
+}
+
+.fields {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  flex: none;
+}
+
+.amountRow {
+  margin-top: 3px;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.amountPeso {
+  font: 600 20px/1 inherit;
+  color: var(--accent);
+}
+
+.amountInput {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font: 700 24px/1.2 inherit;
+  letter-spacing: -0.02em;
+}
+
+.footnote {
+  margin-top: 12px;
+  text-align: center;
+  font: 400 11.5px/1.4 inherit;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.dots {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  padding-bottom: 26px;
+  flex: none;
+}
+
+.dot {
+  height: 4px;
+  border-radius: 100px;
+  transition:
+    width 0.3s var(--ease-out),
+    background 0.3s;
+}
+
+@media (pointer: coarse) {
+  .skip {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+  }
+}
+
+.restoreLink {
+  margin-top: 14px;
+  width: 100%;
+  height: 44px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 500 13px/1 inherit;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background 0.2s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .restoreLink:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/*
+ * Declared here, not imported: CSS Modules scopes animation names, so a reference to a
+ * keyframe defined in globals.css is renamed to one that does not exist and the animation
+ * silently never runs. Keeping the keyframes beside their only user keeps them honest.
+ */
+@keyframes bwFan {
+  0% {
+    transform: var(--bwT) translateY(26px) scale(0.94);
+  }
+  100% {
+    transform: var(--bwT);
+  }
+}

@@ -1,0 +1,826 @@
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.topInset {
+  height: var(--screen-top);
+  flex: none;
+}
+
+/*
+ * One column on a phone, two from 900px: the wallet keeps its own column and the activity
+ * panel gets a permanent one, so a desktop user reads cards and spending at once instead of
+ * scrolling a phone layout.
+ */
+.panes {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.walletPane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.panesDeck .walletPane {
+  flex: none;
+}
+
+.panesStack .walletPane {
+  flex: 1;
+}
+
+.activityPane {
+  min-height: 0;
+}
+
+.panesDeck .activityPane {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The stack layout is its own full-height scroller on a phone. */
+.panesStack .activityPane {
+  display: none;
+}
+
+@media (min-width: 760px) {
+  .panes,
+  .panesDeck,
+  .panesStack {
+    display: grid;
+    grid-template-columns: minmax(264px, 400px) minmax(0, 1fr);
+    gap: var(--pane-gap);
+    padding: 4px var(--pane-gap) var(--pane-gap);
+    align-items: stretch;
+  }
+
+  .panesDeck .walletPane,
+  .panesStack .walletPane {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--dark-1);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 24px;
+    padding: 18px 0 18px;
+  }
+
+  /* The carousel keeps its peeking neighbour, but a hard column edge would read as a
+     rendering fault rather than as more cards — so the edge is faded, not cut. */
+  .deckViewport {
+    mask-image: linear-gradient(90deg, #000 68%, transparent 96%);
+    -webkit-mask-image: linear-gradient(90deg, #000 68%, transparent 96%);
+  }
+
+  /* One card and its actions do not fill a tall column, and a half-empty panel reads as a
+     mistake — so in deck mode the panel wraps its content instead of stretching. The stack
+     has cards enough to earn the whole column. */
+  .panesDeck .walletPane {
+    align-self: start;
+    max-height: 100%;
+  }
+
+  .panesStack .walletPane {
+    align-self: stretch;
+  }
+
+  .quickRow {
+    padding: 0 18px 4px;
+  }
+
+  .dots {
+    padding: 14px 0 14px;
+  }
+
+  .panesStack .activityPane,
+  .panesDeck .activityPane {
+    display: block;
+    min-height: 0;
+  }
+}
+
+.header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 0 22px 12px;
+}
+
+.greetingBlock {
+  min-width: 0;
+}
+
+@media (min-width: 760px) {
+  .header {
+    padding: 0 var(--pane-gap) 16px;
+  }
+
+  .greeting {
+    font-size: 12.5px;
+  }
+
+  .total {
+    margin-top: 6px;
+    font-size: 26px;
+  }
+}
+
+.greeting {
+  font: 400 11.5px/1 inherit;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.total {
+  margin-top: 4px;
+  font: 700 19px/1 inherit;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+}
+
+.roundBtn {
+  width: 40px;
+  height: 40px;
+  color: #fff;
+  border-radius: 100px;
+  background: var(--dark-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+  transition:
+    background 0.2s,
+    transform 0.16s var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .roundBtn:hover {
+    background: var(--dark-hover);
+  }
+}
+
+.roundBtn:active {
+  transform: scale(0.92);
+}
+
+/* ── deck carousel ── */
+.deckViewport {
+  flex: none;
+  overflow: hidden;
+  position: relative;
+  touch-action: pan-y;
+}
+
+.deckTrack {
+  position: absolute;
+  left: 0;
+  top: 0;
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  padding-left: 22px;
+  will-change: transform;
+}
+
+.deckCard {
+  flex: none;
+  container-type: inline-size;
+  border-radius: 22px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.45);
+  transition:
+    filter 0.35s,
+    opacity 0.3s;
+}
+
+.cardInner {
+  position: absolute;
+  inset: 0;
+  padding: 17px 19px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cardTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.cardKind {
+  font: 600 10.5px/1 inherit;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cardNick {
+  margin-top: 6px;
+  font: 700 14px/1 inherit;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 15ch;
+}
+
+.freeze {
+  width: 44px;
+  height: 25px;
+  border-radius: 100px;
+  padding: 3px;
+  display: flex;
+  cursor: pointer;
+  flex: none;
+  transition: background 0.25s;
+}
+
+.freezeKnob {
+  width: 19px;
+  height: 19px;
+  border-radius: 100px;
+  transition: transform 0.28s var(--ease-out);
+}
+
+.balanceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 0;
+}
+
+.balancePeso {
+  font: 600 24px/1 inherit;
+  letter-spacing: -0.02em;
+}
+
+.balanceValue {
+  /* Shrinks rather than overflowing once a balance runs long. */
+  font: 700 clamp(24px, 11cqw, 38px) / 1 inherit;
+  letter-spacing: -0.038em;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.cardFootRow {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.footLabel {
+  font: 500 8.5px/1 inherit;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.footValue {
+  margin-top: 4px;
+  font: 600 12px/1 inherit;
+  letter-spacing: 0.06em;
+}
+
+.frost {
+  position: absolute;
+  inset: 0;
+  background: rgba(120, 160, 200, 0.16);
+  backdrop-filter: blur(1.5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.frostPill {
+  padding: 6px 13px;
+  border-radius: 100px;
+  background: rgba(11, 11, 12, 0.72);
+  color: #fff;
+  font: 600 11px/1 inherit;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.newCardTile {
+  flex: none;
+  margin-right: 22px;
+  border-radius: 22px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .newCardTile:hover {
+    border-color: rgba(255, 255, 255, 0.42);
+    background: rgba(255, 255, 255, 0.03);
+  }
+}
+
+.newCardIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.09);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.newCardLabel {
+  font: 500 12px/1.3 inherit;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
+.dots {
+  flex: none;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  padding: 14px 0 12px;
+}
+
+/* The visible dot is 5px; the button around it is a real target. */
+.dot {
+  position: relative;
+  height: 5px;
+  border-radius: 100px;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  transition:
+    width 0.3s var(--ease-out),
+    background 0.3s;
+}
+
+.dot::after {
+  content: "";
+  position: absolute;
+  inset: -20px -6px;
+}
+
+.quickRow {
+  flex: none;
+  display: flex;
+  gap: 10px;
+  padding: 0 22px 15px;
+}
+
+.quickBtn {
+  flex: 1;
+  height: 48px;
+  border-radius: 100px;
+  background: var(--dark-3);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-left: 6px;
+  cursor: pointer;
+  color: #fff;
+  transition:
+    transform 0.16s,
+    background 0.2s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .quickBtn:hover {
+    background: #20202a;
+  }
+}
+
+.quickBtn:active {
+  transform: scale(0.965);
+}
+
+.quickIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.quickLabel {
+  font: 600 14px/1 inherit;
+}
+
+/* ── vertical wallet stack ── */
+.stackScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2px 20px calc(126px + var(--screen-bottom));
+}
+
+@media (min-width: 760px) {
+  .stackScroll {
+    overflow: visible;
+    padding: 0 18px 4px;
+  }
+
+  /* The pane is narrower than a phone's full width, so the hint takes its own line rather
+     than fighting the heading for one. */
+  .stackHead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .stackHint {
+    text-align: left;
+  }
+}
+
+.tileRow {
+  display: flex;
+  gap: 9px;
+}
+
+.tileDark {
+  flex: 1;
+  border-radius: 18px;
+  background: var(--dark-1);
+  padding: 13px 15px;
+  cursor: pointer;
+  text-align: left;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tileDark:hover {
+    background: #1b1b21;
+  }
+}
+
+.tileAccent {
+  flex: 1;
+  border-radius: 18px;
+  background: var(--accent);
+  padding: 13px 15px;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.16s;
+}
+
+.tileAccent:active {
+  transform: scale(0.97);
+}
+
+.tileLabel {
+  font: 500 9.5px/1 inherit;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tileLabelInk {
+  font: 500 9.5px/1 inherit;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(11, 11, 12, 0.5);
+}
+
+.tileAmount {
+  margin-top: 7px;
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.tilePeso {
+  font: 600 14px/1 inherit;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.tileValue {
+  font: 700 21px/1 inherit;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.tileAction {
+  margin-top: 7px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tileActionLabel {
+  font: 700 15px/1 inherit;
+  color: var(--ink);
+}
+
+/* The heading and its hint never share a line comfortably at column widths, so they stack
+   at every size rather than wrapping into each other. */
+.stackHead {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.stackTitle {
+  font: 700 15px/1 inherit;
+  letter-spacing: -0.015em;
+}
+
+.stackHint {
+  font: 400 11.5px/1.3 inherit;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Height is set from the measured stack and snaps; everything inside rides on transforms,
+   so opening a card never animates a layout property. */
+.stackArea {
+  margin-top: 12px;
+  position: relative;
+}
+
+.stackCard {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  container-type: inline-size;
+  height: 196px;
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    transform 0.44s var(--ease-out),
+    box-shadow 0.32s,
+    filter 0.35s,
+    opacity 0.3s;
+}
+
+.stackDeal {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  animation: bwDeal 0.6s cubic-bezier(0.2, 0.9, 0.22, 1) both;
+}
+
+.stackFace {
+  position: absolute;
+  inset: 0;
+  padding: 15px 17px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stackTopRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.stackKind {
+  font: 600 9.5px/1 inherit;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.stackNick {
+  margin-top: 6px;
+  font: 700 15px/1 inherit;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stackStripLabel {
+  font: 500 9px/1 inherit;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.stackBalance {
+  margin-top: 5px;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  justify-content: flex-end;
+}
+
+.stackPeso {
+  font: 600 13px/1 inherit;
+}
+
+.stackValue {
+  font: 700 clamp(15px, 6cqw, 21px) / 1 inherit;
+  letter-spacing: -0.034em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.stackFootRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.miniBtn {
+  height: 32px;
+  padding: 0 13px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  font: 600 11.5px/1 inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* The add affordance sits inside the stack and glides with it rather than being pushed
+   down by an animating container height. */
+.addCard {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 52px;
+  transition: transform 0.44s var(--ease-out);
+  border-radius: 100px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .addCard:hover {
+    border-color: rgba(255, 255, 255, 0.42);
+    background: rgba(255, 255, 255, 0.03);
+  }
+}
+
+.addCardLabel {
+  font: 600 13px/1 inherit;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+@media (pointer: coarse) {
+  .roundBtn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-height: 560px) {
+  .greeting {
+    display: none;
+  }
+
+  .total {
+    margin-top: 0;
+  }
+
+  .header {
+    padding-bottom: 8px;
+  }
+}
+
+/* ── empty wallet ── */
+.emptyWallet {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 28px calc(110px + var(--screen-bottom));
+  text-align: center;
+  overflow-y: auto;
+}
+
+.emptyArt {
+  position: relative;
+  width: 150px;
+  height: 96px;
+  margin-bottom: 12px;
+  flex: none;
+}
+
+.emptyCard {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 118px;
+  height: 74px;
+  margin-left: -59px;
+  border-radius: 12px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.18);
+}
+
+.emptyCard:nth-child(1) {
+  transform: translateY(16px) rotate(-9deg);
+}
+
+.emptyCard:nth-child(2) {
+  transform: translateY(8px) rotate(4deg);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.emptyCard:nth-child(3) {
+  transform: none;
+  border-style: solid;
+  border-color: rgba(255, 202, 40, 0.55);
+  background: rgba(255, 202, 40, 0.06);
+}
+
+.emptyTitle {
+  margin: 0;
+  font: 800 24px/1.15 inherit;
+  letter-spacing: -0.03em;
+}
+
+.emptyBody {
+  margin: 0;
+  font: 400 13.5px/1.55 inherit;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 38ch;
+  text-wrap: pretty;
+}
+
+.emptyBtn {
+  margin-top: 10px;
+  height: 52px;
+  padding: 0 26px;
+  border-radius: 100px;
+  background: var(--accent);
+  color: var(--ink);
+  font: 700 15px/1 inherit;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(255, 202, 40, 0.24);
+  transition: transform 0.16s var(--ease-out);
+}
+
+.emptyBtn:active {
+  transform: scale(0.97);
+}
+
+/*
+ * Declared here, not imported: CSS Modules scopes animation names, so a reference to a
+ * keyframe defined in globals.css is renamed to one that does not exist and the animation
+ * silently never runs. Keeping the keyframes beside their only user keeps them honest.
+ */
+@keyframes bwDeal {
+  0% {
+    transform: translateY(54px) scale(0.94);
+  }
+  100% {
+    transform: none;
+  }
+}

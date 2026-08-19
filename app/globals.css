@@ -1,0 +1,447 @@
+/*
+ * The navigation indicator's position is driven by these counters. Registering them is not
+ * cosmetic: an unregistered custom property is an untyped token stream, and changing one on
+ * an ancestor does not reliably invalidate a descendant's `transform`, which left the active
+ * pill frozen on whichever destination happened to render first.
+ */
+@property --nav-i {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --nav-j {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+:root {
+  /* ink + paper */
+  --ink: #0b0b0c;
+  --paper: #ffffff;
+
+  /* accents */
+  --accent: #ffca28;
+  --blue: #1d6ff2;
+  --blue-deep: #0b3a8f;
+  --blue-pale: #eef4ff;
+  --blue-line: #d7e5ff;
+  --red: #f0483e;
+  --red-deep: #c62f26;
+  --green: #0b8f6a;
+  --green-pale: #e7f6ee;
+  --cream: #f4eedc;
+  --pink: #f9a8b4;
+
+  /* dark surfaces */
+  --dark-1: #141418;
+  --dark-2: #16161a;
+  --dark-3: #17171b;
+  --dark-hover: #22222a;
+
+  /* light surfaces */
+  --sand-1: #f5f4f0;
+  --sand-2: #f2f1ec;
+  --sand-3: #eceae4;
+  --sand-4: #e3e2dc;
+  --sand-hover: #efeee9;
+
+  /* type */
+  --muted-1: #6d6d72;
+  --muted-2: #8a8a8f;
+  --muted-3: #a9a9ae;
+  --muted-4: #bdbdc4;
+  --muted-5: #c0bfba;
+
+  /* hairlines */
+  --line-1: #f2f1ec;
+  --line-2: #f4f3ee;
+  --line-3: #ecebe5;
+  --line-4: #e7e6e0;
+
+  /* motion */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Layout insets. The app is the page, so the top inset is the notch/status bar on a
+     phone and simple breathing room everywhere else. */
+  --screen-top: calc(env(safe-area-inset-top, 0px) + 26px);
+  --screen-bottom: env(safe-area-inset-bottom, 0px);
+  --tabbar-gap: calc(var(--screen-bottom) + 18px);
+  /* Widest a single reading column grows to before it stops stretching. */
+  --app-max-w: 480px;
+  /* Persistent navigation rail, from the two-pane breakpoint up. */
+  --rail-w: 76px;
+  --pane-gap: 20px;
+  /* Single-column screens stop stretching here so lines stay readable. */
+  --content-max: 720px;
+
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+html {
+  /* Keeps iOS from zooming the layout when a field is focused. */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--ink);
+  overflow: hidden;
+  overscroll-behavior: none;
+  font-family: var(--font-outfit), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: var(--ink);
+}
+
+input,
+button,
+textarea {
+  font-family: inherit;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+}
+
+button {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  font-size: inherit;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+input {
+  caret-color: var(--accent);
+}
+
+/* Light panels get an ink caret so it stays visible against paper. */
+.paperField {
+  caret-color: var(--ink);
+}
+
+/*
+ * Touch surfaces hide the scrollbar — the panel edge is the affordance. A mouse has no
+ * such feedback, so from a fine pointer the bars are drawn, thin and themed.
+ */
+@media (pointer: coarse) {
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+
+@media (pointer: fine) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(140, 140, 150, 0.45) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(140, 140, 150, 0.4);
+    border-radius: 100px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(140, 140, 150, 0.7);
+    background-clip: content-box;
+  }
+}
+
+/*
+ * Entrances animate TRANSFORM only — a frozen animation clock (backgrounded tab, raster
+ * capture, PDF export) must never leave content stuck at opacity: 0.
+ */
+@keyframes bwDeal {
+  0% {
+    transform: translateY(54px) scale(0.94);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes bwFan {
+  0% {
+    transform: var(--bwT) translateY(26px) scale(0.94);
+  }
+  100% {
+    transform: var(--bwT);
+  }
+}
+
+@keyframes bwPop {
+  0% {
+    transform: scale(0.72);
+  }
+  55% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bwSheet {
+  from {
+    transform: translateY(102%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes bwFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bwFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes bwConfetti {
+  0% {
+    transform: translate(0, 0) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--bwX), var(--bwY)) rotate(var(--bwR));
+    opacity: 0;
+  }
+}
+
+@keyframes bwShine {
+  0% {
+    transform: translateX(-130%);
+  }
+  100% {
+    transform: translateX(230%);
+  }
+}
+
+@keyframes bwToast {
+  0% {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+  12% {
+    transform: none;
+    opacity: 1;
+  }
+  88% {
+    transform: none;
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+}
+
+@keyframes bwSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Screen and row entrances. Transform-only, and driven by the element mounting rather than
+   by a timer writing a flag into global state — a navigation that interrupts another one
+   can then never leave a screen parked at its "before" values. */
+@keyframes bwEnterUp {
+  from {
+    transform: translateY(14px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes bwEnterSide {
+  from {
+    transform: translateX(26px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes bwRowUp {
+  from {
+    transform: translateY(12px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes bwCardIn {
+  from {
+    transform: scale(0.88);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes bwRingSweep {
+  from {
+    stroke-dashoffset: var(--ring-len);
+  }
+  to {
+    stroke-dashoffset: var(--ring-off);
+  }
+}
+
+@keyframes bwBarGrow {
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--bar-w);
+  }
+}
+
+.bwEnterUp {
+  animation: bwEnterUp 0.42s var(--ease-out) both;
+}
+
+.bwEnterSide {
+  animation: bwEnterSide 0.36s var(--ease-out) both;
+}
+
+/*
+ * Reduced motion means less movement, not less meaning. Spatial entrances collapse to a
+ * plain fade and looping ambience stops, but colour and opacity feedback — the part that
+ * confirms a tap actually did something — is left running.
+ */
+/*
+ * Opening a card morphs it into the detail hero rather than cross-fading two pictures of
+ * the same object. The rail is named separately so it holds still underneath.
+ */
+::view-transition-group(wallet-card) {
+  animation-duration: 0.44s;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+::view-transition-old(wallet-card),
+::view-transition-new(wallet-card) {
+  /* The card is one object; blending two snapshots of it just looks like a ghost. */
+  animation: none;
+  mix-blend-mode: normal;
+  height: 100%;
+  overflow: clip;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+}
+
+/*
+ * Short viewports — phone landscape, and a flip phone held half-open — have rows to spare
+ * nowhere. The top inset collapses to the notch and nothing more.
+ */
+/* Between the phone and the two-pane breakpoint, let the single column breathe wider. */
+@media (min-width: 600px) {
+  :root {
+    --app-max-w: 560px;
+  }
+}
+
+@media (max-height: 560px) {
+  :root {
+    --screen-top: calc(env(safe-area-inset-top, 0px) + 10px);
+    --tabbar-gap: calc(env(safe-area-inset-bottom, 0px) + 10px);
+    --pane-gap: 12px;
+  }
+}
+
+/*
+ * A coarse pointer cannot aim the way a mouse can, so the small round controls grow to the
+ * 44px floor. Fine pointers keep the tighter, more composed sizing.
+ */
+@media (pointer: coarse) {
+  button,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+
+  .bwEnterUp,
+  .bwEnterSide {
+    animation: bwFade 0.2s ease both;
+  }
+
+  [class*="deal"],
+  [class*="Deal"] {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Ambient loops earn nothing under reduced motion. */
+  [style*="bwShine"],
+  [style*="bwFloat"] {
+    animation: none !important;
+  }
+}

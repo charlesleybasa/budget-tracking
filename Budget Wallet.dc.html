@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#e8e6e0;font-family:Outfit,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#1d6ff2;text-decoration:none}
+  a:hover{color:#0b4fbe}
+  input,button,textarea{font-family:inherit}
+  input:focus,textarea:focus{outline:none}
+  ::-webkit-scrollbar{width:0;height:0}
+  /* Entrances animate TRANSFORM only — a frozen animation clock (backgrounded tab,
+     raster capture, PDF export) must never leave content at opacity:0. */
+  @keyframes bwDeal{0%{transform:translateY(54px) scale(.94)}100%{transform:none}}
+  @keyframes bwFan{0%{transform:var(--bwT) translateY(26px) scale(.94)}100%{transform:var(--bwT)}}
+  @keyframes bwPop{0%{transform:scale(.72)}55%{transform:scale(1.06)}100%{transform:scale(1)}}
+  @keyframes bwSheet{from{transform:translateY(102%)}to{transform:translateY(0)}}
+  @keyframes bwFade{from{opacity:0}to{opacity:1}}
+  @keyframes bwFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  @keyframes bwConfetti{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--bwX),var(--bwY)) rotate(var(--bwR));opacity:0}}
+  @keyframes bwShine{0%{transform:translateX(-130%)}100%{transform:translateX(230%)}}
+  @keyframes bwBell{0%,100%{transform:rotate(0)}20%{transform:rotate(13deg)}40%{transform:rotate(-9deg)}60%{transform:rotate(5deg)}}
+  @keyframes bwToast{0%{transform:translateY(18px);opacity:0}12%{transform:none;opacity:1}88%{transform:none;opacity:1}100%{transform:translateY(-8px);opacity:0}}
+  @keyframes bwSpin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;gap:20px;padding:44px 24px 60px;background:radial-gradient(120% 90% at 50% 0%,#f5f3ee 0%,#e2e0da 100%)">
+
+<div style="display:flex;align-items:center;gap:10px;color:#0b0b0c">
+  <div style="width:22px;height:22px;position:relative">{{ mark }}</div>
+  <div style="font:700 17px/1 Outfit,sans-serif;letter-spacing:-.02em">Pesolita</div>
+  <div style="width:1px;height:14px;background:rgba(0,0,0,.18)"></div>
+  <div style="font:400 12.5px/1 Outfit,sans-serif;color:rgba(0,0,0,.5)">Manual budget wallet · no bank connection</div>
+</div>
+
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;position:relative;overflow:hidden;background:#0b0b0c;font-family:Outfit,sans-serif;color:#fff">
+
+<!-- ══════════ ONBOARDING ══════════ -->
+<sc-if value="{{ isOnboard }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Onboarding" style="position:absolute;inset:0;background:#0b0b0c;display:flex;flex-direction:column;transform:{{ enterT }};opacity:{{ enterO }};transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .34s">
+
+  <div style="height:58px"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:0 26px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:19px;height:19px;position:relative">{{ markW }}</div>
+      <div style="font:700 15px/1 Outfit,sans-serif;letter-spacing:-.02em">Pesolita</div>
+    </div>
+    <div onClick="{{ skipOnboard }}" style="font:500 12.5px/1 Outfit,sans-serif;color:rgba(255,255,255,.45);cursor:pointer;padding:8px">Skip</div>
+  </div>
+
+  <sc-if value="{{ ob0 }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;flex-direction:column">
+    <div style="flex:1;position:relative;display:flex;align-items:center;justify-content:center">{{ fanStack }}</div>
+    <div style="padding:0 30px 34px">
+      <div style="font:800 38px/1.02 Outfit,sans-serif;letter-spacing:-.035em;text-wrap:pretty">Every peso<br>gets a home.</div>
+      <div style="margin-top:14px;font:400 14.5px/1.5 Outfit,sans-serif;color:rgba(255,255,255,.55);max-width:290px;text-wrap:pretty">Make a card for each pocket of your money — bank, e-wallet, the cash in your actual wallet. You type it in, nothing snoops your bank.</div>
+      <div onClick="{{ obNext }}" style="margin-top:26px;height:56px;border-radius:100px;background:#ffca28;color:#0b0b0c;display:flex;align-items:center;justify-content:center;gap:9px;font:700 16px/1 Outfit,sans-serif;cursor:pointer;transition:transform .16s cubic-bezier(.2,.8,.2,1),box-shadow .2s;box-shadow:0 12px 30px rgba(255,202,40,.28)" style-active="transform:scale(.965)">Let's make your first card
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0b0b0c" stroke-width="2.6" stroke-linecap="round"><path d="M5 12h13M12 6l6 6-6 6"></path></svg>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ obName1 }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;flex-direction:column;padding:22px 26px 30px;transform:{{ enterTX }};opacity:{{ enterO }};transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .3s">
+    <div style="font:800 30px/1.06 Outfit,sans-serif;letter-spacing:-.03em">First — what<br>should I call you?</div>
+    <div style="margin-top:9px;font:400 13.5px/1.45 Outfit,sans-serif;color:rgba(255,255,255,.5);max-width:280px;text-wrap:pretty">Just a first name is fine. It stays on this phone with everything else.</div>
+    <div style="margin-top:26px;border-radius:18px;background:#16161a;padding:14px 16px">
+      <div style="font:500 10.5px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.38)">Your name</div>
+      <input value="{{ userName }}" onChange="{{ setUserName }}" placeholder="Charles" style="margin-top:6px;width:100%;border:0;background:transparent;color:#fff;font:700 24px/1.2 Outfit,sans-serif;letter-spacing:-.02em" />
+    </div>
+    <div style="margin-top:16px;font:600 15px/1 Outfit,sans-serif;color:#ffca28">{{ hi }}</div>
+    <div style="flex:1"></div>
+    <div onClick="{{ obNext }}" style="height:54px;border-radius:100px;background:{{ nameOk }};color:#0b0b0c;display:flex;align-items:center;justify-content:center;font:700 15.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,transform .16s" style-active="transform:scale(.97)">Continue</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ ob1 }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;flex-direction:column;padding:22px 26px 30px;transform:{{ enterTX }};opacity:{{ enterO }};transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .3s">
+    <div style="font:800 30px/1.06 Outfit,sans-serif;letter-spacing:-.03em">What kind of<br>pocket is it?</div>
+    <div style="margin-top:9px;font:400 13.5px/1.45 Outfit,sans-serif;color:rgba(255,255,255,.5)">You can add the rest later. No judgement if it's all cash.</div>
+    <div style="margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <sc-for list="{{ kinds }}" as="k" hint-placeholder-count="6">
+        <div onClick="{{ k.pick }}" style="border-radius:18px;padding:14px 13px 15px;background:{{ k.bg }};border:1.5px solid {{ k.bd }};cursor:pointer;transition:transform .16s,background .2s" style-active="transform:scale(.97)">
+          <div style="width:30px;height:30px;border-radius:9px;background:{{ k.dot }};display:flex;align-items:center;justify-content:center">{{ k.icon }}</div>
+          <div style="margin-top:11px;font:600 13.5px/1.2 Outfit,sans-serif;color:{{ k.fg }}">{{ k.label }}</div>
+          <div style="margin-top:3px;font:400 11px/1.3 Outfit,sans-serif;color:{{ k.sub }}">{{ k.hint }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="flex:1"></div>
+    <div onClick="{{ obNext }}" style="height:54px;border-radius:100px;background:{{ obKindOk }};color:#0b0b0c;display:flex;align-items:center;justify-content:center;font:700 15.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,transform .16s" style-active="transform:scale(.97)">Continue</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ ob2 }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;flex-direction:column;padding:18px 26px 30px;transform:{{ enterTX }};opacity:{{ enterO }};transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .3s">
+    <div style="font:800 27px/1.06 Outfit,sans-serif;letter-spacing:-.03em">Name it, fund it.</div>
+    <div style="margin-top:16px;display:flex;justify-content:center">{{ obPreview }}</div>
+    <div style="margin-top:20px;display:flex;flex-direction:column;gap:11px">
+      <div style="border-radius:16px;background:#16161a;padding:12px 15px">
+        <div style="font:500 10.5px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.38)">Nickname</div>
+        <input value="{{ obName }}" onChange="{{ setObName }}" placeholder="BPI Debit" style="margin-top:5px;width:100%;border:0;background:transparent;color:#fff;font:600 17px/1.2 Outfit,sans-serif" />
+      </div>
+      <div style="border-radius:16px;background:#16161a;padding:12px 15px">
+        <div style="font:500 10.5px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.38)">What's in it right now</div>
+        <div style="margin-top:3px;display:flex;align-items:baseline;gap:5px">
+          <div style="font:600 20px/1 Outfit,sans-serif;color:#ffca28">₱</div>
+          <input value="{{ obBal }}" onChange="{{ setObBal }}" placeholder="0.00" inputMode="decimal" style="flex:1;border:0;background:transparent;color:#fff;font:700 24px/1.2 Outfit,sans-serif;letter-spacing:-.02em" />
+        </div>
+      </div>
+    </div>
+    <div style="flex:1"></div>
+    <div onClick="{{ obFinish }}" style="height:54px;border-radius:100px;background:#ffca28;color:#0b0b0c;display:flex;align-items:center;justify-content:center;font:700 15.5px/1 Outfit,sans-serif;cursor:pointer;transition:transform .16s" style-active="transform:scale(.97)">Create card</div>
+    <div style="margin-top:12px;text-align:center;font:400 11.5px/1.4 Outfit,sans-serif;color:rgba(255,255,255,.35)">You can redesign the card art any time.</div>
+  </div>
+  </sc-if>
+
+  <div style="display:flex;gap:5px;justify-content:center;padding-bottom:26px">
+    <sc-for list="{{ obDots }}" as="d" hint-placeholder-count="3">
+      <div style="height:4px;width:{{ d.w }};border-radius:100px;background:{{ d.bg }};transition:width .3s cubic-bezier(.2,.8,.2,1),background .3s"></div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ HOME ══════════ -->
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Home" style="position:absolute;inset:0;display:flex;flex-direction:column;transform:{{ enterT }};opacity:{{ enterO }};transition:transform .42s cubic-bezier(.2,.8,.2,1),opacity .3s">
+
+  <div style="height:56px;flex:none"></div>
+
+  <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px 12px">
+    <div>
+      <div style="font:400 11.5px/1 Outfit,sans-serif;color:rgba(255,255,255,.42)">{{ greeting }}</div>
+      <div style="margin-top:4px;font:700 19px/1 Outfit,sans-serif;letter-spacing:-.025em">Total ₱{{ totalStr }}</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <div onClick="{{ toggleLayout }}" style="width:36px;height:36px;border-radius:100px;background:#17171b;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s" style-hover="background:#22222a">{{ layoutIcon }}</div>
+      <div onClick="{{ togglePrivacy }}" style="width:36px;height:36px;border-radius:100px;background:#17171b;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s" style-hover="background:#22222a">{{ eyeIcon }}</div>
+      <div onClick="{{ goEditorNew }}" style="width:36px;height:36px;border-radius:100px;background:#17171b;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s" style-hover="background:#22222a">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ isDeck }}" hint-placeholder-val="{{ false }}">
+  <!-- card carousel -->
+  <div style="flex:none;height:206px;overflow:hidden;position:relative"
+       onPointerDown="{{ dragStart }}" onPointerMove="{{ dragMove }}" onPointerUp="{{ dragEnd }}" onPointerCancel="{{ dragEnd }}">
+    <div style="position:absolute;left:0;top:0;display:flex;gap:14px;padding-left:22px;will-change:transform;transform:translate3d({{ trackX }}px,0,0);transition:{{ trackEase }}">
+      <sc-for list="{{ deck }}" as="c" hint-placeholder-count="3">
+        <div onClick="{{ c.open }}" style="flex:none;width:320px;height:196px;border-radius:22px;position:relative;overflow:hidden;background:{{ c.base }};cursor:pointer;box-shadow:0 18px 34px rgba(0,0,0,.45);transition:filter .35s,opacity .3s;filter:{{ c.filter }};opacity:{{ c.op }}">
+          {{ c.art }}
+          <div style="position:absolute;inset:0;padding:17px 19px;display:flex;flex-direction:column;justify-content:space-between">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div style="font:600 10.5px/1 Outfit,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:{{ c.fgDim }}">{{ c.kind }}</div>
+                <div style="margin-top:6px;font:700 14px/1 Outfit,sans-serif;color:{{ c.fg }};letter-spacing:-.01em">{{ c.nick }}</div>
+              </div>
+              <div onClick="{{ c.freeze }}" style="width:44px;height:25px;border-radius:100px;background:{{ c.swBg }};padding:3px;display:flex;cursor:pointer;transition:background .25s">
+                <div style="width:19px;height:19px;border-radius:100px;background:{{ c.swKnob }};transition:transform .28s cubic-bezier(.2,.8,.2,1);transform:translateX({{ c.swX }})"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:baseline;gap:4px">
+                <div style="font:600 24px/1 Outfit,sans-serif;color:{{ c.fg }};letter-spacing:-.02em">₱</div>
+                <div style="font:700 38px/1 Outfit,sans-serif;color:{{ c.fg }};letter-spacing:-.038em;font-variant-numeric:tabular-nums">{{ c.balStr }}</div>
+              </div>
+              <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:flex-end">
+                <div>
+                  <div style="font:500 8.5px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:{{ c.fgDim }}">{{ c.footL }}</div>
+                  <div style="margin-top:4px;font:600 12px/1 Outfit,sans-serif;color:{{ c.fg }};letter-spacing:.06em">{{ c.mask }}</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font:500 8.5px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:{{ c.fgDim }}">{{ c.footR }}</div>
+                  <div style="margin-top:4px;font:600 12px/1 Outfit,sans-serif;color:{{ c.fg }}">{{ c.exp }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {{ c.frost }}
+        </div>
+      </sc-for>
+      <div onClick="{{ goEditorNew }}" style="flex:none;width:150px;height:196px;margin-right:22px;border-radius:22px;border:1.5px dashed rgba(255,255,255,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:border-color .2s,background .2s" style-hover="border-color:rgba(255,255,255,.42);background:rgba(255,255,255,.03)">
+        <div style="width:38px;height:38px;border-radius:100px;background:rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+        </div>
+        <div style="font:500 12px/1.3 Outfit,sans-serif;color:rgba(255,255,255,.5);text-align:center">New card</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:none;display:flex;gap:5px;justify-content:center;padding:14px 0 12px">
+    <sc-for list="{{ dots }}" as="d" hint-placeholder-count="7">
+      <div onClick="{{ d.go }}" style="height:5px;width:{{ d.w }};border-radius:100px;background:{{ d.bg }};cursor:pointer;transition:width .3s cubic-bezier(.2,.8,.2,1),background .3s"></div>
+    </sc-for>
+  </div>
+
+  <div style="flex:none;display:flex;gap:10px;padding:0 22px 15px">
+    <div onClick="{{ openWithdraw }}" style="flex:1;height:48px;border-radius:100px;background:#17171b;display:flex;align-items:center;gap:9px;padding-left:6px;cursor:pointer;transition:transform .16s,background .2s" style-active="transform:scale(.965)" style-hover="background:#20202a">
+      <div style="width:36px;height:36px;border-radius:100px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"></path></svg>
+      </div>
+      <div style="font:600 14px/1 Outfit,sans-serif">Spend</div>
+    </div>
+    <div onClick="{{ openDeposit }}" style="flex:1;height:48px;border-radius:100px;background:#17171b;display:flex;align-items:center;gap:9px;padding-left:6px;cursor:pointer;transition:transform .16s,background .2s" style-active="transform:scale(.965)" style-hover="background:#20202a">
+      <div style="width:36px;height:36px;border-radius:100px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M17 7L7 17M15 17H7V9"></path></svg>
+      </div>
+      <div style="font:600 14px/1 Outfit,sans-serif">Top up</div>
+    </div>
+  </div>
+
+  <!-- white sheet -->
+  <div style="flex:1;min-height:0;background:#fff;border-radius:26px 26px 0 0;position:relative;overflow:hidden">
+    <div style="height:100%;overflow-y:auto;padding:18px 20px 118px">
+
+      <!-- safe to spend -->
+      <div onClick="{{ goInsights }}" style="border-radius:20px;background:#f5f4f0;padding:15px 17px;cursor:pointer;transition:background .2s" style-hover="background:#efeee9">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font:500 11px/1 Outfit,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#8a8a8f">Safe to spend today</div>
+          <div style="font:500 11px/1 Outfit,sans-serif;color:#8a8a8f">{{ daysLeftStr }}</div>
+        </div>
+        <div style="margin-top:8px;display:flex;align-items:baseline;gap:4px;color:#0b0b0c">
+          <div style="font:600 18px/1 Outfit,sans-serif">₱</div>
+          <div style="font:700 32px/1 Outfit,sans-serif;letter-spacing:-.035em;font-variant-numeric:tabular-nums">{{ stsStr }}</div>
+          <div style="margin-left:6px;font:500 12.5px/1 Outfit,sans-serif;color:#8a8a8f">on {{ activeNick }}</div>
+        </div>
+        <div style="margin-top:12px;height:7px;border-radius:100px;background:#e3e2dc;overflow:hidden;display:flex">{{ stsBar }}</div>
+        <div style="margin-top:9px;font:400 12px/1.4 Outfit,sans-serif;color:#6d6d72;text-wrap:pretty">{{ stsCopy }}</div>
+      </div>
+
+      <!-- notifications -->
+      <sc-if value="{{ hasNotifs }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-top:22px">
+        <div style="font:700 15px/1 Outfit,sans-serif;color:#0b0b0c;letter-spacing:-.015em">Worth knowing</div>
+        <div style="margin-top:11px;display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{ notifs }}" as="n" hint-placeholder-count="2">
+            <div style="position:relative;border-radius:16px;overflow:hidden;height:{{ n.h }};transition:height .32s cubic-bezier(.2,.8,.2,1),opacity .28s,margin .32s;opacity:{{ n.op }}">
+              <div style="position:absolute;inset:0;background:#f0483e;display:flex;align-items:center;justify-content:flex-end;padding-right:18px">
+                <div onClick="{{ n.del }}" style="cursor:pointer;padding:8px">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13M10 11v6M14 11v6"></path></svg>
+                </div>
+              </div>
+              <div onPointerDown="{{ n.swStart }}" onPointerMove="{{ n.swMove }}" onPointerUp="{{ n.swEnd }}" onPointerCancel="{{ n.swEnd }}"
+                   style="position:absolute;inset:0;border-radius:16px;overflow:hidden;background:{{ n.bg }};padding:13px 15px;touch-action:pan-y;cursor:grab;transform:translateX({{ n.x }}px);transition:{{ n.ease }}">
+                {{ n.art }}
+                <div style="position:relative">
+                  <div style="font:700 13.5px/1.2 Outfit,sans-serif;color:{{ n.fg }};letter-spacing:-.01em;white-space:nowrap">{{ n.title }}</div>
+                  <div style="margin-top:4px;font:400 11.5px/1.4 Outfit,sans-serif;color:{{ n.fg2 }};max-width:225px;text-wrap:pretty">{{ n.body }}</div>
+                </div>
+                <sc-if value="{{ n.hasCta }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ n.cta }}" style="position:absolute;right:13px;bottom:12px;height:29px;padding:0 14px;border-radius:100px;background:{{ n.ctaBg }};color:{{ n.ctaFg }};display:flex;align-items:center;justify-content:center;white-space:nowrap;flex:none;font:600 11.5px/1 Outfit,sans-serif;cursor:pointer">{{ n.ctaLabel }}</div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- recent activity -->
+      <div style="margin-top:24px;display:flex;align-items:center;justify-content:space-between">
+        <div style="font:700 15px/1 Outfit,sans-serif;color:#0b0b0c;letter-spacing:-.015em">Recent activity</div>
+        <div onClick="{{ goSearch }}" style="display:flex;align-items:center;gap:5px;cursor:pointer;font:500 12px/1 Outfit,sans-serif;color:#1d6ff2">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1d6ff2" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5L21 21"></path></svg>
+          Search
+        </div>
+      </div>
+      <div style="margin-top:8px;display:flex;flex-direction:column">
+        <sc-for list="{{ recent }}" as="t" hint-placeholder-count="6">
+          <div onClick="{{ t.open }}" style="display:flex;align-items:center;gap:12px;padding:10px 0;cursor:pointer;transform:{{ rowT }};opacity:{{ rowO }};transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .4s;transition-delay:{{ t.delay }}">
+            <div style="width:40px;height:40px;flex:none;border-radius:12px;background:{{ t.bg }};display:flex;align-items:center;justify-content:center;font:700 14px/1 Outfit,sans-serif;color:{{ t.fg }}">{{ t.initial }}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font:600 13.5px/1.2 Outfit,sans-serif;color:#0b0b0c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.merchant }}</div>
+              <div style="margin-top:3px;font:400 11.5px/1 Outfit,sans-serif;color:#8a8a8f">{{ t.meta }}</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font:600 13.5px/1 Outfit,sans-serif;color:{{ t.amtFg }};font-variant-numeric:tabular-nums">{{ t.amtStr }}</div>
+              <div style="margin-top:3px;font:400 11px/1 Outfit,sans-serif;color:#a9a9ae">{{ t.cardNick }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div onClick="{{ goDetail }}" style="margin-top:14px;height:44px;border-radius:100px;background:#f5f4f0;display:flex;align-items:center;justify-content:center;font:600 13px/1 Outfit,sans-serif;color:#0b0b0c;cursor:pointer;transition:background .2s" style-hover="background:#eceae4">See everything on {{ activeNick }}</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ── vertical wallet stack ── -->
+  <sc-if value="{{ isStack }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:2px 20px 126px">
+
+    <div style="display:flex;gap:9px">
+      <div onClick="{{ goInsights }}" style="flex:1;border-radius:18px;background:#141418;padding:13px 15px;cursor:pointer;transition:background .2s" style-hover="background:#1b1b21">
+        <div style="font:500 9.5px/1 Outfit,sans-serif;letter-spacing:.11em;text-transform:uppercase;color:rgba(255,255,255,.4)">Safe today</div>
+        <div style="margin-top:7px;display:flex;align-items:baseline;gap:3px">
+          <div style="font:600 14px/1 Outfit,sans-serif;color:rgba(255,255,255,.6)">₱</div>
+          <div style="font:700 21px/1 Outfit,sans-serif;letter-spacing:-.03em;font-variant-numeric:tabular-nums">{{ stsStr }}</div>
+        </div>
+      </div>
+      <div onClick="{{ openWithdraw }}" style="flex:1;border-radius:18px;background:#ffca28;padding:13px 15px;cursor:pointer;transition:transform .16s" style-active="transform:scale(.97)">
+        <div style="font:500 9.5px/1 Outfit,sans-serif;letter-spacing:.11em;text-transform:uppercase;color:rgba(11,11,12,.5)">Quick</div>
+        <div style="margin-top:7px;display:flex;align-items:center;gap:6px">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0b0b0c" stroke-width="2.6" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"></path></svg>
+          <div style="font:700 15px/1 Outfit,sans-serif;color:#0b0b0c">Log spend</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;display:flex;align-items:baseline;justify-content:space-between">
+      <div style="font:700 15px/1 Outfit,sans-serif;letter-spacing:-.015em">Your cards</div>
+      <div style="font:400 11.5px/1 Outfit,sans-serif;color:rgba(255,255,255,.4)">Tap to open · tap again for history</div>
+    </div>
+
+    <div style="margin-top:12px;position:relative;height:{{ stackH }}px;transition:height .44s cubic-bezier(.2,.8,.2,1)">
+      <sc-for list="{{ stack }}" as="c" hint-placeholder-count="7">
+        <div onClick="{{ c.tap }}" style="position:absolute;left:0;right:0;top:0;height:196px;border-radius:22px;overflow:hidden;background:{{ c.base }};cursor:pointer;z-index:{{ c.z }};box-shadow:{{ c.shadow }};transform:translate3d(0,{{ c.y }}px,0) scale({{ c.scale }});transition:transform .44s cubic-bezier(.2,.8,.2,1),box-shadow .32s;filter:{{ c.filter }};opacity:{{ c.op }}">
+          <div style="position:absolute;inset:0;border-radius:22px;overflow:hidden;animation:bwDeal .6s cubic-bezier(.2,.9,.22,1) both;animation-delay:{{ c.dealDelay }}">
+          {{ c.art }}
+          <div style="position:absolute;inset:0;padding:15px 17px;display:flex;flex-direction:column">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+              <div style="min-width:0">
+                <div style="font:600 9.5px/1 Outfit,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:{{ c.fgDim }};white-space:nowrap">{{ c.kind }}</div>
+                <div style="margin-top:6px;font:700 15px/1 Outfit,sans-serif;color:{{ c.fg }};letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.nick }}</div>
+              </div>
+              <div style="text-align:right;flex:none">
+                <div style="font:500 9px/1 Outfit,sans-serif;letter-spacing:.11em;text-transform:uppercase;color:{{ c.fgDim }};white-space:nowrap">{{ c.stripLabel }}</div>
+                <div style="margin-top:5px;display:flex;align-items:baseline;gap:2px;justify-content:flex-end">
+                  <div style="font:600 13px/1 Outfit,sans-serif;color:{{ c.fg }}">₱</div>
+                  <div style="font:700 21px/1 Outfit,sans-serif;color:{{ c.fg }};letter-spacing:-.034em;font-variant-numeric:tabular-nums;white-space:nowrap">{{ c.balStr }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="flex:1"></div>
+
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
+              <div>
+                <div style="font:500 8.5px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:{{ c.fgDim }}">{{ c.footL }}</div>
+                <div style="margin-top:4px;font:600 12px/1 Outfit,sans-serif;color:{{ c.fg }};letter-spacing:.06em;white-space:nowrap">{{ c.mask }}</div>
+              </div>
+              <sc-if value="{{ c.isOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:7px">
+                  <div onClick="{{ c.top }}" style="height:32px;padding:0 13px;border-radius:100px;background:{{ c.miniBg }};color:{{ c.fg }};display:flex;align-items:center;font:600 11.5px/1 Outfit,sans-serif;white-space:nowrap;cursor:pointer">Top up</div>
+                  <div onClick="{{ c.spend }}" style="height:32px;padding:0 13px;border-radius:100px;background:{{ c.miniBgS }};color:{{ c.miniFgS }};display:flex;align-items:center;font:600 11.5px/1 Outfit,sans-serif;white-space:nowrap;cursor:pointer">Spend</div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+          {{ c.frost }}
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div onClick="{{ goEditorNew }}" style="margin-top:14px;height:52px;border-radius:100px;border:1.5px dashed rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;transition:border-color .2s,background .2s" style-hover="border-color:rgba(255,255,255,.42);background:rgba(255,255,255,.03)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      <div style="font:600 13px/1 Outfit,sans-serif;color:rgba(255,255,255,.75)">Add a card</div>
+    </div>
+  </div>
+  </sc-if>
+
+  {{ tabBar }}
+</div>
+</sc-if>
+
+<!-- ══════════ CARD DETAIL ══════════ -->
+<sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Card detail" style="position:absolute;inset:0;background:#0b0b0c;display:flex;flex-direction:column;transform:{{ enterTX }};opacity:{{ enterO }};transition:transform .36s cubic-bezier(.2,.8,.2,1),opacity .3s">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px 14px">
+    <div onClick="{{ goHome }}" style="width:36px;height:36px;border-radius:100px;background:#17171b;display:flex;align-items:center;justify-content:center;cursor:pointer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M19 12H6M12 6l-6 6 6 6"></path></svg>
+    </div>
+    <div style="font:600 14px/1 Outfit,sans-serif">{{ activeNick }}</div>
+    <div onClick="{{ goEditorActive }}" style="width:36px;height:36px;border-radius:100px;background:#17171b;display:flex;align-items:center;justify-content:center;cursor:pointer">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round"><path d="M4 20h4l10-10-4-4L4 16v4zM14 6l4 4"></path></svg>
+    </div>
+  </div>
+  <div style="flex:none;display:flex;justify-content:center;padding-bottom:16px">{{ detailCard }}</div>
+
+  <div style="flex:1;min-height:0;background:#fff;border-radius:26px 26px 0 0;overflow:hidden">
+    <div style="height:100%;overflow-y:auto;padding:18px 20px 40px">
+      <div style="display:flex;gap:11px;align-items:center;border-radius:20px;background:#f5f4f0;padding:15px 16px">
+        {{ spendRing }}
+        <div style="flex:1">
+          <div style="font:500 11px/1 Outfit,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#8a8a8f">{{ limitLabel }}</div>
+          <div style="margin-top:6px;font:700 20px/1 Outfit,sans-serif;color:#0b0b0c;letter-spacing:-.03em;font-variant-numeric:tabular-nums">₱{{ spentStr }} <span style="font:500 13px/1 Outfit,sans-serif;color:#8a8a8f">of ₱{{ limitStr }}</span></div>
+          <div style="margin-top:6px;font:400 11.5px/1.35 Outfit,sans-serif;color:#6d6d72;text-wrap:pretty">{{ limitCopy }}</div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;display:flex;gap:9px">
+        <div onClick="{{ openWithdraw }}" style="flex:1;height:44px;border-radius:100px;background:#0b0b0c;color:#fff;display:flex;align-items:center;justify-content:center;gap:7px;font:600 13px/1 Outfit,sans-serif;cursor:pointer;transition:transform .16s" style-active="transform:scale(.96)">Log spend</div>
+        <div onClick="{{ goTransfer }}" style="flex:1;height:44px;border-radius:100px;background:#f5f4f0;color:#0b0b0c;display:flex;align-items:center;justify-content:center;gap:7px;font:600 13px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s" style-hover="background:#eceae4">Move money</div>
+      </div>
+
+      <div style="margin-top:24px;font:700 15px/1 Outfit,sans-serif;color:#0b0b0c;letter-spacing:-.015em">History</div>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+        <div style="margin-top:16px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <div style="font:600 11.5px/1 Outfit,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#a9a9ae">{{ g.day }}</div>
+            <div style="font:500 11.5px/1 Outfit,sans-serif;color:#a9a9ae;font-variant-numeric:tabular-nums">{{ g.total }}</div>
+          </div>
+          <div style="margin-top:4px">
+            <sc-for list="{{ g.rows }}" as="t" hint-placeholder-count="2">
+              <div onClick="{{ t.open }}" style="display:flex;align-items:center;gap:12px;padding:10px 0;cursor:pointer;border-bottom:1px solid #f2f1ec">
+                <div style="width:38px;height:38px;flex:none;border-radius:12px;background:{{ t.bg }};display:flex;align-items:center;justify-content:center;font:700 13px/1 Outfit,sans-serif;color:{{ t.fg }}">{{ t.initial }}</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font:600 13.5px/1.2 Outfit,sans-serif;color:#0b0b0c">{{ t.merchant }}</div>
+                  <div style="margin-top:3px;font:400 11.5px/1 Outfit,sans-serif;color:#8a8a8f">{{ t.meta }}</div>
+                </div>
+                <div style="font:600 13.5px/1 Outfit,sans-serif;color:{{ t.amtFg }};font-variant-numeric:tabular-nums">{{ t.amtStr }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ INSIGHTS ══════════ -->
+<sc-if value="{{ isInsights }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Insights" style="position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;transform:{{ enterT }};opacity:{{ enterO }};transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .3s">
+  <div style="flex:none;background:#0b0b0c;padding:56px 20px 22px;border-radius:0 0 26px 26px">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div onClick="{{ goHome }}" style="width:36px;height:36px;border-radius:100px;background:#17171b;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M19 12H6M12 6l-6 6 6 6"></path></svg>
+      </div>
+      <div style="font:600 14px/1 Outfit,sans-serif">This week</div>
+      <div style="width:36px"></div>
+    </div>
+    <div style="margin-top:18px;border-radius:20px;background:#ffca28;padding:17px 18px;position:relative;overflow:hidden">
+      {{ insightArt }}
+      <div style="position:relative">
+        <div style="font:600 10.5px/1 Outfit,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:rgba(11,11,12,.5)">Weekly read</div>
+        <div style="margin-top:8px;font:800 22px/1.13 Outfit,sans-serif;color:#0b0b0c;letter-spacing:-.03em;max-width:250px;text-wrap:pretty">{{ insightHead }}</div>
+        <div style="margin-top:8px;font:400 12.5px/1.45 Outfit,sans-serif;color:rgba(11,11,12,.66);max-width:255px;text-wrap:pretty">{{ insightBody }}</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:20px 20px 118px">
+    <div style="display:flex;gap:10px">
+      <sc-for list="{{ statCards }}" as="s" hint-placeholder-count="2">
+        <div style="flex:1;border-radius:18px;background:{{ s.bg }};padding:14px 15px">
+          <div style="font:500 10.5px/1.2 Outfit,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:{{ s.dim }}">{{ s.label }}</div>
+          <div style="margin-top:8px;font:700 21px/1 Outfit,sans-serif;color:{{ s.fg }};letter-spacing:-.03em;font-variant-numeric:tabular-nums">{{ s.value }}</div>
+          <div style="margin-top:5px;font:400 11px/1.3 Outfit,sans-serif;color:{{ s.dim }}">{{ s.sub }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top:22px;font:700 15px/1 Outfit,sans-serif;color:#0b0b0c;letter-spacing:-.015em">Where it went</div>
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:14px">
+      <sc-for list="{{ catRows }}" as="c" hint-placeholder-count="5">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:9px;height:9px;border-radius:100px;background:{{ c.color }}"></div>
+              <div style="font:600 13px/1 Outfit,sans-serif;color:#0b0b0c">{{ c.name }}</div>
+            </div>
+            <div style="font:600 12.5px/1 Outfit,sans-serif;color:#6d6d72;font-variant-numeric:tabular-nums">{{ c.amt }}</div>
+          </div>
+          <div style="margin-top:7px;height:9px;border-radius:100px;background:#f2f1ec;overflow:hidden">{{ c.bar }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top:24px;font:700 15px/1 Outfit,sans-serif;color:#0b0b0c;letter-spacing:-.015em">Coming up</div>
+    <div style="margin-top:11px;display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ bills }}" as="b" hint-placeholder-count="3">
+        <div style="display:flex;align-items:center;gap:12px;border-radius:16px;background:#f5f4f0;padding:12px 14px">
+          <div style="width:38px;height:38px;flex:none;border-radius:12px;background:{{ b.bg }};display:flex;flex-direction:column;align-items:center;justify-content:center;color:{{ b.fg }}">
+            <div style="font:700 13px/1 Outfit,sans-serif">{{ b.d }}</div>
+            <div style="font:500 8px/1 Outfit,sans-serif;letter-spacing:.08em;text-transform:uppercase;opacity:.7">{{ b.m }}</div>
+          </div>
+          <div style="flex:1">
+            <div style="font:600 13.5px/1 Outfit,sans-serif;color:#0b0b0c">{{ b.name }}</div>
+            <div style="margin-top:4px;font:400 11.5px/1 Outfit,sans-serif;color:#8a8a8f">{{ b.when }}</div>
+          </div>
+          <div style="font:700 14px/1 Outfit,sans-serif;color:#0b0b0c;font-variant-numeric:tabular-nums">{{ b.amt }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  {{ tabBar }}
+</div>
+</sc-if>
+
+<!-- ══════════ SEARCH ══════════ -->
+<sc-if value="{{ isSearch }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Search history" style="position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;transform:{{ enterT }};opacity:{{ enterO }};transition:transform .38s cubic-bezier(.2,.8,.2,1),opacity .28s">
+  <div style="flex:none;padding:56px 20px 18px;background:#0b0b0c;border-radius:0 0 26px 26px">
+    <div style="display:flex;align-items:center;gap:11px">
+      <div style="flex:1;height:46px;border-radius:100px;background:#17171b;display:flex;align-items:center;gap:9px;padding:0 16px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5L21 21"></path></svg>
+        <input value="{{ query }}" onChange="{{ setQuery }}" placeholder="Jollibee, load, last Tuesday…" style="flex:1;border:0;background:transparent;font:500 14px/1 Outfit,sans-serif;color:#fff" />
+      </div>
+      <div onClick="{{ goHome }}" style="font:600 13.5px/1 Outfit,sans-serif;color:#ffca28;cursor:pointer;padding:8px 2px">Done</div>
+    </div>
+    <div style="margin-top:13px;display:flex;gap:7px;overflow-x:auto">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="6">
+        <div onClick="{{ f.go }}" style="flex:none;height:32px;padding:0 14px;border-radius:100px;background:{{ f.bgD }};color:{{ f.fgD }};display:flex;align-items:center;white-space:nowrap;font:600 12px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,color .2s">{{ f.label }}</div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:16px 20px 40px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px">
+      <div style="font:500 11.5px/1 Outfit,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#a9a9ae">{{ resultCount }}</div>
+      <div style="font:600 12.5px/1 Outfit,sans-serif;color:#0b0b0c;font-variant-numeric:tabular-nums">{{ resultTotal }}</div>
+    </div>
+    <sc-for list="{{ results }}" as="t" hint-placeholder-count="6">
+      <div onClick="{{ t.open }}" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f4f3ee;cursor:pointer;transform:{{ rowT }};opacity:{{ rowO }};transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .35s;transition-delay:{{ t.delay }}">
+        <div style="width:38px;height:38px;flex:none;border-radius:12px;background:{{ t.bg }};display:flex;align-items:center;justify-content:center;font:700 13px/1 Outfit,sans-serif;color:{{ t.fg }}">{{ t.initial }}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font:600 13.5px/1.2 Outfit,sans-serif;color:#0b0b0c">{{ t.merchant }}</div>
+          <div style="margin-top:3px;font:400 11.5px/1 Outfit,sans-serif;color:#8a8a8f">{{ t.metaFull }}</div>
+        </div>
+        <div style="font:600 13.5px/1 Outfit,sans-serif;color:{{ t.amtFg }};font-variant-numeric:tabular-nums">{{ t.amtStr }}</div>
+      </div>
+    </sc-for>
+    <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:56px 20px;text-align:center">
+        <div style="font:700 16px/1.3 Outfit,sans-serif;color:#0b0b0c">Nothing here.</div>
+        <div style="margin-top:7px;font:400 13px/1.5 Outfit,sans-serif;color:#8a8a8f">Either you didn't buy it, or you didn't log it. One of those is fixable.</div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ CARD EDITOR ══════════ -->
+<sc-if value="{{ isEditor }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Card editor" style="position:absolute;inset:0;background:#0b0b0c;display:flex;flex-direction:column;transform:{{ enterT }};opacity:{{ enterO }};transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .3s">
+  <div style="flex:none;height:56px"></div>
+  <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px 8px">
+    <div onClick="{{ goHome }}" style="width:36px;height:36px;border-radius:100px;background:#17171b;display:flex;align-items:center;justify-content:center;cursor:pointer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+    </div>
+    <div style="font:600 14px/1 Outfit,sans-serif">{{ editorTitle }}</div>
+    <div onClick="{{ randomize }}" style="width:36px;height:36px;border-radius:100px;background:#17171b;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:#23232c">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M20 5h-5M20 5l-3-3M20 5l-3 3M4 19h5M4 19l3-3M4 19l3 3M4 5l16 14"></path></svg>
+    </div>
+  </div>
+
+  <div style="flex:none;display:flex;justify-content:center;padding:10px 0 18px">{{ editorPreview }}</div>
+
+  <div style="flex:1;min-height:0;background:#fff;border-radius:26px 26px 0 0;overflow:hidden">
+    <div style="height:100%;overflow-y:auto;padding:18px 20px 30px">
+
+      <div style="font:600 11px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a9a9ae">Art style</div>
+      <div style="margin-top:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
+        <sc-for list="{{ artStyles }}" as="a" hint-placeholder-count="6">
+          <div onClick="{{ a.go }}" style="border-radius:14px;overflow:hidden;cursor:pointer;border:2px solid {{ a.bd }};transition:border-color .2s,transform .16s" style-active="transform:scale(.96)">
+            <div style="height:52px;position:relative;background:{{ a.base }}">{{ a.thumb }}</div>
+            <div style="padding:6px 8px;background:#f5f4f0;font:600 10.5px/1 Outfit,sans-serif;color:#0b0b0c;text-align:center">{{ a.name }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:22px;display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+        <div style="font:600 11px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a9a9ae;white-space:nowrap">Card category</div>
+        <div style="font:400 10.5px/1.3 Outfit,sans-serif;color:#c0bfba;text-align:right">Sets art, palette &amp; chip</div>
+      </div>
+      <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:9px">
+        <sc-for list="{{ catTpls }}" as="t" hint-placeholder-count="8">
+          <div onClick="{{ t.go }}" style="border-radius:14px;overflow:hidden;cursor:pointer;border:2px solid {{ t.bd }};transition:border-color .2s,transform .16s" style-active="transform:scale(.97)">
+            <div style="height:60px;position:relative">{{ t.thumb }}</div>
+            <div style="padding:7px 9px 8px;background:#f5f4f0">
+              <div style="font:600 11.5px/1 Outfit,sans-serif;color:#0b0b0c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.name }}</div>
+              <div style="margin-top:3px;font:400 9.5px/1.25 Outfit,sans-serif;color:#a9a9ae">{{ t.sub }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:22px;display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+        <div style="font:600 11px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a9a9ae;white-space:nowrap">Filipino weave</div>
+        <div style="font:400 10.5px/1.3 Outfit,sans-serif;color:#c0bfba;text-align:right">Woven, not printed</div>
+      </div>
+      <div style="margin-top:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
+        <sc-for list="{{ weaves }}" as="w" hint-placeholder-count="6">
+          <div onClick="{{ w.go }}" style="border-radius:14px;overflow:hidden;cursor:pointer;border:2px solid {{ w.bd }};transition:border-color .2s,transform .16s" style-active="transform:scale(.96)">
+            <div style="height:52px;position:relative">{{ w.thumb }}</div>
+            <div style="padding:6px 7px 7px;background:#f5f4f0;text-align:center">
+              <div style="font:600 10.5px/1 Outfit,sans-serif;color:#0b0b0c;white-space:nowrap">{{ w.name }}</div>
+              <div style="margin-top:3px;font:400 8.5px/1.2 Outfit,sans-serif;color:#a9a9ae">{{ w.sub }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ isMetal }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:14px">
+        <div style="font:600 11px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a9a9ae">Tier word</div>
+        <div style="margin-top:9px;display:flex;gap:7px">
+          <sc-for list="{{ tierOpts }}" as="t" hint-placeholder-count="3">
+            <div onClick="{{ t.go }}" style="flex:1;height:36px;border-radius:100px;background:{{ t.bg }};color:{{ t.fg }};display:flex;align-items:center;justify-content:center;white-space:nowrap;font:600 11.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,color .2s">{{ t.name }}</div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <div onClick="{{ toggleChip }}" style="margin-top:12px;height:44px;border-radius:100px;background:{{ chipBg }};color:{{ chipFg }};display:flex;align-items:center;justify-content:center;gap:9px;font:600 12.5px/1 Outfit,sans-serif;white-space:nowrap;cursor:pointer;transition:background .2s,color .2s">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ chipFg }}" stroke-width="2.1" stroke-linecap="round"><rect x="4" y="7" width="10" height="8" rx="2"></rect><path d="M4 11h10M17 8.5a5 5 0 010 7M20 6a8 8 0 010 12"></path></svg>
+        {{ chipLabel }}
+      </div>
+
+      <input type="file" accept="image/*" ref="{{ fileRef }}" onChange="{{ onFile }}" style="display:none" />
+
+      <sc-if value="{{ isPhoto }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:20px;border-radius:20px;background:#f5f4f0;padding:15px 16px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font:700 13.5px/1 Outfit,sans-serif;color:#0b0b0c;letter-spacing:-.01em">Your photo</div>
+          <div style="height:26px;padding:0 11px;border-radius:100px;background:{{ contrastBg }};color:{{ contrastFg }};display:flex;align-items:center;gap:5px;font:700 11px/1 Outfit,sans-serif;white-space:nowrap">{{ contrastRatio }} <span style="font-weight:500;opacity:.75">AA</span></div>
+        </div>
+        <div style="margin-top:5px;font:400 11.5px/1.4 Outfit,sans-serif;color:#6d6d72;text-wrap:pretty">{{ contrastCopy }}</div>
+
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <div onClick="{{ pickPhoto }}" style="flex:1;height:42px;border-radius:100px;background:#0b0b0c;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font:600 12.5px/1 Outfit,sans-serif;cursor:pointer;white-space:nowrap;transition:transform .16s" style-active="transform:scale(.97)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"></path></svg>
+            {{ photoBtnLabel }}
+          </div>
+          <sc-if value="{{ hasPhoto }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ autoFix }}" style="height:42px;padding:0 15px;border-radius:100px;background:#eef4ff;color:#0b3a8f;display:flex;align-items:center;justify-content:center;font:600 12.5px/1 Outfit,sans-serif;cursor:pointer;white-space:nowrap">Auto-fix</div>
+            <div onClick="{{ dropPhoto }}" style="width:42px;height:42px;border-radius:100px;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c62f26" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"></path></svg>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ hasPhoto }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font:600 10.5px/1 Outfit,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#a9a9ae">Zoom · drag the card to reframe</div>
+            <div onClick="{{ recentre }}" style="font:600 11px/1 Outfit,sans-serif;color:#1d6ff2;cursor:pointer;padding:4px">Recentre</div>
+          </div>
+          <input type="range" min="1" max="2.6" step="0.02" value="{{ photoZoom }}" onChange="{{ setPhotoZoom }}" style="margin-top:8px;width:100%;accent-color:#0b0b0c" />
+
+          <div style="margin-top:10px;font:600 10.5px/1 Outfit,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#a9a9ae">Scrim behind the numbers</div>
+          <div style="margin-top:8px;display:flex;gap:7px">
+            <sc-for list="{{ scrimOpts }}" as="o" hint-placeholder-count="4">
+              <div onClick="{{ o.go }}" style="flex:1;height:34px;border-radius:100px;background:{{ o.bg }};color:{{ o.fg }};display:flex;align-items:center;justify-content:center;white-space:nowrap;font:600 11.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,color .2s">{{ o.name }}</div>
+            </sc-for>
+          </div>
+
+          <div style="margin-top:12px;display:flex;gap:10px">
+            <div style="flex:1">
+              <div style="font:600 10.5px/1 Outfit,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#a9a9ae">Text</div>
+              <div style="margin-top:8px;display:flex;gap:6px">
+                <sc-for list="{{ textOpts }}" as="o" hint-placeholder-count="3">
+                  <div onClick="{{ o.go }}" style="flex:1;height:34px;border-radius:100px;background:{{ o.bg }};color:{{ o.fg }};display:flex;align-items:center;justify-content:center;white-space:nowrap;font:600 11.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,color .2s">{{ o.name }}</div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="flex:none;width:96px">
+              <div style="font:600 10.5px/1 Outfit,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#a9a9ae">Soften</div>
+              <div onClick="{{ toggleBlur }}" style="margin-top:8px;height:34px;border-radius:100px;background:{{ blurBg }};color:{{ blurFg }};display:flex;align-items:center;justify-content:center;white-space:nowrap;font:600 11.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,color .2s">Blur</div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <div style="margin-top:13px;padding-top:12px;border-top:1px solid #e7e6e0;font:400 11px/1.5 Outfit,sans-serif;color:#8a8a8f;text-wrap:pretty">840px or wider, under 10MB. Photos with a calm bottom-left corner work best — that's where your balance lives. Don't upload a picture that already has text in it.</div>
+      </div>
+      </sc-if>
+
+      <div style="margin-top:22px;font:600 11px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a9a9ae">Palette</div>
+      <div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap">
+        <sc-for list="{{ palettes }}" as="p" hint-placeholder-count="6">
+          <div onClick="{{ p.go }}" style="width:52px;height:52px;border-radius:100px;overflow:hidden;display:flex;cursor:pointer;border:2.5px solid {{ p.bd }};transition:border-color .2s,transform .16s" style-active="transform:scale(.94)">
+            <div style="flex:1;background:{{ p.c1 }}"></div>
+            <div style="flex:1;background:{{ p.c2 }}"></div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:22px;font:600 11px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a9a9ae">Texture</div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <sc-for list="{{ textures }}" as="t" hint-placeholder-count="4">
+          <div onClick="{{ t.go }}" style="flex:1;height:38px;border-radius:100px;background:{{ t.bg }};color:{{ t.fg }};display:flex;align-items:center;justify-content:center;font:600 12px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,color .2s">{{ t.name }}</div>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:22px;font:600 11px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a9a9ae">Layout</div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <sc-for list="{{ layouts }}" as="l" hint-placeholder-count="2">
+          <div onClick="{{ l.go }}" style="flex:1;height:38px;border-radius:100px;background:{{ l.bg }};color:{{ l.fg }};display:flex;align-items:center;justify-content:center;font:600 12px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,color .2s">{{ l.name }}</div>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px">
+        <div style="border-radius:16px;background:#f5f4f0;padding:12px 15px">
+          <div style="font:500 10.5px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a9a9ae">Nickname</div>
+          <input value="{{ edName }}" onChange="{{ setEdName }}" placeholder="Give it a name" style="margin-top:4px;width:100%;border:0;background:transparent;color:#0b0b0c;font:600 16px/1.2 Outfit,sans-serif" />
+        </div>
+        <div style="display:flex;gap:10px">
+          <div style="flex:1;border-radius:16px;background:#f5f4f0;padding:12px 15px">
+            <div style="font:500 10.5px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a9a9ae">Balance</div>
+            <input value="{{ edBal }}" onChange="{{ setEdBal }}" inputMode="decimal" style="margin-top:4px;width:100%;border:0;background:transparent;color:#0b0b0c;font:600 16px/1.2 Outfit,sans-serif" />
+          </div>
+          <div style="flex:1;border-radius:16px;background:#f5f4f0;padding:12px 15px">
+            <div style="font:500 10.5px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a9a9ae">Monthly limit</div>
+            <input value="{{ edLimit }}" onChange="{{ setEdLimit }}" inputMode="decimal" style="margin-top:4px;width:100%;border:0;background:transparent;color:#0b0b0c;font:600 16px/1.2 Outfit,sans-serif" />
+          </div>
+        </div>
+      </div>
+
+      <div onClick="{{ saveCard }}" style="margin-top:20px;height:52px;border-radius:100px;background:#0b0b0c;color:#fff;display:flex;align-items:center;justify-content:center;font:700 15px/1 Outfit,sans-serif;cursor:pointer;transition:transform .16s" style-active="transform:scale(.97)">{{ saveLabel }}</div>
+      <sc-if value="{{ canDelete }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ deleteCard }}" style="margin-top:10px;height:46px;border-radius:100px;color:#f0483e;display:flex;align-items:center;justify-content:center;font:600 13.5px/1 Outfit,sans-serif;cursor:pointer">Delete this card</div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ TRANSFER ══════════ -->
+<sc-if value="{{ isTransfer }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Transfer" style="position:absolute;inset:0;background:#0b0b0c;display:flex;flex-direction:column;transform:{{ enterT }};opacity:{{ enterO }};transition:transform .38s cubic-bezier(.2,.8,.2,1),opacity .28s">
+  <div style="flex:none;height:56px"></div>
+  <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px 16px">
+    <div onClick="{{ goHome }}" style="width:36px;height:36px;border-radius:100px;background:#17171b;display:flex;align-items:center;justify-content:center;cursor:pointer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+    </div>
+    <div style="font:600 14px/1 Outfit,sans-serif">Move money</div>
+    <div style="width:36px"></div>
+  </div>
+
+  <div style="flex:none;padding:0 20px">
+    <div style="border-radius:20px;background:#16161a;padding:14px 16px;display:flex;align-items:center;gap:13px">
+      <div style="width:52px;height:34px;border-radius:8px;overflow:hidden;position:relative;background:{{ fromBase }}">{{ fromArt }}</div>
+      <div style="flex:1">
+        <div style="font:500 10px/1 Outfit,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.38)">From</div>
+        <div style="margin-top:4px;font:600 14px/1 Outfit,sans-serif">{{ fromNick }}</div>
+      </div>
+      <div style="font:600 13px/1 Outfit,sans-serif;color:rgba(255,255,255,.5);font-variant-numeric:tabular-nums">₱{{ fromBal }}</div>
+    </div>
+    <div style="display:flex;justify-content:center;margin:-9px 0;position:relative;z-index:2">
+      <div onClick="{{ swapCards }}" style="width:38px;height:38px;border-radius:100px;background:#ffca28;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .3s cubic-bezier(.2,.8,.2,1);transform:rotate({{ swapRot }}deg)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0b0b0c" stroke-width="2.5" stroke-linecap="round"><path d="M8 4v16M8 20l-4-4M16 20V4M16 4l4 4"></path></svg>
+      </div>
+    </div>
+    <div style="border-radius:20px;background:#16161a;padding:14px 16px;display:flex;align-items:center;gap:13px">
+      <div style="width:52px;height:34px;border-radius:8px;overflow:hidden;position:relative;background:{{ toBase }}">{{ toArt }}</div>
+      <div style="flex:1">
+        <div style="font:500 10px/1 Outfit,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.38)">To</div>
+        <div style="margin-top:4px;font:600 14px/1 Outfit,sans-serif">{{ toNick }}</div>
+      </div>
+      <div style="font:600 13px/1 Outfit,sans-serif;color:rgba(255,255,255,.5);font-variant-numeric:tabular-nums">₱{{ toBal }}</div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:7px;overflow-x:auto;padding-bottom:4px">
+      <sc-for list="{{ toPicker }}" as="p" hint-placeholder-count="5">
+        <div onClick="{{ p.go }}" style="flex:none;height:30px;padding:0 13px;border-radius:100px;background:{{ p.bg }};color:{{ p.fg }};display:flex;align-items:center;white-space:nowrap;font:600 11.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s">{{ p.nick }}</div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end">
+    <div style="text-align:center;padding:14px 0 6px">
+      <div style="font:500 11px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35)">Amount</div>
+      <div style="margin-top:9px;display:flex;align-items:baseline;justify-content:center;gap:5px">
+        <div style="font:600 26px/1 Outfit,sans-serif;color:rgba(255,255,255,.5)">₱</div>
+        <div style="font:700 46px/1 Outfit,sans-serif;letter-spacing:-.04em;font-variant-numeric:tabular-nums">{{ amtDisplay }}</div>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:7px;justify-content:center">
+        <sc-for list="{{ quickAmts }}" as="q" hint-placeholder-count="4">
+          <div onClick="{{ q.go }}" style="height:28px;padding:0 12px;border-radius:100px;background:rgba(255,255,255,.09);color:#fff;display:flex;align-items:center;white-space:nowrap;font:600 11.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s" style-hover="background:rgba(255,255,255,.18)">{{ q.label }}</div>
+        </sc-for>
+      </div>
+    </div>
+    {{ keypad }}
+    <div style="padding:6px 20px 30px">
+      <div onClick="{{ doTransfer }}" style="height:54px;border-radius:100px;background:{{ transferBtnBg }};color:#0b0b0c;display:flex;align-items:center;justify-content:center;font:700 15.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,transform .16s" style-active="transform:scale(.97)">Move it</div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ SETTINGS ══════════ -->
+<sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Settings" style="position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;transform:{{ enterT }};opacity:{{ enterO }};transition:transform .38s cubic-bezier(.2,.8,.2,1),opacity .28s">
+  <div style="flex:none;padding:56px 20px 16px;background:#0b0b0c;border-radius:0 0 26px 26px">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div onClick="{{ goHome }}" style="width:36px;height:36px;border-radius:100px;background:#17171b;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M19 12H6M12 6l-6 6 6 6"></path></svg>
+      </div>
+      <div style="font:600 14px/1 Outfit,sans-serif">Settings</div>
+      <div style="width:36px"></div>
+    </div>
+    <div style="margin-top:18px;display:flex;align-items:center;gap:13px">
+      <div style="width:52px;height:52px;border-radius:100px;background:#ffca28;display:flex;align-items:center;justify-content:center;font:800 20px/1 Outfit,sans-serif;color:#0b0b0c">{{ settingsInitials }}</div>
+      <div>
+        <div style="font:700 17px/1 Outfit,sans-serif;letter-spacing:-.02em">{{ settingsName }}</div>
+        <div style="margin-top:5px;font:400 12px/1 Outfit,sans-serif;color:rgba(255,255,255,.45)">{{ cardCountStr }} · nothing connected to a bank</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:18px 20px 118px">
+    <sc-for list="{{ settingGroups }}" as="g" hint-placeholder-count="3">
+      <div style="margin-bottom:22px">
+        <div style="font:600 11px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a9a9ae">{{ g.title }}</div>
+        <div style="margin-top:10px;border-radius:18px;background:#f5f4f0;overflow:hidden">
+          <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+            <div onClick="{{ r.go }}" style="display:flex;align-items:center;gap:12px;padding:14px 15px;border-bottom:1px solid {{ r.bd }};cursor:pointer;transition:background .18s" style-hover="background:#efeee9">
+              <div style="width:32px;height:32px;flex:none;border-radius:10px;background:{{ r.bg }};display:flex;align-items:center;justify-content:center">{{ r.icon }}</div>
+              <div style="flex:1">
+                <div style="font:600 13.5px/1 Outfit,sans-serif;color:#0b0b0c">{{ r.label }}</div>
+                <div style="margin-top:4px;font:400 11.5px/1.3 Outfit,sans-serif;color:#8a8a8f">{{ r.sub }}</div>
+              </div>
+              {{ r.right }}
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+    <div style="text-align:center;font:400 11.5px/1.5 Outfit,sans-serif;color:#a9a9ae">Pesolita 1.0 · Your numbers never leave this phone.</div>
+  </div>
+  {{ tabBar }}
+</div>
+</sc-if>
+
+<!-- ══════════ ADD EXPENSE / TOP UP SHEET ══════════ -->
+<sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:70">
+  <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);animation:bwFade .28s both"></div>
+  <div data-screen-label="Add expense" style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:28px 28px 0 0;transform:{{ sheetT }};transition:transform .42s cubic-bezier(.16,1,.3,1);max-height:96%;display:flex;flex-direction:column;overflow:hidden">
+    <div style="flex:none;display:flex;justify-content:center;padding:10px 0 4px"><div style="width:38px;height:4px;border-radius:100px;background:#dcdbd5"></div></div>
+
+    <div style="flex:none;padding:6px 20px 0;display:flex;align-items:center;justify-content:space-between">
+      <div style="font:700 17px/1 Outfit,sans-serif;color:#0b0b0c;letter-spacing:-.02em">{{ sheetTitle }}</div>
+      <div onClick="{{ closeSheet }}" style="width:32px;height:32px;border-radius:100px;background:#f2f1ec;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0b0b0c" stroke-width="2.6" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+      </div>
+    </div>
+
+    <div style="flex:none;padding:12px 20px 0">
+      <div style="height:38px;border-radius:100px;background:#f2f1ec;padding:3px;display:flex;gap:2px">
+        <sc-for list="{{ sheetModes }}" as="m" hint-placeholder-count="3">
+          <div onClick="{{ m.go }}" style="flex:1;border-radius:100px;background:{{ m.bg }};color:{{ m.fg }};display:flex;align-items:center;justify-content:center;white-space:nowrap;font:600 12.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .22s,color .22s">{{ m.name }}</div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="flex:1;min-height:0;overflow-y:auto;padding:12px 20px 0">
+      <div style="display:flex;align-items:baseline;justify-content:center;gap:5px;padding:4px 0 2px">
+        <div style="font:600 26px/1 Outfit,sans-serif;color:{{ sheetAccent }}">{{ sheetSign }}₱</div>
+        <div style="font:700 50px/1 Outfit,sans-serif;color:#0b0b0c;letter-spacing:-.045em;font-variant-numeric:tabular-nums">{{ amtDisplay }}</div>
+      </div>
+      <div style="text-align:center;font:400 12px/1 Outfit,sans-serif;color:#8a8a8f">{{ sheetSub }}</div>
+
+      <sc-if value="{{ isMove }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:14px;display:flex;align-items:center;gap:10px;border-radius:16px;background:#eef4ff;border:1px solid #d7e5ff;padding:10px 13px">
+          <div style="width:44px;height:29px;border-radius:7px;overflow:hidden;position:relative;flex:none;background:{{ moveToBase }}">{{ moveToArt }}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font:500 10px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6b8fd0">Into</div>
+            <div style="margin-top:3px;font:600 13px/1 Outfit,sans-serif;color:#0b3a8f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ moveToNick }}</div>
+          </div>
+        </div>
+        <div style="margin-top:9px;display:flex;gap:7px;overflow-x:auto;padding-bottom:6px">
+          <sc-for list="{{ movePicker }}" as="p" hint-placeholder-count="6">
+            <div onClick="{{ p.go }}" style="flex:none;height:32px;padding:0 13px;border-radius:100px;background:{{ p.bg }};color:{{ p.fg }};display:flex;align-items:center;white-space:nowrap;font:600 11.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,color .2s">{{ p.nick }}</div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ notMove }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-top:16px;display:flex;gap:7px;overflow-x:auto;padding-bottom:6px">
+        <sc-for list="{{ catChips }}" as="c" hint-placeholder-count="7">
+          <div onClick="{{ c.go }}" style="flex:none;height:34px;padding:0 13px;border-radius:100px;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;gap:7px;font:600 12.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,color .2s,transform .16s" style-active="transform:scale(.95)">
+            <div style="width:7px;height:7px;border-radius:100px;background:{{ c.dot }}"></div>{{ c.name }}
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:10px;border-radius:16px;background:#f5f4f0;padding:11px 14px;display:flex;align-items:center;gap:10px">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#a9a9ae" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h9"></path></svg>
+        <input value="{{ note }}" onChange="{{ setNote }}" placeholder="What was it? (I'll guess the category)" style="flex:1;border:0;background:transparent;font:500 13.5px/1 Outfit,sans-serif;color:#0b0b0c" />
+      </div>
+      <sc-if value="{{ hasGuess }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ acceptGuess }}" style="margin-top:8px;display:flex;align-items:center;gap:8px;border-radius:14px;background:#eef4ff;border:1px solid #d7e5ff;padding:10px 13px;cursor:pointer">
+          <div style="width:22px;height:22px;border-radius:100px;background:#1d6ff2;display:flex;align-items:center;justify-content:center">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"></path></svg>
+          </div>
+          <div style="flex:1;font:500 12.5px/1.35 Outfit,sans-serif;color:#0b3a8f">Looks like <strong style="font-weight:700">{{ guessCat }}</strong> — tap to use it</div>
+        </div>
+      </sc-if>
+
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <div onClick="{{ toggleReceipt }}" style="flex:1;height:44px;border-radius:14px;background:{{ receiptBg }};display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font:600 12.5px/1 Outfit,sans-serif;color:{{ receiptFg }};transition:background .2s,color .2s">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{ receiptFg }}" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="3"></rect><circle cx="12" cy="12" r="3.2"></circle></svg>
+          {{ receiptLabel }}
+        </div>
+        <div onClick="{{ toggleSplit }}" style="flex:1;height:44px;border-radius:14px;background:{{ splitBg }};display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font:600 12.5px/1 Outfit,sans-serif;color:{{ splitFg }};transition:background .2s,color .2s">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{ splitFg }}" stroke-width="2.2" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"></circle><circle cx="17" cy="9" r="2.6"></circle><path d="M3 19c0-3.3 2.7-5 6-5s6 1.7 6 5M16.5 14c2.6.3 4.5 2 4.5 5"></path></svg>
+          {{ splitLabel }}
+        </div>
+      </div>
+      <sc-if value="{{ split }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:8px;border-radius:14px;background:#f5f4f0;padding:11px 13px;display:flex;align-items:center;justify-content:space-between">
+          <div style="font:500 12.5px/1 Outfit,sans-serif;color:#6d6d72">Mika owes you</div>
+          <div style="font:700 14px/1 Outfit,sans-serif;color:#0b0b0c;font-variant-numeric:tabular-nums">₱{{ splitHalf }}</div>
+        </div>
+      </sc-if>
+      </sc-if>
+
+      <div style="margin-top:12px;display:flex;align-items:center;gap:10px;border-radius:16px;background:#f5f4f0;padding:10px 13px">
+        <div style="width:44px;height:29px;border-radius:7px;overflow:hidden;position:relative;background:{{ fromBase }}">{{ fromArt }}</div>
+        <div style="flex:1">
+          <div style="font:500 10px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a9a9ae">{{ sheetCardLabel }}</div>
+          <div style="margin-top:3px;font:600 13px/1 Outfit,sans-serif;color:#0b0b0c">{{ activeNick }}</div>
+        </div>
+        <div onClick="{{ cycleCard }}" style="font:600 11.5px/1 Outfit,sans-serif;color:#1d6ff2;cursor:pointer;padding:6px 4px">Change</div>
+      </div>
+    </div>
+
+    {{ keypadLight }}
+
+    <div style="flex:none;padding:4px 20px 26px">
+      <div onClick="{{ saveTx }}" style="height:54px;border-radius:100px;background:{{ saveTxBg }};color:{{ saveTxFg }};display:flex;align-items:center;justify-content:center;gap:8px;font:700 15.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,transform .16s" style-active="transform:scale(.97)">{{ saveTxLabel }}</div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ SUCCESS ══════════ -->
+<sc-if value="{{ successOpen }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Success" style="position:absolute;inset:0;z-index:90;background:#1d6ff2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 34px;overflow:hidden">
+  {{ confetti }}
+  <div style="animation:bwPop .55s cubic-bezier(.2,1.2,.3,1) both">{{ successArt }}</div>
+  <div style="margin-top:26px;text-align:center">
+    <div style="font:800 27px/1.14 Outfit,sans-serif;letter-spacing:-.03em;text-wrap:pretty">{{ successHead }}</div>
+    <div style="margin-top:11px;font:400 14px/1.5 Outfit,sans-serif;color:rgba(255,255,255,.78);text-wrap:pretty">{{ successBody }}</div>
+  </div>
+  <div style="position:absolute;left:26px;right:26px;bottom:44px">
+    <div onClick="{{ closeSuccess }}" style="height:54px;border-radius:100px;background:#ffca28;color:#0b0b0c;display:flex;align-items:center;justify-content:center;font:700 15.5px/1 Outfit,sans-serif;cursor:pointer;transition:transform .16s" style-active="transform:scale(.97)">Nice, back to my cards</div>
+  </div>
+</div>
+</sc-if>
+
+{{ toast }}
+</div>
+</x-import>
+
+<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:520px">
+  <sc-for list="{{ jumps }}" as="j" hint-placeholder-count="9">
+    <div onClick="{{ j.go }}" style="height:28px;padding:0 12px;border-radius:100px;background:{{ j.bg }};color:{{ j.fg }};display:flex;align-items:center;white-space:nowrap;font:600 11.5px/1 Outfit,sans-serif;cursor:pointer;transition:background .2s,color .2s">{{ j.label }}</div>
+  </sc-for>
+</div>
+<div style="font:400 11.5px/1.5 Outfit,sans-serif;color:rgba(0,0,0,.42);text-align:center;max-width:460px;text-wrap:pretty">Drag the card deck sideways · swipe a notice left to bin it · everything is live, nothing is hooked to a bank.</div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:540,&quot;height&quot;:1060},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffca28&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ffca28&quot;,&quot;#1d6ff2&quot;,&quot;#f0483e&quot;,&quot;#0b8f6a&quot;],&quot;section&quot;:&quot;Look&quot;},&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;onboard&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;onboard&quot;,&quot;home&quot;,&quot;detail&quot;,&quot;insights&quot;,&quot;search&quot;,&quot;editor&quot;,&quot;transfer&quot;,&quot;settings&quot;],&quot;section&quot;:&quot;Prototype&quot;}}">
+const R = React.createElement;
+const PESO = n => (Math.round(Math.abs(n) * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const PESO0 = n => Math.round(Math.abs(n)).toLocaleString('en-PH');
+
+const PAL = [
+  ['#ffca28', '#0b0b0c'], ['#1d6ff2', '#f4eedc'], ['#f4eedc', '#f0483e'],
+  ['#f9a8b4', '#f0483e'], ['#16161a', '#ffca28'], ['#0b8f6a', '#f4eedc'],
+];
+const ART_STYLES = ['blob', 'wave', 'arc', 'grid', 'confetti', 'mesh', 'photo'];
+const ART_NAMES = { blob: 'Blob', wave: 'Wave', arc: 'Arc', grid: 'Grid', confetti: 'Confetti', mesh: 'Mesh', photo: 'Photo' };
+// Filipino weave templates. Grounded in real PH card practice — DBP's EMV ATM card used a
+// banig (woven mat) motif in flag colours — and drawn generatively, not traced from any bank.
+const WEAVES = [
+  ['banig', 'Banig', 'Pandan mat weave'],
+  ['binakol', 'Binakol', 'Ilocos whorl illusion'],
+  ['tnalak', "T'nalak", 'T’boli abaca ikat'],
+  ['yakan', 'Yakan', 'Bunga-sama diamonds'],
+  ['kalinga', 'Kalinga', 'Banded red & black'],
+  ['pina', 'Piña', 'Sheer pineapple fibre'],
+];
+const WEAVE_KEYS = WEAVES.map(w => w[0]);
+// High-frequency pattern styles are as hostile to text as a photo is, so they go through the
+// same scrim/contrast machinery. `c2` = fraction of area the accent covers, `w` = white lift;
+// derived from each pattern's stripe duty-cycle × layer opacity in art().
+// amax / wmax = the PEAK alpha the accent and the white highlight ever reach in that style.
+// These drive the extremes a glyph can land on; a watermark at 0.13 must not be modelled as
+// a near-solid stripe, or the tuner washes the card out to protect text that was never at risk.
+const PATTERN_DUTY = {
+  banig: { amax: 0.40, wmax: 0.20 }, binakol: { amax: 0.88, wmax: 0.40 }, tnalak: { amax: 0.90, wmax: 0.45 },
+  yakan: { amax: 0.90, wmax: 0.42 }, kalinga: { amax: 0.90, wmax: 0.90 }, pina: { amax: 0.90, wmax: 0.55 },
+  grid: { amax: 0.95, wmax: 0.05 },
+  planes: { amax: 0.85, wmax: 0.30 }, metal: { amax: 0.90, wmax: 0.50 }, glyph: { amax: 0.15, wmax: 0.14 },
+  orbit: { amax: 0.55, wmax: 0.30 }, pixweave: { amax: 0.95, wmax: 0.42 }, foil: { amax: 0.95, wmax: 0.12 },
+  irid: { amax: 0.90, wmax: 0.55 }, crest: { amax: 0.85, wmax: 0.26 },
+  // These five were originally exempt, which meant darkText() judged them by base colour alone
+  // while their near-white accent shapes sat directly over the balance. Every style with an
+  // accent region belongs in this table — an omission here is a silent contrast failure.
+  blob: { amax: 0.92, wmax: 0.93 }, wave: { amax: 0.90, wmax: 0.95 }, arc: { amax: 0.95, wmax: 0.05 },
+  mesh: { amax: 0.95, wmax: 0.32 }, confetti: { amax: 0.90, wmax: 0.80 },
+};
+// One template per CATEGORY, not per bank. Sixty brand clones would be unlicensable and
+// unmaintainable; a category language gives every card an identity the user still controls.
+const CATS_TPL = [
+  ['Banks', 'Diagonal planes, jewel tone', { style: 'planes', c1: '#8f1420', c2: '#3a070e', tex: 'none', chip: true }],
+  ['Credit cards', 'Brushed metal + tier word', { style: 'metal', c1: '#b8912f', c2: '#f4e3ab', tex: 'none', chip: true, tier: 'GOLD' }],
+  ['Digital banks', 'One vivid hue, big glyph', { style: 'glyph', c1: '#6d3df0', c2: '#ffffff', tex: 'none', chip: true }],
+  ['E-wallets', 'Orbit rings + sparkle', { style: 'orbit', c1: '#0b5fd6', c2: '#8fd0ff', tex: 'none', chip: false }],
+  ['Prepaid / transit', 'Pixel weave', { style: 'pixweave', c1: '#22246b', c2: '#f26a2e', tex: 'none', chip: false }],
+  ['Membership', 'Gold foil on black', { style: 'foil', c1: '#131315', c2: '#c9a227', tex: 'none', chip: false }],
+  ['Credit & loans', 'Pastel iridescent', { style: 'irid', c1: '#efc9e2', c2: '#bfe6f0', tex: 'none', chip: true }],
+  ['International', 'Navy crest lines', { style: 'crest', c1: '#0d2350', c2: '#c8102e', tex: 'none', chip: true }],
+];
+// Scrim ladder. A semi-transparent gradient behind the text is the standard fix for
+// text-over-photo legibility; 'veil' is the uniform-overlay variant for busy images.
+const SCRIM = { off: 0, soft: 0.32, strong: 0.55, veil: 0.5 };
+const SCRIM_NAMES = { off: 'None', soft: 'Soft', strong: 'Strong', veil: 'Full veil' };
+const TEX = ['none', 'grain', 'dots', 'stripes'];
+const CATS = [
+  { name: 'Food', color: '#f0483e' }, { name: 'Transport', color: '#1d6ff2' },
+  { name: 'Bills', color: '#7c3aed' }, { name: 'Groceries', color: '#0b8f6a' },
+  { name: 'Shopping', color: '#ffca28' }, { name: 'Load', color: '#ec4899' },
+  { name: 'Health', color: '#0891b2' }, { name: 'Fun', color: '#f97316' },
+];
+const CATC = n => (CATS.find(c => c.name === n) || CATS[0]).color;
+const GUESS = [
+  [['jollibee', 'mcdo', 'grab food', 'kanto', 'lunch', 'coffee', 'starbucks', 'milk tea', 'silog'], 'Food'],
+  [['grab', 'angkas', 'jeep', 'lrt', 'mrt', 'gas', 'toll', 'taxi', 'fare'], 'Transport'],
+  [['meralco', 'maynilad', 'globe', 'pldt', 'rent', 'water', 'internet', 'bill'], 'Bills'],
+  [['sm', 'puregold', 'palengke', 'market', 'grocer', 'landers'], 'Groceries'],
+  [['shopee', 'lazada', 'uniqlo', 'shoes', 'tiktok shop'], 'Shopping'],
+  [['load', 'data', 'promo', 'gigafest'], 'Load'],
+  [['mercury', 'watsons', 'clinic', 'vitamin', 'doctor', 'gym'], 'Health'],
+  [['netflix', 'spotify', 'movie', 'cinema', 'concert', 'game'], 'Fun'],
+];
+
+const MK = (kind, nick, last4, exp, bal, limit, art, extra) => Object.assign({
+  id: nick.toLowerCase().replace(/[^a-z]/g, '') + Math.floor(Math.random() * 900 + 100),
+  kind, nick, last4, exp, bal, limit, art, frozen: false,
+}, extra || {});
+
+const SEED_CARDS = [
+  MK('ATM / Debit', 'Payroll ATM', '1214', '04 / 26', 2486.12, 12000, { style: 'banig', c1: '#ffca28', c2: '#0b0b0c', tex: 'grain', layout: 'standard', chip: true }),
+  MK('Cash on hand', 'Cash on Hand', '', '—', 1240, 4000, { style: 'arc', c1: '#f4eedc', c2: '#f0483e', tex: 'dots', layout: 'standard' }),
+  MK('E-wallet', 'E-wallet', '8383', '03 / 26', 3875.25, 6000, { style: 'wave', c1: '#1d6ff2', c2: '#f4eedc', tex: 'none', layout: 'standard' }),
+  MK('Credit card', 'Blue Card', '2131', '09 / 27', 18420.5, 40000, { style: 'kalinga', c1: '#16161a', c2: '#f0483e', tex: 'none', layout: 'standard', chip: true }),
+  MK('Savings goal', 'Japan Fund', '', 'Apr 27', 24500, 80000, { style: 'tnalak', c1: '#f9a8b4', c2: '#f0483e', tex: 'none', layout: 'compact' }, { goal: 80000 }),
+  MK('Emergency fund', 'Break Glass', '', '—', 50000, 0, { style: 'binakol', c1: '#16161a', c2: '#ffca28', tex: 'none', layout: 'standard' }),
+  MK('Shared', 'House · Mika', '7742', '12 / 26', 6300, 15000, { style: 'yakan', c1: '#f0483e', c2: '#f4eedc', tex: 'none', layout: 'standard', chip: true }),
+];
+
+const T = (ci, merchant, cat, amount, dayOffset, note) => ({ id: Math.random().toString(36).slice(2), ci, merchant, cat, amount, dayOffset, note: note || '' });
+const SEED_TX = [
+  T(0, 'Jollibee Katipunan', 'Food', -285, 0, 'Chickenjoy 2pc'),
+  T(2, 'Grab · to office', 'Transport', -168, 0),
+  T(1, 'Palengke run', 'Groceries', -640, 0, 'Sunday market'),
+  T(0, 'Meralco', 'Bills', -3120, 1, 'August billing'),
+  T(2, 'Globe load', 'Load', -299, 1),
+  T(3, 'Shopee', 'Shopping', -1249, 1, 'Desk lamp'),
+  T(0, 'Salary', 'Bills', 32000, 2, 'Semi-monthly'),
+  T(1, '7-Eleven', 'Food', -132, 2),
+  T(0, 'Netflix', 'Fun', -549, 3, 'Standard plan'),
+  T(6, 'SM Supermarket', 'Groceries', -2180, 3, 'House stock'),
+  T(2, 'Angkas', 'Transport', -95, 4),
+  T(0, 'Mercury Drug', 'Health', -410, 4),
+  T(3, 'Uniqlo', 'Shopping', -1990, 5),
+  T(1, 'Kanto Freestyle', 'Food', -220, 6),
+  T(4, 'Moved to Japan Fund', 'Bills', 2500, 6, 'Auto-save'),
+  T(0, 'Starbucks Podium', 'Food', -195, 7),
+  T(2, 'Lazada', 'Shopping', -735, 8, 'Phone case'),
+  T(0, 'Maynilad', 'Bills', -680, 9),
+];
+
+class Component extends DCLogic {
+  state = {
+    screen: 'onboard', obStep: 0, obKind: null, obName: '', obBal: '',
+    obArt: { style: 'blob', c1: '#ffca28', c2: '#0b0b0c', tex: 'grain', layout: 'standard' },
+    cards: SEED_CARDS, tx: SEED_TX, active: 0,
+    trackX: 22, dragging: false, dragFrom: 0, dragStartX: 0,
+    notifs: [
+      { id: 'n1', k: 'limit', title: 'Credit limit changed', body: 'Metrobank bumped you 20%. Tempting. Ignore it.', x: 0, gone: false },
+      { id: 'n2', k: 'bill', title: 'Rent is due Friday', body: '₱12,000 out of BPI Debit. Set aside now?', x: 0, gone: false, cta: 'Set aside' },
+      { id: 'n3', k: 'low', title: 'Cash on Hand is thin', body: 'Down to ₱1,240 — three days of coffee, tops.', x: 0, gone: false },
+    ],
+    sheet: null, sheetCard: 0, amt: '', cat: 'Food', note: '', receipt: false, split: false,
+    success: null, toast: null,
+    ed: null, edNew: false,
+    from: 0, to: 4, swapRot: 0,
+    query: '', filter: 'All',
+    ringOn: false, barsOn: false, sts: null, privacy: false,
+    tab: 'home',
+    // Entrance motion is driven off these flags, never off a keyframe `from` state.
+    // They default to the RESTING (final) value, so a frozen animation clock —
+    // raster capture, PDF export, backgrounded tab — always yields correct geometry.
+    entering: false, sheetOff: false,
+    homeLayout: 'stack', stackOpen: 0,
+    userName: '', moveTo: 4,
+  };
+
+  flash() { setTimeout(() => this.setState({ entering: false }), 24); }
+
+  // ── lifecycle ──────────────────────────────────────────
+  componentDidMount() {
+    const st = this.props.startScreen;
+    if (st && st !== 'onboard') this.setState({ screen: st }, () => this.enter(st));
+    // correct value first (works with a frozen animation clock / export), then animate toward it
+    this.setState({ sts: this.safeToSpend() }, () => this.animateSts());
+  }
+  componentWillUnmount() { clearInterval(this._sti); clearTimeout(this._tt); }
+
+  // `animate` is false on mount so a startScreen prop / frozen clock never parks the deck
+  // mid-deal — dealt defaults true, which IS the settled position.
+  enter(s, animate) {
+    if (s === 'detail') { this.setState({ ringOn: false }); setTimeout(() => this.setState({ ringOn: true }), 60); }
+    if (s === 'insights') { this.setState({ barsOn: false }); setTimeout(() => this.setState({ barsOn: true }), 80); }
+  }
+  go = s => { this.setState({ screen: s, tab: s === 'home' ? 'home' : s, entering: true }, () => { this.enter(s, true); this.flash(); }); };
+
+  // sts always holds the CORRECT figure; the rAF pass only eases the last stretch,
+  // so a frozen clock (backgrounded tab, raster capture, PDF export) still shows the real number.
+  // sts always holds the CORRECT figure. The ease-in runs on a coarse interval, not per frame:
+  // each update re-renders every card and editor thumbnail, so 60fps here starves the main thread.
+  animateSts() {
+    clearInterval(this._sti);
+    const target = this.safeToSpend();
+    const from = target * 0.6;
+    this.setState({ sts: target });
+    let i = 0;
+    const steps = 7;
+    this._sti = setInterval(() => {
+      i++;
+      const e = 1 - Math.pow(1 - i / steps, 3);
+      this.setState({ sts: i >= steps ? target : from + (target - from) * e });
+      if (i >= steps) clearInterval(this._sti);
+    }, 55);
+  }
+
+  toast(msg) { clearTimeout(this._tt); this.setState({ toast: msg }); this._tt = setTimeout(() => this.setState({ toast: null }), 2400); }
+
+  // ── derived ────────────────────────────────────────────
+  card(i) { return this.state.cards[Math.max(0, Math.min(this.state.cards.length - 1, i))] || this.state.cards[0]; }
+  spentOn(i) { return this.state.tx.filter(t => t.ci === i && t.amount < 0).reduce((s, t) => s + Math.abs(t.amount), 0); }
+  safeToSpend() {
+    const c = this.card(this.state.active);
+    const left = Math.max(0, (c.limit || c.bal) - this.spentOn(this.state.active));
+    const days = 31 - new Date().getDate() + 1;
+    return Math.max(0, Math.min(c.bal, left / Math.max(1, days)));
+  }
+
+  // ── carousel ───────────────────────────────────────────
+  snapTo(i) {
+    const n = this.state.cards.length;
+    const idx = Math.max(0, Math.min(n - 1, i));
+    this.setState({ active: idx, trackX: 22 - idx * 334, dragging: false }, () => this.animateSts());
+  }
+  dragStart = e => { this.setState({ dragging: true, dragStartX: e.clientX, dragFrom: this.state.trackX }); if (e.currentTarget.setPointerCapture) try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {} };
+  dragMove = e => { if (!this.state.dragging) return; this.setState({ trackX: this.state.dragFrom + (e.clientX - this.state.dragStartX) }); };
+  dragEnd = e => {
+    if (!this.state.dragging) return;
+    const idx = Math.round((22 - this.state.trackX) / 334);
+    this.snapTo(idx);
+  };
+
+  // ── notifications ──────────────────────────────────────
+  swipe(id, phase, e) {
+    const ns = this.state.notifs.map(n => {
+      if (n.id !== id) return n;
+      if (phase === 'start') return Object.assign({}, n, { sx: e.clientX, base: n.x || 0, drag: true });
+      if (phase === 'move' && n.drag) return Object.assign({}, n, { x: Math.max(-84, Math.min(0, (n.base || 0) + (e.clientX - n.sx))) });
+      if (phase === 'end') return Object.assign({}, n, { drag: false, x: (n.x || 0) < -42 ? -78 : 0 });
+      return n;
+    });
+    this.setState({ notifs: ns });
+  }
+  killNotif(id) { this.setState({ notifs: this.state.notifs.map(n => n.id === id ? Object.assign({}, n, { gone: true }) : n) }); }
+
+  // ── keypad ─────────────────────────────────────────────
+  key(k) {
+    let a = this.state.amt;
+    if (k === 'del') a = a.slice(0, -1);
+    else if (k === '.') { if (!a.includes('.')) a = (a || '0') + '.'; }
+    else { if (a.includes('.') && a.split('.')[1].length >= 2) return; if (a.replace('.', '').length >= 8) return; a = a === '0' ? k : a + k; }
+    this.setState({ amt: a });
+  }
+
+  guess() {
+    const n = this.state.note.toLowerCase().trim();
+    if (n.length < 3) return null;
+    for (const [words, cat] of GUESS) if (words.some(w => n.includes(w))) return cat === this.state.cat ? null : cat;
+    return null;
+  }
+
+  // ── actions ────────────────────────────────────────────
+  openSheet(kind) {
+    this.setState({ sheet: kind, amt: '', note: '', cat: 'Food', receipt: false, split: false, sheetCard: this.state.active, sheetOff: true },
+      () => setTimeout(() => this.setState({ sheetOff: false }), 24));
+  }
+  saveTx = () => {
+    const amt = parseFloat(this.state.amt);
+    if (!amt) { this.toast('Put a number in first.'); return; }
+    const i = this.state.sheetCard;
+    // Move lives in the same sheet as Spend and Top up — same amount, same keypad, one intent switch.
+    if (this.state.sheet === 'move') {
+      const to = this.state.moveTo;
+      if (to === i) { this.toast('Pick a different card to move into.'); return; }
+      if (amt > this.card(i).bal) { this.toast("That's more than " + this.card(i).nick + ' has.'); return; }
+      const cards = this.state.cards.map((c, k) => k === i ? Object.assign({}, c, { bal: c.bal - amt })
+        : k === to ? Object.assign({}, c, { bal: c.bal + amt }) : c);
+      const tx = [T(to, 'From ' + this.card(i).nick, 'Bills', amt, 0, 'Moved')].concat(this.state.tx);
+      this.setState({ cards, tx, sheet: null, success: { head: 'Moved.', body: '₱' + PESO(amt) + ' from ' + this.card(i).nick + ' to ' + this.card(to).nick + '. No fees, because no bank was involved.' } }, () => this.animateSts());
+      return;
+    }
+    const sign = this.state.sheet === 'deposit' ? 1 : -1;
+    const cards = this.state.cards.map((c, k) => k === i ? Object.assign({}, c, { bal: c.bal + sign * amt }) : c);
+    const tx = [T(i, this.state.note || (sign > 0 ? 'Top up' : this.state.cat), this.state.cat, sign * amt, 0, this.state.note)].concat(this.state.tx);
+    this.setState({
+      cards, tx, sheet: null,
+      success: {
+        head: sign > 0 ? 'Funded.' : 'Logged it.',
+        body: sign > 0
+          ? '₱' + PESO(amt) + ' added to ' + this.card(i).nick + '. Look at you, being responsible.'
+          : '₱' + PESO(amt) + ' off ' + this.card(i).nick + '. ' + (this.state.split ? 'Mika owes you ₱' + PESO(amt / 2) + '.' : 'That took four seconds.'),
+      },
+    }, () => this.animateSts());
+  };
+  doTransfer = () => {
+    const amt = parseFloat(this.state.amt);
+    const { from, to } = this.state;
+    if (!amt) { this.toast('How much are we moving?'); return; }
+    if (amt > this.card(from).bal) { this.toast("That's more than " + this.card(from).nick + ' has.'); return; }
+    const cards = this.state.cards.map((c, k) => k === from ? Object.assign({}, c, { bal: c.bal - amt }) : k === to ? Object.assign({}, c, { bal: c.bal + amt }) : c);
+    const tx = [T(to, 'From ' + this.card(from).nick, 'Bills', amt, 0, 'Transfer')].concat(this.state.tx);
+    this.setState({ cards, tx, amt: '', success: { head: 'Moved.', body: '₱' + PESO(amt) + ' from ' + this.card(from).nick + ' to ' + this.card(to).nick + '. No fees, because no bank was involved.' } }, () => this.animateSts());
+  };
+
+  openEditor(i) {
+    if (i === null) {
+      this.setState({ ed: { kind: 'ATM / Debit', nick: '', last4: '', exp: '12 / 28', bal: 0, limit: 0, art: { style: 'blob', c1: '#ffca28', c2: '#0b0b0c', tex: 'grain', layout: 'standard' } }, edNew: true, screen: 'editor' });
+    } else {
+      this.setState({ ed: JSON.parse(JSON.stringify(this.state.cards[i])), edNew: false, screen: 'editor', active: i, entering: true }, () => this.flash());
+    }
+  }
+  setEd(patch) { this.setState({ ed: Object.assign({}, this.state.ed, patch) }); }
+  setEdArt(patch) { this.setEd({ art: Object.assign({}, this.state.ed.art, patch) }); }
+  saveCard = () => {
+    const ed = this.state.ed;
+    if (!ed.nick.trim()) { this.toast('Give it a name first.'); return; }
+    if (this.state.edNew) {
+      const cards = this.state.cards.concat([Object.assign({}, ed, { id: 'c' + Date.now() })]);
+      this.setState({ cards, screen: 'home' }, () => this.snapTo(cards.length - 1));
+      this.toast(ed.nick + ' is in the deck.');
+    } else {
+      const cards = this.state.cards.map(c => c.id === ed.id ? ed : c);
+      this.setState({ cards, screen: 'home' });
+      this.toast('Redesigned.');
+    }
+  };
+  deleteCard = () => {
+    const cards = this.state.cards.filter(c => c.id !== this.state.ed.id);
+    this.setState({ cards, screen: 'home' }, () => this.snapTo(0));
+    this.toast('Gone. The money went with it.');
+  };
+  randomize = () => {
+    const p = PAL[Math.floor(Math.random() * PAL.length)];
+    this.setEdArt({ style: ART_STYLES[Math.floor(Math.random() * ART_STYLES.length)], c1: p[0], c2: p[1], tex: TEX[Math.floor(Math.random() * TEX.length)] });
+  };
+
+  // ── art engine ─────────────────────────────────────────
+  art(a, w, h, r) {
+    const c1 = a.c1, c2 = a.c2, s = a.style, L = [];
+    const px = f => Math.round(f * w);
+    if (s === 'blob') {
+      L.push(R('div', { key: 1, style: { position: 'absolute', left: -px(.1), top: -px(.13), width: px(.47), height: px(.47), borderRadius: '50% 50% 42% 58%/55% 45% 55% 45%', background: c2, opacity: .92 } }));
+      L.push(R('svg', { key: 2, viewBox: '0 0 320 196', preserveAspectRatio: 'none', style: { position: 'absolute', inset: 0, width: '100%', height: '100%' } },
+        R('path', { d: 'M-8 44 C36 4 88 66 136 28 C178 -6 210 34 258 8 C292 -10 328 6 336 26 L336 -12 L-8 -12 Z', fill: '#fff', opacity: .93 })));
+      L.push(R('div', { key: 3, style: { position: 'absolute', right: -px(.08), bottom: -px(.12), width: px(.34), height: px(.34), borderRadius: '46% 54% 60% 40%/48% 62% 38% 52%', background: c2, opacity: .16 } }));
+    } else if (s === 'wave') {
+      L.push(R('svg', { key: 1, viewBox: '0 0 320 196', preserveAspectRatio: 'none', style: { position: 'absolute', inset: 0, width: '100%', height: '100%' } },
+        R('path', { d: 'M0 132 C56 96 92 168 160 132 C226 97 260 158 320 124 L320 196 L0 196 Z', fill: c2, opacity: .9 }),
+        R('path', { d: 'M0 156 C60 122 96 190 164 154 C230 119 262 178 320 148 L320 196 L0 196 Z', fill: '#fff', opacity: .28 }),
+        R('circle', { cx: 268, cy: 44, r: 40, fill: '#fff', opacity: .14 })));
+    } else if (s === 'arc') {
+      L.push(R('svg', { key: 1, viewBox: '0 0 320 196', preserveAspectRatio: 'none', style: { position: 'absolute', inset: 0, width: '100%', height: '100%' } },
+        R('circle', { cx: 300, cy: 190, r: 150, fill: c2, opacity: .16 }),
+        R('circle', { cx: 300, cy: 190, r: 104, fill: c2, opacity: .3 }),
+        R('circle', { cx: 300, cy: 190, r: 58, fill: c2, opacity: .95 }),
+        R('path', { d: 'M0 0 L104 0 A104 104 0 0 1 0 104 Z', fill: c2, opacity: .85 })));
+    } else if (s === 'grid') {
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(' + c2 + ' 1.2px,transparent 1.2px),linear-gradient(90deg,' + c2 + ' 1.2px,transparent 1.2px)', backgroundSize: px(.075) + 'px ' + px(.075) + 'px', opacity: .3 } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', right: px(.06), top: px(.1), width: px(.2), height: px(.2), background: c2, borderRadius: 4, transform: 'rotate(45deg)', opacity: .95 } }));
+      L.push(R('div', { key: 3, style: { position: 'absolute', left: px(.05), bottom: px(.05), width: px(.42), height: 3, background: c2, opacity: .8 } }));
+    } else if (s === 'confetti') {
+      const seeds = [[.08, .12, 14, 22], [.24, .58, 9, -14], [.42, .2, 12, 40], [.6, .66, 8, 8], [.74, .3, 15, -32], [.88, .74, 10, 18], [.34, .84, 7, 60], [.52, .42, 11, -20], [.16, .4, 8, 34], [.92, .18, 12, 6]];
+      seeds.forEach((sd, i) => L.push(R('div', {
+        key: 'c' + i, style: {
+          position: 'absolute', left: px(sd[0]), top: sd[1] * h, width: sd[2], height: sd[2] * .42,
+          background: i % 3 === 0 ? '#fff' : c2, borderRadius: 100, transform: 'rotate(' + sd[3] + 'deg)', opacity: i % 3 === 0 ? .8 : .92,
+        },
+      })));
+      L.push(R('div', { key: 'g', style: { position: 'absolute', inset: 0, background: 'radial-gradient(70% 90% at 20% 0%,rgba(255,255,255,.4),transparent)' } }));
+    } else if (s === 'banig') {
+      // A real pandan mat interlaces two TONES of one colour, not a dark bar over a light field.
+      // Deriving both tones as c1→c2 blends keeps the card's hue and needs no scrim to stay legible.
+      const st = Math.max(9, px(.036));
+      const t1 = this.tone(c1, c2, 0.14), t2 = this.tone(c1, c2, 0.40);
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, backgroundColor: c1,
+        backgroundImage: 'conic-gradient(from 0deg at 50% 50%,' + t1 + ' 0 25%,' + t2 + ' 25% 50%,' + t1 + ' 50% 75%,' + t2 + ' 75% 100%)',
+        backgroundSize: (st * 2) + 'px ' + (st * 2) + 'px' } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(0deg,rgba(0,0,0,.13) 0 1px,transparent 1px ' + st + 'px),repeating-linear-gradient(90deg,rgba(0,0,0,.13) 0 1px,transparent 1px ' + st + 'px)' } }));
+      L.push(R('div', { key: 3, style: { position: 'absolute', inset: 0, background: 'radial-gradient(120% 90% at 18% 8%,rgba(255,255,255,.2),transparent 62%),radial-gradient(90% 80% at 88% 96%,rgba(0,0,0,.14),transparent 60%)' } }));
+    } else if (s === 'binakol') {
+      const whorl = (cx2, cy2, r2) => 'repeating-conic-gradient(from 0deg at ' + cx2 + '% ' + cy2 + '%,' + c2 + ' 0deg 7deg,rgba(255,255,255,0) 7deg 14deg)';
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, backgroundColor: c1, backgroundImage: whorl(22, 26) + ',' + whorl(78, 72), opacity: .88 } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', inset: 0, backgroundImage: 'repeating-radial-gradient(circle at 22% 26%,rgba(255,255,255,.34) 0 4px,rgba(255,255,255,0) 4px 13px),repeating-radial-gradient(circle at 78% 72%,rgba(255,255,255,.28) 0 4px,rgba(255,255,255,0) 4px 13px)' } }));
+    } else if (s === 'tnalak') {
+      const d = Math.max(13, px(.055));
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, backgroundColor: c1,
+        backgroundImage: 'repeating-linear-gradient(45deg,' + c2 + ' 0 2.5px,rgba(255,255,255,0) 2.5px ' + d + 'px),repeating-linear-gradient(-45deg,' + c2 + ' 0 2.5px,rgba(255,255,255,0) 2.5px ' + d + 'px)' } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(45deg,rgba(255,255,255,.42) 0 1px,transparent 1px ' + (d * 2) + 'px),repeating-linear-gradient(-45deg,rgba(255,255,255,.42) 0 1px,transparent 1px ' + (d * 2) + 'px)' } }));
+      L.push(R('div', { key: 3, style: { position: 'absolute', left: 0, right: 0, top: '46%', height: Math.max(11, px(.05)), background: c2, opacity: .9 } }));
+    } else if (s === 'yakan') {
+      const d = Math.max(8, px(.032));
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, backgroundColor: c1,
+        backgroundImage: 'repeating-linear-gradient(45deg,' + c2 + ' 0 1.6px,rgba(255,255,255,0) 1.6px ' + d + 'px),repeating-linear-gradient(-45deg,' + c2 + ' 0 1.6px,rgba(255,255,255,0) 1.6px ' + d + 'px),repeating-linear-gradient(45deg,rgba(255,255,255,.4) 0 1px,transparent 1px ' + (d * 3) + 'px)' } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(' + c2 + ' 1.4px,transparent 1.5px)', backgroundSize: (d * 2) + 'px ' + (d * 2) + 'px', opacity: .8 } }));
+    } else if (s === 'kalinga') {
+      const b = Math.max(9, px(.038));
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, backgroundColor: c1,
+        backgroundImage: 'repeating-linear-gradient(0deg,' + c2 + ' 0 ' + b + 'px,rgba(255,255,255,.9) ' + b + 'px ' + (b + 2) + 'px,rgba(255,255,255,0) ' + (b + 2) + 'px ' + (b * 2.2) + 'px,rgba(255,255,255,.55) ' + (b * 2.2) + 'px ' + (b * 2.2 + 1.5) + 'px,rgba(255,255,255,0) ' + (b * 2.2 + 1.5) + 'px ' + (b * 3.4) + 'px)' } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(90deg,rgba(0,0,0,.2) 0 1px,transparent 1px ' + (b * 1.5) + 'px)' } }));
+      L.push(R('div', { key: 3, style: { position: 'absolute', left: 0, right: 0, top: '38%', height: Math.max(7, px(.03)), backgroundImage: 'repeating-linear-gradient(90deg,' + c2 + ' 0 ' + b + 'px,rgba(255,255,255,.85) ' + b + 'px ' + (b * 2) + 'px)' } }));
+    } else if (s === 'pina') {
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, background: 'linear-gradient(150deg,' + c1 + ' 0%,' + c2 + ' 140%)' } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(90deg,rgba(255,255,255,.3) 0 1px,transparent 1px 5px),repeating-linear-gradient(0deg,rgba(255,255,255,.22) 0 1px,transparent 1px 5px)' } }));
+      L.push(R('div', { key: 3, style: { position: 'absolute', inset: 0, background: 'radial-gradient(90% 70% at 78% 18%,rgba(255,255,255,.5),transparent 62%)' } }));
+    } else if (s === 'planes') {
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, background: 'linear-gradient(118deg,' + c1 + ' 0 38%,' + c2 + ' 38% 56%,' + c1 + ' 56% 100%)' } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', inset: 0, background: 'linear-gradient(132deg,rgba(255,255,255,0) 44%,rgba(255,255,255,.22) 50%,rgba(255,255,255,0) 56%)' } }));
+      L.push(R('div', { key: 3, style: { position: 'absolute', left: 0, bottom: 0, width: '58%', height: '54%', backgroundImage: 'radial-gradient(rgba(255,255,255,.3) 1px,transparent 1.2px)', backgroundSize: (7 * w / 320) + 'px ' + (7 * w / 320) + 'px', maskImage: 'linear-gradient(30deg,#000,transparent 72%)', WebkitMaskImage: 'linear-gradient(30deg,#000,transparent 72%)' } }));
+      L.push(R('div', { key: 4, style: { position: 'absolute', right: '-8%', top: '-30%', width: '52%', height: '160%', background: c2, opacity: .5, transform: 'rotate(24deg)' } }));
+    } else if (s === 'metal') {
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, background: 'linear-gradient(104deg,' + c1 + ' 0%,' + c2 + ' 34%,' + c1 + ' 58%,' + c2 + ' 82%,' + c1 + ' 100%)' } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(104deg,rgba(255,255,255,.16) 0 1px,rgba(0,0,0,.05) 1px 3px)' } }));
+      L.push(R('div', { key: 3, style: { position: 'absolute', left: '-10%', top: '18%', width: '130%', height: '54%', background: 'radial-gradient(60% 100% at 40% 50%,rgba(255,255,255,.5),transparent 70%)', transform: 'rotate(-8deg)' } }));
+      if (a.tier) L.push(R('div', { key: 4, style: { position: 'absolute', right: 19 * w / 320, top: 18 * w / 320, font: '500 ' + (10 * w / 320) + 'px/1 Outfit,sans-serif', letterSpacing: '.28em', color: 'rgba(0,0,0,.5)' } }, a.tier));
+    } else if (s === 'glyph') {
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, background: c1 } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', right: '-4%', top: '50%', transform: 'translateY(-50%)', font: '800 ' + (h * 1.15) + 'px/0.78 Outfit,sans-serif', color: c2, opacity: .13, letterSpacing: '-.06em' } }, a.glyph || 'S'));
+      L.push(R('div', { key: 3, style: { position: 'absolute', inset: 0, background: 'radial-gradient(80% 70% at 12% 8%,rgba(255,255,255,.14),transparent 62%)' } }));
+    } else if (s === 'orbit') {
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, background: c1 } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', inset: 0, backgroundImage: 'repeating-radial-gradient(circle at 88% 78%,' + c2 + ' 0 ' + (11 * w / 320) + 'px,rgba(255,255,255,0) ' + (11 * w / 320) + 'px ' + (24 * w / 320) + 'px)', opacity: .55 } }));
+      L.push(R('div', { key: 3, style: { position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,.6) .8px,transparent 1px)', backgroundSize: (16 * w / 320) + 'px ' + (13 * w / 320) + 'px', opacity: .5 } }));
+    } else if (s === 'pixweave') {
+      const u = Math.max(9, px(.036));
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, background: c1 } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', inset: 0, backgroundImage: 'conic-gradient(from 45deg at 50% 50%,' + c2 + ' 0 25%,rgba(255,255,255,0) 25% 100%)', backgroundSize: u + 'px ' + u + 'px', opacity: .95 } }));
+      L.push(R('div', { key: 3, style: { position: 'absolute', inset: 0, backgroundImage: 'conic-gradient(from 225deg at 50% 50%,rgba(255,255,255,.42) 0 25%,rgba(255,255,255,0) 25% 100%)', backgroundSize: (u * 2) + 'px ' + (u * 2) + 'px' } }));
+    } else if (s === 'foil') {
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, background: c1 } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', right: '-24%', top: '-46%', width: '96%', height: '190%', borderRadius: '50%', border: (3.2 * w / 320) + 'px solid ' + c2, opacity: .95, transform: 'rotate(-16deg)' } }));
+      L.push(R('div', { key: 3, style: { position: 'absolute', right: '-14%', top: '-24%', width: '72%', height: '150%', borderRadius: '50%', border: (1.4 * w / 320) + 'px solid ' + c2, opacity: .5, transform: 'rotate(-16deg)' } }));
+      L.push(R('div', { key: 4, style: { position: 'absolute', inset: 0, background: 'linear-gradient(120deg,transparent 40%,rgba(255,255,255,.1) 52%,transparent 62%)' } }));
+    } else if (s === 'irid') {
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, background: 'conic-gradient(from 200deg at 32% 20%,' + c1 + ',' + c2 + ',#fdf1c9,' + c1 + ')' } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', inset: 0, background: 'radial-gradient(70% 90% at 78% 88%,rgba(255,255,255,.55),transparent 64%)' } }));
+      L.push(R('div', { key: 3, style: { position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,.5) .7px,transparent .9px)', backgroundSize: (6 * w / 320) + 'px ' + (6 * w / 320) + 'px', opacity: .5 } }));
+    } else if (s === 'crest') {
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, background: 'linear-gradient(160deg,' + c1 + ' 0%,#071736 100%)' } }));
+      L.push(R('div', { key: 2, style: { position: 'absolute', inset: 0, backgroundImage: 'repeating-radial-gradient(circle at 74% 116%,rgba(255,255,255,.26) 0 1px,rgba(255,255,255,0) 1px ' + (13 * w / 320) + 'px)' } }));
+      L.push(R('div', { key: 3, style: { position: 'absolute', left: '-6%', top: '-40%', width: '46%', height: '180%', background: c2, opacity: .85, transform: 'rotate(18deg)' } }));
+      L.push(R('div', { key: 4, style: { position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,transparent 1px ' + (9 * w / 320) + 'px)' } }));
+    } else if (s === 'photo') {
+      const p = a.photo || {};
+      if (!p.src) {
+        L.push(R('div', { key: 'ph', style: { position: 'absolute', inset: 0, background: 'linear-gradient(135deg,' + c1 + ' 0%,' + c2 + ' 100%)' } }));
+        L.push(R('div', { key: 'ph2', style: { position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8 } },
+          R('svg', { width: 26, height: 26, viewBox: '0 0 24 24', fill: 'none', stroke: 'rgba(255,255,255,.9)', strokeWidth: 2, strokeLinecap: 'round' }, R('rect', { x: 3, y: 5, width: 18, height: 14, rx: 3 }), R('path', { d: 'M3 16l5-5 4 4 3-3 6 6' }), R('circle', { cx: 8.5, cy: 9.5, r: 1.4 })),
+          R('div', { style: { font: '600 11px/1 Outfit,sans-serif', color: 'rgba(255,255,255,.9)', letterSpacing: '.04em' } }, 'Your photo here')));
+      } else {
+        L.push(R('div', { key: 'img', style: { position: 'absolute', inset: 0, overflow: 'hidden' } },
+          R('div', { style: {
+            position: 'absolute', inset: '-2%', backgroundImage: 'url(' + p.src + ')', backgroundSize: 'cover', backgroundPosition: 'center',
+            transform: 'scale(' + (p.zoom || 1) + ') translate(' + (p.px || 0) + '%,' + (p.py || 0) + '%)',
+            filter: p.blur ? 'blur(7px)' : 'none', transition: 'transform .18s ease-out, filter .3s',
+          } })));
+        const m = this.photoMetrics(p);
+        const al = SCRIM[p.scrim || 'soft'];
+        const rgb = m.scrimIsDark ? '0,0,0' : '255,255,255';
+        if (al > 0) L.push(R('div', { key: 'scrim', style: {
+          position: 'absolute', inset: 0, transition: 'background .3s',
+          background: p.scrim === 'veil'
+            ? 'rgba(' + rgb + ',' + al + ')'
+            : 'linear-gradient(to top,rgba(' + rgb + ',' + al + ') 0%,rgba(' + rgb + ',' + (al * 0.62).toFixed(3) + ') 38%,rgba(' + rgb + ',0) 76%),linear-gradient(to bottom,rgba(' + rgb + ',' + (al * 0.45).toFixed(3) + ') 0%,rgba(' + rgb + ',0) 34%)',
+        } }));
+      }
+    } else {
+      L.push(R('div', { key: 1, style: { position: 'absolute', inset: 0, background: 'radial-gradient(60% 80% at 12% 8%,' + c2 + ' 0%,transparent 62%),radial-gradient(55% 70% at 92% 88%,' + c2 + ' 0%,transparent 60%),radial-gradient(40% 50% at 70% 18%,rgba(255,255,255,.32) 0%,transparent 70%)', opacity: .95 } }));
+    }
+    // Damp the weave to the tuned amplitude. The flat c1 base sits behind, so lowering the
+    // pattern group's opacity blends it toward c1 exactly as patternExtremes() models.
+    const tuned = this.patternScrim(a);
+    if (tuned && tuned.k < 1 && L.length) {
+      const grp = L.splice(0, L.length);
+      L.push(R('div', { key: 'pat', style: { position: 'absolute', inset: 0, opacity: tuned.k } }, grp));
+    }
+    if (a.tex === 'grain') L.push(R('div', { key: 'tx', style: { position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(0,0,0,.5) .7px,transparent .8px)', backgroundSize: '3.5px 3.5px', opacity: .16, mixBlendMode: 'multiply' } }));
+    if (a.tex === 'dots') L.push(R('div', { key: 'tx', style: { position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(0,0,0,.42) 1.6px,transparent 1.7px)', backgroundSize: '13px 13px', opacity: .2 } }));
+    if (a.tex === 'stripes') L.push(R('div', { key: 'tx', style: { position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(115deg,rgba(255,255,255,.16) 0 2px,transparent 2px 11px)' } }));
+    // Scrim behind BOTH text zones — deck cards carry the balance bottom-left, stack cards
+    // carry it top-right, so a pattern card has to protect top and bottom alike.
+    if (tuned && tuned.alpha > 0) {
+      const rgb = tuned.scrimIsDark ? '0,0,0' : '255,255,255';
+      const al = tuned.alpha;
+      // Stack cards carry the amount in the TOP strip, deck cards at the bottom — both ends
+      // get the full-strength stop, decaying into the untouched middle.
+      L.push(R('div', { key: 'pscrim', style: {
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(to top,rgba(' + rgb + ',' + al + ') 0%,rgba(' + rgb + ',' + (al * 0.62).toFixed(3) + ') 26%,rgba(' + rgb + ',0) 52%),linear-gradient(to bottom,rgba(' + rgb + ',' + al + ') 0%,rgba(' + rgb + ',' + (al * 0.62).toFixed(3) + ') 24%,rgba(' + rgb + ',0) 48%)',
+      } }));
+    }
+    // EMV chip + contactless mark: the functional anatomy of a real PH ATM/debit card.
+    // The network badge is a neutral placeholder — a live build drops the issuer's mark in.
+    if (a.chip) {
+      const k = w / 320, cw = 40 * k, ch = 30 * k;
+      const dk = tuned ? tuned.useDark : this.isLight(c1);
+      const line = dk ? 'rgba(0,0,0,.35)' : 'rgba(255,255,255,.45)';
+      L.push(R('div', { key: 'chip', style: { position: 'absolute', left: 19 * k, top: 74 * k, display: 'flex', alignItems: 'center', gap: 10 * k } },
+        R('div', { style: { width: cw, height: ch, borderRadius: 5 * k, background: 'linear-gradient(135deg,#e8c86a 0%,#f6e6ae 38%,#c9a03f 70%,#eddba0 100%)', position: 'relative', overflow: 'hidden', boxShadow: 'inset 0 0 0 ' + (0.8 * k) + 'px rgba(0,0,0,.22)' } },
+          R('div', { style: { position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(0deg,rgba(120,90,20,.55) 0 ' + (1 * k) + 'px,transparent ' + (1 * k) + 'px ' + (6 * k) + 'px)' } }),
+          R('div', { style: { position: 'absolute', left: '28%', top: '18%', width: '44%', height: '64%', border: (0.9 * k) + 'px solid rgba(120,90,20,.6)', borderRadius: 2 * k } })),
+        R('div', { style: { display: 'flex', alignItems: 'center', gap: 1.5 * k } },
+          [0, 1, 2].map(i => R('div', {
+            key: i, style: {
+              width: 3.4 * k, height: (9 + i * 5) * k, borderRight: (1.9 * k) + 'px solid ' + line,
+              borderTopRightRadius: 9 * k, borderBottomRightRadius: 9 * k,
+            },
+          })))));
+      // On a plate, so the badge never has to fight the pattern underneath it.
+      const plate = dk ? 'rgba(255,255,255,.92)' : 'rgba(11,11,12,.72)';
+      const plateFg = dk ? '#0b0b0c' : '#ffffff';
+      L.push(R('div', { key: 'net', style: {
+        position: 'absolute', right: 19 * k, top: 74 * k, height: 22 * k, padding: '0 ' + (8 * k) + 'px',
+        borderRadius: 100 * k, background: plate, display: 'flex', alignItems: 'center', gap: 5 * k,
+      } },
+        R('div', { style: { display: 'flex', alignItems: 'center' } },
+          R('div', { style: { width: 11 * k, height: 11 * k, borderRadius: 100, background: plateFg, opacity: .85 } }),
+          R('div', { style: { width: 11 * k, height: 11 * k, borderRadius: 100, background: plateFg, opacity: .42, marginLeft: -4.5 * k } })),
+        R('div', { style: { font: '700 ' + (9.5 * k) + 'px/1 Outfit,sans-serif', letterSpacing: '.13em', color: plateFg } }, 'DEBIT')));
+    }
+    L.push(R('div', { key: 'sh', style: { position: 'absolute', top: 0, left: 0, width: '42%', height: '100%', background: 'linear-gradient(100deg,transparent,rgba(255,255,255,.3),transparent)', animation: 'bwShine 5.5s 1.2s ease-in-out infinite' } }));
+    return R('div', { style: { position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: r || 22, background: c1 } }, L);
+  }
+
+  // ── photo legibility engine ────────────────────────────
+  fileRef = React.createRef();
+
+  relLum(rgb) {
+    const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+    return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]);
+  }
+
+  // Contrast of the card's text against the photo AFTER the scrim is composited over it.
+  photoMetrics(p, scrimKey, textMode) {
+    const key = scrimKey || p.scrim || 'soft';
+    const mode = textMode || p.textMode || 'auto';
+    const a = SCRIM[key] * (key === 'veil' ? 1 : 0.86); // text sits low, in the dense part of the gradient
+    const sample = p.sample || [128, 128, 128];
+    const rawL = this.relLum(sample);
+    const scrimIsDark = mode !== 'dark';
+    const sc = scrimIsDark ? 0 : 255;
+    const blended = sample.map(v => v * (1 - a) + sc * a);
+    const L = this.relLum(blended);
+    const useDark = mode === 'auto' ? (a === 0 && rawL > 0.55) : mode === 'dark';
+    const tL = useDark ? 0 : 1;
+    const ratio = (Math.max(L, tL) + 0.05) / (Math.min(L, tL) + 0.05);
+    return { useDark, ratio: Math.round(ratio * 10) / 10, scrimIsDark };
+  }
+
+  // Smallest scrim that clears WCAG 4.5:1 — keeps as much of the photo visible as possible.
+  autoTune(p) {
+    const order = ['off', 'soft', 'strong', 'veil'];
+    for (const k of order) if (this.photoMetrics(p, k).ratio >= 4.5) return k;
+    return 'veil';
+  }
+
+  onFile = e => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    if (!/^image\//.test(f.type)) { this.toast("That's not an image."); return; }
+    if (f.size > 10 * 1024 * 1024) { this.toast('Under 10MB please — that one is huge.'); return; }
+    const rd = new FileReader();
+    rd.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        if (img.naturalWidth < 400) this.toast('A bit low-res — 840px or wider looks best.');
+        // downscale, then average only the zone the balance actually sits in (bottom-left)
+        const cv = document.createElement('canvas');
+        cv.width = 64; cv.height = 40;
+        const cx = cv.getContext('2d');
+        cx.drawImage(img, 0, 0, 64, 40);
+        let r = 0, g = 0, b = 0, n = 0;
+        try {
+          const d = cx.getImageData(0, 18, 46, 22).data;
+          for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; n++; }
+        } catch (err) { n = 0; }
+        const sample = n ? [r / n, g / n, b / n] : [128, 128, 128];
+        const photo = { src: rd.result, zoom: 1, px: 0, py: 0, scrim: 'soft', blur: false, textMode: 'auto', sample };
+        photo.scrim = this.autoTune(photo);
+        this.setEdArt({ style: 'photo', photo });
+        this.toast('Scrim set to ' + SCRIM_NAMES[photo.scrim].toLowerCase() + ' so the balance stays readable.');
+      };
+      img.src = rd.result;
+    };
+    rd.readAsDataURL(f);
+    e.target.value = '';
+  };
+
+  photoDrag = (phase, e) => {
+    const p = this.state.ed && this.state.ed.art.photo;
+    if (!p || !p.src) return;
+    if (phase === 'start') { this._pd = { x: e.clientX, y: e.clientY, px: p.px, py: p.py }; }
+    else if (phase === 'move' && this._pd) {
+      const lim = Math.max(0, (p.zoom - 1) * 50) + 8;
+      this.setEdArt({ photo: Object.assign({}, p, {
+        px: Math.max(-lim, Math.min(lim, this._pd.px + (e.clientX - this._pd.x) / 3.2)),
+        py: Math.max(-lim, Math.min(lim, this._pd.py + (e.clientY - this._pd.y) / 2)),
+      }) });
+    } else if (phase === 'end') this._pd = null;
+  };
+
+  setPhoto(patch) {
+    const p = this.state.ed.art.photo || {};
+    this.setEdArt({ photo: Object.assign({}, p, patch) });
+  }
+
+  tone(c1, c2, t) {
+    const a = this.hexRgb(c1), b = this.hexRgb(c2);
+    return 'rgb(' + a.map((v, i) => Math.round(v * (1 - t) + b[i] * t)).join(',') + ')';
+  }
+
+  hexRgb(hex) {
+    const h = String(hex || '#000').replace('#', '');
+    const n = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16) || 0;
+    return [n >> 16 & 255, n >> 8 & 255, n & 255];
+  }
+
+  // A pattern's two luminance extremes at amplitude k. Glyphs cross the whole amplitude,
+  // not the mean, so both ends have to clear the contrast floor — tuning on the average
+  // leaves every stroke that lands on a dark bar failing.
+  patternExtremes(a, k) {
+    const c1 = this.hexRgb(a.c1), c2 = this.hexRgb(a.c2);
+    const P = PATTERN_DUTY[a.style] || { amax: 0.9, wmax: 0.55 };
+    // The BARE BASE must be in the set: every pattern paints over c1, so c1 always shows
+    // between the marks. Omitting it made a near-black base with a light accent look mid-toned.
+    return [
+      c1,
+      c1.map((v, i) => v * (1 - P.amax * k) + c2[i] * P.amax * k),
+      c1.map(v => v * (1 - P.wmax * k) + 255 * P.wmax * k),
+    ];
+  }
+
+  // Find the MOST visible weave (largest amplitude) whose darkest and brightest bands both
+  // clear 4.5:1 under one text colour + the lightest scrim that works. Damping amplitude
+  // beats masking the pattern out of the text zones: the weave survives across the whole card.
+  _ps = {};
+  patternScrim(a) {
+    if (!PATTERN_DUTY[a.style]) return null;
+    // Memoised: the search is 3 scrims × 8 amplitudes × 2 text colours, and art() runs for
+    // every card and every editor thumbnail on each render. Keyed on the only inputs it reads.
+    const ck = a.style + '|' + a.c1 + '|' + a.c2;
+    if (this._ps[ck]) return this._ps[ck];
+    const r = this._tunePattern(a);
+    this._ps[ck] = r;
+    return r;
+  }
+
+  _tunePattern(a) {
+    // Scrim is the OUTER loop: a heavy scrim washes the whole card out, while damping the
+    // amplitude only softens the pattern. So exhaust every amplitude scrim-free before
+    // reaching for a scrim at all.
+    for (const sk of ['off', 'soft', 'strong']) {
+      for (const k of [1, 0.8, 0.62, 0.48, 0.36, 0.26, 0.18, 0.12]) {
+        const ex = this.patternExtremes(a, k);
+        for (const tm of ['light', 'dark']) {
+          const ms = ex.map(sample => this.photoMetrics({ sample, scrim: sk, textMode: tm }));
+          const worst = Math.min.apply(null, ms.map(m => m.ratio));
+          if (worst >= 4.5) {
+            return { k, key: sk, alpha: SCRIM[sk], uniform: false, useDark: tm === 'dark', scrimIsDark: ms[0].scrimIsDark, ratio: worst };
+          }
+        }
+      }
+    }
+    const ex = this.patternExtremes(a, 0.12);
+    const m = this.photoMetrics({ sample: ex[0], scrim: 'strong', textMode: 'auto' });
+    return { k: 0.12, key: 'strong', alpha: SCRIM.strong, uniform: false, useDark: m.useDark, scrimIsDark: m.scrimIsDark, ratio: m.ratio };
+  }
+
+  darkText(a) {
+    if (a.style === 'photo' && a.photo && a.photo.src) return this.photoMetrics(a.photo).useDark;
+    const ps = this.patternScrim(a);
+    if (ps) return ps.useDark;
+    return this.isLight(a.c1);
+  }
+
+  isLight(hex) {
+    const h = hex.replace('#', '');
+    const n = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+    return (((n >> 16 & 255) * 299 + (n >> 8 & 255) * 587 + (n & 255) * 114) / 1000) > 150;
+  }
+
+  // Oversized initial as the composition anchor — the glyph templates need the card's letter.
+  artOf(card, w, h, r) {
+    return this.art(Object.assign({}, card.art, { glyph: (card.nick || '?').trim().charAt(0).toUpperCase() }), w, h, r);
+  }
+
+  cardView(c, i, extra) {
+    const light = this.darkText(c.art);
+    const fg = light ? '#0b0b0c' : '#ffffff';
+    const compact = c.art.layout === 'compact';
+    return Object.assign({
+      kind: c.kind, nick: c.nick, exp: c.exp || '—',
+      mask: c.last4 ? '•••• •••• ' + c.last4 : (c.kind === 'Cash on hand' ? 'Physical pesos' : 'No number'),
+      footL: compact ? 'Goal' : 'Card', footR: compact ? 'Target' : 'Exp date',
+      balStr: this.state.privacy ? '•••••' : (compact ? PESO0(c.bal) : PESO(c.bal)),
+      base: c.art.c1, fg, fgDim: light ? 'rgba(11,11,12,.5)' : 'rgba(255,255,255,.55)',
+      art: this.artOf(c, 320, 196, 22),
+      filter: c.frozen ? 'saturate(.25)' : 'none', op: c.frozen ? .82 : 1,
+      swBg: c.frozen ? (light ? 'rgba(11,11,12,.25)' : 'rgba(255,255,255,.22)') : (light ? '#0b0b0c' : '#ffffff'),
+      swKnob: c.frozen ? (light ? '#0b0b0c' : '#fff') : (light ? '#ffca28' : '#0b0b0c'),
+      swX: c.frozen ? '0px' : '19px',
+      stripLabel: c.goal ? 'Saved' : 'Left',
+      miniBg: light ? 'rgba(11,11,12,.1)' : 'rgba(255,255,255,.2)',
+      miniBgS: light ? '#0b0b0c' : '#ffffff',
+      miniFgS: light ? '#ffffff' : '#0b0b0c',
+      frost: c.frozen ? R('div', { style: { position: 'absolute', inset: 0, background: 'rgba(120,160,200,.16)', backdropFilter: 'blur(1.5px)', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+        R('div', { style: { padding: '6px 13px', borderRadius: 100, background: 'rgba(11,11,12,.72)', color: '#fff', font: '600 11px/1 Outfit,sans-serif', letterSpacing: '.06em', textTransform: 'uppercase' } }, 'Frozen')) : null,
+    }, extra || {});
+  }
+
+  ring(pct, size, goalMode) {
+    const r = size / 2 - 6, len = 2 * Math.PI * r;
+    const off = this.state.ringOn ? len * (1 - Math.min(1, pct)) : len;
+    // On a savings goal a high number is good; on a spend limit it is not.
+    const col = goalMode
+      ? (pct > .66 ? '#0b8f6a' : pct > .33 ? '#ffca28' : '#1d6ff2')
+      : (pct > .9 ? '#f0483e' : pct > .7 ? '#ffca28' : '#0b8f6a');
+    return R('svg', { width: size, height: size, style: { flex: 'none', transform: 'rotate(-90deg)' } },
+      R('circle', { cx: size / 2, cy: size / 2, r, fill: 'none', stroke: '#e3e2dc', strokeWidth: 9 }),
+      R('circle', { cx: size / 2, cy: size / 2, r, fill: 'none', stroke: col, strokeWidth: 9, strokeLinecap: 'round', strokeDasharray: len, strokeDashoffset: off, style: { transition: 'stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1)' } }));
+  }
+
+  keypadNode(light) {
+    const keys = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], ['.', '0', 'del']];
+    const fg = light ? '#0b0b0c' : '#fff';
+    const bg = light ? '#f5f4f0' : 'rgba(255,255,255,.07)';
+    return R('div', { style: { flex: 'none', padding: light ? '8px 20px 0' : '2px 20px 6px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 } },
+      keys.flat().map(k => R('div', {
+        key: k, onClick: () => this.key(k),
+        style: {
+          height: light ? 46 : 50, borderRadius: 15, background: bg, color: fg, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          font: '600 20px/1 Outfit,sans-serif', cursor: 'pointer', userSelect: 'none', transition: 'transform .12s, background .18s',
+        },
+        onPointerDown: e => { e.currentTarget.style.transform = 'scale(.93)'; e.currentTarget.style.background = light ? '#e8e7e1' : 'rgba(255,255,255,.16)'; },
+        onPointerUp: e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.background = bg; },
+        onPointerLeave: e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.background = bg; },
+      }, k === 'del'
+        ? R('svg', { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: fg, strokeWidth: 2.2, strokeLinecap: 'round' }, R('path', { d: 'M10 5h9a2 2 0 012 2v10a2 2 0 01-2 2h-9L3 12z' }), R('path', { d: 'M18 9l-5 6M13 9l5 6' }))
+        : k)));
+  }
+
+  tabBarNode() {
+    const items = [
+      { k: 'home', s: 'home', d: 'M4 11.5L12 5l8 6.5V20a1 1 0 01-1 1h-4v-6H9v6H5a1 1 0 01-1-1z' },
+      { k: 'insights', s: 'insights', d: 'M5 19V9M10 19V5M15 19v-7M20 19v-4' },
+      null,
+      { k: 'search', s: 'search', d: 'M11 18a7 7 0 100-14 7 7 0 000 14zM16.5 16.5L21 21' },
+      { k: 'settings', s: 'settings', d: 'M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM12 2.5l1.6 2.1 2.6-.5.5 2.6 2.3 1.3-1.2 2.4 1.2 2.4-2.3 1.3-.5 2.6-2.6-.5L12 21.5l-1.6-2.1-2.6.5-.5-2.6L5 15.9l1.2-2.4L5 11.1l2.3-1.3.5-2.6 2.6.5z' },
+    ];
+    return R('div', { style: { position: 'absolute', left: 16, right: 16, bottom: 26, height: 66, borderRadius: 100, background: '#fff', boxShadow: '0 -2px 24px rgba(0,0,0,.13), 0 10px 30px rgba(0,0,0,.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-around', zIndex: 40 } },
+      items.map((it, i) => it === null
+        ? R('div', {
+          key: 'fab', onClick: () => this.openSheet('withdraw'),
+          style: { width: 56, height: 56, marginTop: -22, borderRadius: 100, background: '#1d6ff2', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 10px 24px rgba(29,111,242,.42)', transition: 'transform .2s cubic-bezier(.2,.8,.2,1)' },
+          onPointerDown: e => { e.currentTarget.style.transform = 'scale(.9) rotate(90deg)'; },
+          onPointerUp: e => { e.currentTarget.style.transform = 'none'; },
+          onPointerLeave: e => { e.currentTarget.style.transform = 'none'; },
+        }, R('svg', { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: '#fff', strokeWidth: 2.6, strokeLinecap: 'round' }, R('path', { d: 'M12 5v14M5 12h14' })))
+        : R('div', {
+          key: it.k, onClick: () => this.go(it.s),
+          style: { width: 46, height: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' },
+        }, R('svg', {
+          width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none',
+          stroke: this.state.screen === it.s ? '#0b0b0c' : '#bdbdc4', strokeWidth: 2.1, strokeLinecap: 'round', strokeLinejoin: 'round',
+          style: { transition: 'stroke .2s, transform .25s cubic-bezier(.2,1.4,.3,1)', transform: this.state.screen === it.s ? 'scale(1.12)' : 'scale(1)' },
+        }, R('path', { d: it.d })))));
+  }
+
+  markNode(col) {
+    return R('svg', { viewBox: '0 0 24 24', width: '100%', height: '100%' },
+      R('path', { d: 'M12 1.6l2.5 6.1 6.1-2.5-2.5 6.1 6.1 2.5-6.1 2.5 2.5 6.1-6.1-2.5L12 24l-2.5-6.1-6.1 2.5 2.5-6.1L-0.2 13.8l6.1-2.5-2.5-6.1 6.1 2.5z', fill: col, transform: 'translate(1.2 -0.8) scale(.92)' }));
+  }
+
+  // ── render values ──────────────────────────────────────
+  renderVals() {
+    const s = this.state, cards = s.cards, ac = this.card(s.active);
+    const total = cards.reduce((a, c) => a + c.bal, 0);
+    const accent = this.props.accent || '#ffca28';
+    const days = 31 - new Date().getDate() + 1;
+    const spent = this.spentOn(s.active);
+    const limit = ac.limit || ac.bal;
+    // Goal cards measure progress toward the target, not spend against a limit —
+    // the ring has to agree with the number printed beside it.
+    const pct = ac.goal ? Math.min(1, ac.bal / ac.goal) : (limit ? Math.min(1, spent / limit) : 0);
+    const g = this.guess();
+    // Only build the art for the screen actually on-stage. renderVals runs on every setState,
+    // and every card/thumbnail is a multi-layer gradient tree — building all of them each time
+    // made cost scale with the whole app instead of the visible screen.
+    const on = k => s.screen === k;
+    const NONE = [];
+
+    const txRow = (t, k) => {
+      const cc = cards[t.ci] || cards[0];
+      return {
+        initial: t.merchant.replace(/[^A-Za-z]/g, '').slice(0, 1).toUpperCase() || '₱',
+        bg: t.amount > 0 ? '#e7f6ee' : (CATC(t.cat) + '1f'), fg: t.amount > 0 ? '#0b8f6a' : CATC(t.cat),
+        merchant: t.merchant, meta: t.cat + (t.note ? ' · ' + t.note : ''),
+        metaFull: t.cat + ' · ' + (cc ? cc.nick : '') + (t.note ? ' · ' + t.note : ''),
+        amtStr: (t.amount > 0 ? '+₱' : '−₱') + PESO(t.amount), amtFg: t.amount > 0 ? '#0b8f6a' : '#0b0b0c',
+        cardNick: cc ? cc.nick : '', delay: (k * 0.045).toFixed(3) + 's',
+        open: () => this.go('detail'),
+      };
+    };
+
+    const dayName = o => o === 0 ? 'Today' : o === 1 ? 'Yesterday' : new Date(Date.now() - o * 864e5).toLocaleDateString('en-PH', { weekday: 'long', day: 'numeric', month: 'short' });
+    const own = s.tx.map((t, i) => ({ t, i })).filter(x => x.t.ci === s.active);
+    const groupMap = {};
+    own.forEach(x => { (groupMap[x.t.dayOffset] = groupMap[x.t.dayOffset] || []).push(x.t); });
+    const groups = Object.keys(groupMap).sort((a, b) => a - b).map(k => ({
+      day: dayName(+k),
+      total: '₱' + PESO(groupMap[k].reduce((a, t) => a + Math.abs(t.amount), 0)),
+      rows: groupMap[k].map((t, i) => txRow(t, i)),
+    }));
+
+    const catTotals = CATS.map(c => ({ name: c.name, color: c.color, amt: s.tx.filter(t => t.cat === c.name && t.amount < 0).reduce((a, t) => a + Math.abs(t.amount), 0) }))
+      .filter(c => c.amt > 0).sort((a, b) => b.amt - a.amt);
+    const catMax = Math.max(1, ...catTotals.map(c => c.amt));
+
+    const q = s.query.toLowerCase().trim();
+    let res = s.tx.filter(t => {
+      const okQ = !q || t.merchant.toLowerCase().includes(q) || t.cat.toLowerCase().includes(q) || (t.note || '').toLowerCase().includes(q);
+      const okF = s.filter === 'All' || (s.filter === 'Money in' ? t.amount > 0 : s.filter === 'Money out' ? t.amount < 0 : t.cat === s.filter);
+      return okQ && okF;
+    });
+
+    const kinds = [
+      ['ATM / Debit', 'Bank card you tap'], ['Credit card', 'Borrowed money'], ['Cash on hand', 'Actual paper'],
+      ['E-wallet', 'GCash, Maya'], ['Savings goal', 'Money with a job'], ['Emergency fund', 'Do not touch'],
+    ];
+
+    return {
+      mark: this.markNode('#0b0b0c'), markW: this.markNode('#ffffff'),
+      // screens
+      isOnboard: s.screen === 'onboard', isHome: s.screen === 'home', isDetail: s.screen === 'detail',
+      isInsights: s.screen === 'insights', isSearch: s.screen === 'search', isEditor: s.screen === 'editor',
+      isTransfer: s.screen === 'transfer', isSettings: s.screen === 'settings',
+      goHome: () => this.go('home'), goDetail: () => this.go('detail'), goInsights: () => this.go('insights'),
+      goSearch: () => this.go('search'), goTransfer: () => this.setState({ amt: '', screen: 'transfer', entering: true }, () => this.flash()),
+      enterT: s.entering ? 'translateY(14px)' : 'none',
+      enterTX: s.entering ? 'translateX(26px)' : 'none',
+      enterO: s.entering ? 0.001 : 1,
+      rowT: s.entering ? 'translateY(12px)' : 'none',
+      rowO: s.entering ? 0 : 1,
+      sheetT: s.sheetOff ? 'translateY(102%)' : 'none',
+      goEditorNew: () => this.openEditor(null), goEditorActive: () => this.openEditor(s.active),
+
+      // onboarding
+      ob0: s.obStep === 0, obName1: s.obStep === 1, ob1: s.obStep === 2, ob2: s.obStep === 3,
+      obNext: () => this.setState({ obStep: Math.min(3, s.obStep + 1), entering: true }, () => this.flash()),
+      skipOnboard: () => this.go('home'),
+      obDots: [0, 1, 2, 3].map(i => ({ w: i === s.obStep ? '22px' : '4px', bg: i === s.obStep ? '#ffca28' : 'rgba(255,255,255,.22)' })),
+      userName: s.userName,
+      setUserName: e => this.setState({ userName: e.target.value }),
+      nameOk: s.userName.trim() ? '#ffca28' : 'rgba(255,255,255,.16)',
+      hi: s.userName.trim() ? 'Hi, ' + s.userName.trim().split(' ')[0] + '.' : 'Nice to meet you.',
+      kinds: kinds.map(([label, hint]) => {
+        const on = s.obKind === label;
+        return {
+          label, hint, bg: on ? 'rgba(255,202,40,.14)' : '#141418', bd: on ? '#ffca28' : 'transparent',
+          fg: '#fff', sub: 'rgba(255,255,255,.42)', dot: on ? '#ffca28' : 'rgba(255,255,255,.1)',
+          icon: R('svg', { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: on ? '#0b0b0c' : 'rgba(255,255,255,.75)', strokeWidth: 2.2, strokeLinecap: 'round' }, R('rect', { x: 2.5, y: 5.5, width: 19, height: 13, rx: 3 }), R('path', { d: 'M2.5 10h19' })),
+          pick: () => this.setState({ obKind: label, obName: label === 'Cash on hand' ? 'Cash on Hand' : '' }),
+        };
+      }),
+      obKindOk: s.obKind ? '#ffca28' : 'rgba(255,255,255,.16)',
+      obName: s.obName, setObName: e => this.setState({ obName: e.target.value }),
+      obBal: s.obBal, setObBal: e => this.setState({ obBal: e.target.value.replace(/[^0-9.]/g, '') }),
+      obPreview: !on('onboard') ? null : R('div', { style: { width: 268, height: 164, borderRadius: 20, position: 'relative', overflow: 'hidden', boxShadow: '0 16px 34px rgba(0,0,0,.45)' } },
+        this.art(s.obArt, 268, 164, 20),
+        R('div', { style: { position: 'absolute', inset: 0, padding: '15px 17px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' } },
+          R('div', { style: { font: '600 10px/1 Outfit,sans-serif', letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(11,11,12,.5)' } }, s.obKind || 'Your card'),
+          R('div', null,
+            R('div', { style: { display: 'flex', alignItems: 'baseline', gap: 3, color: '#0b0b0c' } },
+              R('div', { style: { font: '600 20px/1 Outfit,sans-serif' } }, '₱'),
+              R('div', { style: { font: '700 33px/1 Outfit,sans-serif', letterSpacing: '-.035em', fontVariantNumeric: 'tabular-nums' } }, PESO(parseFloat(s.obBal) || 0))),
+            R('div', { style: { marginTop: 8, font: '700 13px/1 Outfit,sans-serif', color: '#0b0b0c' } }, s.obName || 'Untitled card')))),
+      obFinish: () => {
+        const c = MK(s.obKind || 'ATM / Debit', s.obName.trim() || 'My card', '', '—', parseFloat(s.obBal) || 0, 0, s.obArt);
+        this.setState({ cards: [c].concat(SEED_CARDS), screen: 'home', active: 0, trackX: 22 }, () => this.animateSts());
+        this.toast('Welcome. Log your first spend with the blue button.');
+      },
+      fanStack: !on('onboard') ? null : R('div', { style: { position: 'relative', width: 300, height: 250 } },
+        [[-16, -30, -13], [-8, -15, -6.5], [0, 0, 0], [8, 15, 6.5]].map((t, i) => {
+          const pal = PAL[(i + 4) % PAL.length];
+          return R('div', {
+            key: i,
+            style: {
+              position: 'absolute', left: 34, top: 52 + i * 6, width: 232, height: 142, borderRadius: 18, overflow: 'hidden',
+              boxShadow: '0 14px 30px rgba(0,0,0,.42)', zIndex: i,
+              '--bwT': 'translate(' + t[1] + 'px,' + (i * -4) + 'px) rotate(' + t[2] + 'deg)',
+              animation: 'bwFan .85s cubic-bezier(.2,1,.25,1) both',
+              animationDelay: (i * 0.11 + 0.15) + 's',
+            },
+          }, this.art({ style: ART_STYLES[i % 6], c1: pal[0], c2: pal[1], tex: i % 2 ? 'grain' : 'none' }, 232, 142, 18));
+        })),
+
+      // home
+      greeting: 'Good evening, ' + (s.userName.trim().split(' ')[0] || 'Charles'),
+      totalStr: s.privacy ? '•••••' : PESO(total),
+      privacy: s.privacy, togglePrivacy: () => this.setState({ privacy: !s.privacy }),
+      eyeIcon: R('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: '#fff', strokeWidth: 2.1, strokeLinecap: 'round' },
+        R('path', { d: 'M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z' }), R('circle', { cx: 12, cy: 12, r: 2.8 }),
+        s.privacy ? R('path', { d: 'M4 20L20 4' }) : null),
+      deck: !on('home') || s.homeLayout !== 'deck' ? NONE : cards.map((c, i) => this.cardView(c, i, {
+        open: () => { if (i === s.active) this.go('detail'); else this.snapTo(i); },
+        freeze: e => { e.stopPropagation(); this.setState({ cards: cards.map((x, k) => k === i ? Object.assign({}, x, { frozen: !x.frozen }) : x) }); this.toast(c.frozen ? c.nick + ' is live again.' : c.nick + ' frozen. No spending from it.'); },
+      })),
+      // ── home layout: vertical wallet stack vs horizontal deck ──
+      isDeck: s.homeLayout === 'deck', isStack: s.homeLayout === 'stack',
+      toggleLayout: () => this.setState({ homeLayout: s.homeLayout === 'stack' ? 'deck' : 'stack' }),
+      layoutIcon: s.homeLayout === 'stack'
+        ? R('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: '#fff', strokeWidth: 2.1, strokeLinecap: 'round' }, R('rect', { x: 3, y: 6, width: 18, height: 5, rx: 2 }), R('rect', { x: 3, y: 14, width: 18, height: 5, rx: 2 }))
+        : R('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: '#fff', strokeWidth: 2.1, strokeLinecap: 'round' }, R('rect', { x: 2, y: 7, width: 9, height: 11, rx: 2 }), R('rect', { x: 13, y: 7, width: 9, height: 11, rx: 2 })),
+      stackH: (() => { let y = 0; for (let i = 0; i < cards.length - 1; i++) y += (s.stackOpen === i ? 208 : 84); return y + 196; })(),
+      stack: !on('home') || s.homeLayout !== 'stack' ? NONE : cards.map((c, i) => {
+        let y = 0;
+        for (let j = 0; j < i; j++) y += (s.stackOpen === j ? 208 : 84);
+        const open = s.stackOpen === i;
+        const sc = open ? 1 : 0.982;
+        return this.cardView(c, i, {
+          y, z: i + 1, isOpen: open, scale: sc,
+          // Stagger only. The deal rides on an inner element via @keyframes bwDeal, so the
+          // outer card keeps its correct stack position with no timer in the loop.
+          dealDelay: (0.055 * i).toFixed(3) + 's',
+          shadow: open ? '0 20px 38px rgba(0,0,0,.5)' : '0 -3px 14px rgba(0,0,0,.35)',
+          tap: () => { if (open) { this.setState({ active: i }, () => this.go('detail')); } else this.setState({ stackOpen: i, active: i }, () => this.animateSts()); },
+          spend: e => { e.stopPropagation(); this.setState({ active: i }, () => this.openSheet('withdraw')); },
+          top: e => { e.stopPropagation(); this.setState({ active: i }, () => this.openSheet('deposit')); },
+        });
+      }),
+      trackX: s.trackX,
+      trackEase: s.dragging ? 'none' : 'transform .48s cubic-bezier(.16,1,.3,1)',
+      dragStart: this.dragStart, dragMove: this.dragMove, dragEnd: this.dragEnd,
+      dots: cards.map((c, i) => ({ w: i === s.active ? '18px' : '5px', bg: i === s.active ? accent : 'rgba(255,255,255,.24)', go: () => this.snapTo(i) })),
+      openWithdraw: () => this.openSheet('withdraw'), openDeposit: () => this.openSheet('deposit'),
+
+      activeNick: ac.nick,
+      daysLeftStr: days + ' days left in August',
+      stsStr: PESO(s.sts === null ? this.safeToSpend() : s.sts),
+      stsBar: R('div', { style: { height: '100%', width: (pct * 100).toFixed(1) + '%', background: pct > .9 ? '#f0483e' : pct > .7 ? '#ffca28' : '#0b8f6a', borderRadius: 100, transition: 'width .9s cubic-bezier(.2,.8,.2,1)' } }),
+      stsCopy: pct > .9 ? "You've used almost the whole limit. Coast until payday."
+        : pct > .6 ? 'Pacing is fine. Stay under ₱' + PESO0(this.safeToSpend()) + ' a day and you land clean.'
+        : 'Comfortable. You could even move some into Japan Fund.',
+
+      hasNotifs: s.notifs.some(n => !n.gone),
+      notifs: s.notifs.filter(n => !n.gone).map(n => {
+        const pal = n.k === 'bill' ? ['#1d6ff2', '#fff', 'rgba(255,255,255,.72)'] : n.k === 'low' ? ['#f4eedc', '#0b0b0c', 'rgba(11,11,12,.6)'] : ['#f9a8b4', '#0b0b0c', 'rgba(11,11,12,.62)'];
+        return {
+          title: n.title, body: n.body, bg: pal[0], fg: pal[1], fg2: pal[2],
+          h: n.gone ? '0px' : (n.cta ? '86px' : '72px'), op: n.gone ? 0 : 1,
+          x: n.x || 0, ease: n.drag ? 'none' : 'transform .34s cubic-bezier(.16,1,.3,1)',
+          art: R('div', { style: { position: 'absolute', right: -18, top: -22, width: 96, height: 96, borderRadius: '52% 48% 40% 60%/46% 58% 42% 54%', background: 'rgba(255,255,255,.28)' } }),
+          hasCta: !!n.cta, ctaLabel: n.cta, ctaBg: '#fff', ctaFg: '#1d6ff2',
+          cta: e => { e.stopPropagation(); this.setState({ from: 0, to: 4, amt: '12000', screen: 'transfer' }); },
+          swStart: e => this.swipe(n.id, 'start', e), swMove: e => this.swipe(n.id, 'move', e), swEnd: e => this.swipe(n.id, 'end', e),
+          del: () => this.killNotif(n.id),
+        };
+      }),
+      recent: s.tx.slice(0, 6).map((t, i) => txRow(t, i)),
+
+      tabBar: this.tabBarNode(),
+
+      // detail
+      detailCard: !on('detail') ? null : R('div', { style: { width: 320, height: 196, borderRadius: 22, position: 'relative', overflow: 'hidden', boxShadow: '0 18px 34px rgba(0,0,0,.45)', transform: s.entering ? 'scale(.88)' : 'none', transition: 'transform .5s cubic-bezier(.2,1,.3,1)' } },
+        this.artOf(ac, 320, 196, 22),
+        R('div', { style: { position: 'absolute', inset: 0, padding: '17px 19px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' } },
+          R('div', { style: { font: '600 10.5px/1 Outfit,sans-serif', letterSpacing: '.12em', textTransform: 'uppercase', color: this.darkText(ac.art) ? 'rgba(11,11,12,.5)' : 'rgba(255,255,255,.55)' } }, ac.kind),
+          R('div', null,
+            R('div', { style: { display: 'flex', alignItems: 'baseline', gap: 4, color: this.darkText(ac.art) ? '#0b0b0c' : '#fff' } },
+              R('div', { style: { font: '600 24px/1 Outfit,sans-serif' } }, '₱'),
+              R('div', { style: { font: '700 38px/1 Outfit,sans-serif', letterSpacing: '-.038em', fontVariantNumeric: 'tabular-nums' } }, PESO(ac.bal))),
+            R('div', { style: { marginTop: 10, font: '600 12px/1 Outfit,sans-serif', letterSpacing: '.06em', color: this.darkText(ac.art) ? 'rgba(11,11,12,.6)' : 'rgba(255,255,255,.6)' } }, ac.last4 ? '•••• ' + ac.last4 : ac.kind)))),
+      spendRing: !on('detail') ? null : R('div', { style: { position: 'relative', width: 76, height: 76, flex: 'none' } },
+        this.ring(pct, 76, !!ac.goal),
+        R('div', { style: { position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', font: '700 15px/1 Outfit,sans-serif', color: '#0b0b0c' } }, Math.round(pct * 100) + '%')),
+      limitLabel: ac.goal ? 'Goal progress' : 'Spent this month',
+      spentStr: PESO0(ac.goal ? ac.bal : spent), limitStr: PESO0(limit),
+      limitCopy: ac.goal ? 'Keep this pace and you fly in April.' : pct > .9 ? 'Limit basically reached. Breathe.' : 'On track for the month.',
+      groups,
+
+      // insights
+      insightHead: 'Food is quietly winning',
+      insightBody: '₱1,032 on food this week — up ₱310 from last. Everything else you actually held steady.',
+      insightArt: R('div', { style: { position: 'absolute', right: -30, top: -34, width: 132, height: 132, borderRadius: '54% 46% 38% 62%/48% 56% 44% 52%', background: 'rgba(11,11,12,.1)' } }),
+      statCards: [
+        { label: 'Logged this week', value: '' + s.tx.length, sub: 'transactions', bg: '#0b0b0c', fg: '#fff', dim: 'rgba(255,255,255,.45)' },
+        { label: 'Biggest single hit', value: '₱3,120', sub: 'Meralco · Bills', bg: '#f5f4f0', fg: '#0b0b0c', dim: '#8a8a8f' },
+      ],
+      catRows: catTotals.map((c, i) => ({
+        name: c.name, color: c.color, amt: '₱' + PESO0(c.amt),
+        bar: R('div', { style: { height: '100%', width: s.barsOn ? (c.amt / catMax * 100).toFixed(1) + '%' : '0%', background: c.color, borderRadius: 100, transition: 'width .75s cubic-bezier(.2,.8,.2,1)', transitionDelay: (i * 0.06) + 's' } }),
+      })),
+      bills: [
+        { d: '22', m: 'Aug', name: 'Rent', when: 'Friday · from BPI Debit', amt: '₱12,000', bg: '#0b0b0c', fg: '#fff' },
+        { d: '25', m: 'Aug', name: 'Globe postpaid', when: 'Monday · from GCash', amt: '₱1,499', bg: '#1d6ff2', fg: '#fff' },
+        { d: '28', m: 'Aug', name: 'Netflix', when: 'Thursday · from BPI Debit', amt: '₱549', bg: '#f0483e', fg: '#fff' },
+      ],
+
+      // search
+      query: s.query, setQuery: e => this.setState({ query: e.target.value }),
+      filters: ['All', 'Money out', 'Money in', 'Food', 'Transport', 'Bills', 'Shopping'].map(f => ({
+        label: f, bg: s.filter === f ? '#0b0b0c' : '#f2f1ec', fg: s.filter === f ? '#fff' : '#0b0b0c',
+        bgD: s.filter === f ? '#ffca28' : 'rgba(255,255,255,.1)', fgD: s.filter === f ? '#0b0b0c' : 'rgba(255,255,255,.82)',
+        go: () => this.setState({ filter: f }),
+      })),
+      results: res.map((t, i) => txRow(t, i)),
+      resultCount: res.length + (res.length === 1 ? ' match' : ' matches'),
+      resultTotal: '₱' + PESO0(res.reduce((a, t) => a + Math.abs(t.amount), 0)),
+      noResults: res.length === 0,
+
+      // editor
+      editorTitle: s.edNew ? 'New card' : 'Redesign card',
+      saveLabel: s.edNew ? 'Add to my deck' : 'Save changes',
+      canDelete: !s.edNew && cards.length > 1,
+      editorPreview: s.ed && on('editor') ? R('div', {
+        onPointerDown: e => this.photoDrag('start', e), onPointerMove: e => this.photoDrag('move', e),
+        onPointerUp: e => this.photoDrag('end', e), onPointerLeave: e => this.photoDrag('end', e),
+        style: { width: 320, height: 196, borderRadius: 22, position: 'relative', overflow: 'hidden', boxShadow: '0 18px 36px rgba(0,0,0,.5)', transition: 'transform .3s', cursor: s.ed.art.style === 'photo' && s.ed.art.photo && s.ed.art.photo.src ? 'grab' : 'default', touchAction: 'none' },
+      },
+        this.artOf({ art: s.ed.art, nick: s.ed.nick }, 320, 196, 22),
+        R('div', { style: { position: 'absolute', inset: 0, padding: '17px 19px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' } },
+          R('div', { style: { font: '600 10.5px/1 Outfit,sans-serif', letterSpacing: '.12em', textTransform: 'uppercase', color: this.darkText(s.ed.art) ? 'rgba(11,11,12,.5)' : 'rgba(255,255,255,.55)' } }, s.ed.kind),
+          R('div', null,
+            R('div', { style: { display: 'flex', alignItems: 'baseline', gap: 4, color: this.darkText(s.ed.art) ? '#0b0b0c' : '#fff' } },
+              R('div', { style: { font: '600 24px/1 Outfit,sans-serif' } }, '₱'),
+              R('div', { style: { font: '700 38px/1 Outfit,sans-serif', letterSpacing: '-.038em', fontVariantNumeric: 'tabular-nums' } }, PESO(parseFloat(s.ed.bal) || 0))),
+            R('div', { style: { marginTop: 9, font: '700 13.5px/1 Outfit,sans-serif', color: this.darkText(s.ed.art) ? '#0b0b0c' : '#fff' } }, s.ed.nick || 'Untitled card')))) : null,
+      artStyles: !on('editor') ? NONE : ART_STYLES.map(st => ({
+        name: ART_NAMES[st],
+        go: () => {
+          this.setEdArt({ style: st });
+          if (st === 'photo' && !(s.ed && s.ed.art.photo && s.ed.art.photo.src)) setTimeout(() => { if (this.fileRef.current) this.fileRef.current.click(); }, 120);
+        },
+        bd: s.ed && s.ed.art.style === st ? '#0b0b0c' : 'transparent',
+        base: s.ed ? s.ed.art.c1 : '#ffca28',
+        thumb: s.ed ? this.art(Object.assign({}, s.ed.art, { style: st }), 100, 52, 0) : null,
+      })),
+      catTpls: !on('editor') ? NONE : CATS_TPL.map(([name, sub, preset]) => ({
+        name, sub,
+        go: () => this.setEdArt(Object.assign({ tier: null, photo: null }, preset)),
+        bd: s.ed && s.ed.art.style === preset.style ? '#0b0b0c' : 'transparent',
+        thumb: this.art(Object.assign({}, preset, { glyph: (s.ed && s.ed.nick ? s.ed.nick.trim().charAt(0).toUpperCase() : 'S') }), 100, 60, 0),
+      })),
+      weaves: !on('editor') ? NONE : WEAVES.map(([k, name, sub]) => ({
+        name, sub, go: () => this.setEdArt({ style: k }),
+        bd: s.ed && s.ed.art.style === k ? '#0b0b0c' : 'transparent',
+        thumb: s.ed ? this.art(Object.assign({}, s.ed.art, { style: k, chip: false }), 100, 52, 0) : null,
+      })),
+      chipOn: !!(s.ed && s.ed.art.chip),
+      toggleChip: () => this.setEdArt({ chip: !(s.ed && s.ed.art.chip) }),
+      chipBg: s.ed && s.ed.art.chip ? '#0b0b0c' : '#f5f4f0',
+      chipFg: s.ed && s.ed.art.chip ? '#fff' : '#0b0b0c',
+      chipLabel: s.ed && s.ed.art.chip ? 'Chip + tap mark on' : 'Show chip + tap mark',
+      palettes: !on('editor') ? NONE : PAL.map(p => ({
+        c1: p[0], c2: p[1], go: () => this.setEdArt({ c1: p[0], c2: p[1] }),
+        bd: s.ed && s.ed.art.c1 === p[0] && s.ed.art.c2 === p[1] ? '#0b0b0c' : 'transparent',
+      })),
+      textures: TEX.map(t => ({
+        name: t === 'none' ? 'Flat' : t[0].toUpperCase() + t.slice(1), go: () => this.setEdArt({ tex: t }),
+        bg: s.ed && s.ed.art.tex === t ? '#0b0b0c' : '#f5f4f0', fg: s.ed && s.ed.art.tex === t ? '#fff' : '#0b0b0c',
+      })),
+      layouts: ['standard', 'compact'].map(l => ({
+        name: l === 'standard' ? 'Full detail' : 'Just the number', go: () => this.setEdArt({ layout: l }),
+        bg: s.ed && s.ed.art.layout === l ? '#0b0b0c' : '#f5f4f0', fg: s.ed && s.ed.art.layout === l ? '#fff' : '#0b0b0c',
+      })),
+      // photo card
+      isPhoto: !!(s.ed && s.ed.art.style === 'photo'),
+      hasPhoto: !!(s.ed && s.ed.art.style === 'photo' && s.ed.art.photo && s.ed.art.photo.src),
+      fileRef: this.fileRef, onFile: this.onFile,
+      pickPhoto: () => { if (this.fileRef.current) this.fileRef.current.click(); },
+      photoBtnLabel: (s.ed && s.ed.art.photo && s.ed.art.photo.src) ? 'Replace photo' : 'Upload a photo',
+      dropPhoto: () => this.setEdArt({ photo: null }),
+      photoZoom: s.ed && s.ed.art.photo ? s.ed.art.photo.zoom || 1 : 1,
+      setPhotoZoom: e => this.setPhoto({ zoom: parseFloat(e.target.value) }),
+      recentre: () => this.setPhoto({ px: 0, py: 0, zoom: 1 }),
+      scrimOpts: Object.keys(SCRIM).map(k => ({
+        name: SCRIM_NAMES[k], go: () => this.setPhoto({ scrim: k }),
+        bg: s.ed && s.ed.art.photo && (s.ed.art.photo.scrim || 'soft') === k ? '#0b0b0c' : '#f5f4f0',
+        fg: s.ed && s.ed.art.photo && (s.ed.art.photo.scrim || 'soft') === k ? '#fff' : '#0b0b0c',
+      })),
+      textOpts: [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']].map(([k, name]) => ({
+        name, go: () => this.setPhoto({ textMode: k }),
+        bg: s.ed && s.ed.art.photo && (s.ed.art.photo.textMode || 'auto') === k ? '#0b0b0c' : '#f5f4f0',
+        fg: s.ed && s.ed.art.photo && (s.ed.art.photo.textMode || 'auto') === k ? '#fff' : '#0b0b0c',
+      })),
+      blurOn: !!(s.ed && s.ed.art.photo && s.ed.art.photo.blur),
+      toggleBlur: () => this.setPhoto({ blur: !(s.ed.art.photo && s.ed.art.photo.blur) }),
+      blurBg: s.ed && s.ed.art.photo && s.ed.art.photo.blur ? '#0b0b0c' : '#f5f4f0',
+      blurFg: s.ed && s.ed.art.photo && s.ed.art.photo.blur ? '#fff' : '#0b0b0c',
+      autoFix: () => { const p = s.ed.art.photo; this.setPhoto({ scrim: this.autoTune(p) }); this.toast('Tuned to the lightest scrim that still passes.'); },
+      catTier: s.ed && s.ed.art.tier ? s.ed.art.tier : '',
+      tierOpts: ['GOLD', 'PLATINUM', 'SIGNATURE'].map(t => ({
+        name: t.charAt(0) + t.slice(1).toLowerCase(),
+        go: () => this.setEdArt({ tier: s.ed && s.ed.art.tier === t ? null : t }),
+        bg: s.ed && s.ed.art.tier === t ? '#0b0b0c' : '#f5f4f0',
+        fg: s.ed && s.ed.art.tier === t ? '#fff' : '#0b0b0c',
+      })),
+      isMetal: !!(s.ed && s.ed.art.style === 'metal'),
+      contrastRatio: (() => { const p = s.ed && s.ed.art.photo; return p && p.src ? this.photoMetrics(p).ratio.toFixed(1) + ':1' : '—'; })(),
+      contrastPass: (() => { const p = s.ed && s.ed.art.photo; return !!(p && p.src && this.photoMetrics(p).ratio >= 4.5); })(),
+      contrastBg: (() => { const p = s.ed && s.ed.art.photo; if (!(p && p.src)) return '#f5f4f0'; return this.photoMetrics(p).ratio >= 4.5 ? '#e7f6ee' : '#fdeceb'; })(),
+      contrastFg: (() => { const p = s.ed && s.ed.art.photo; if (!(p && p.src)) return '#8a8a8f'; return this.photoMetrics(p).ratio >= 4.5 ? '#0b8f6a' : '#c62f26'; })(),
+      contrastCopy: (() => {
+        const p = s.ed && s.ed.art.photo;
+        if (!(p && p.src)) return 'Upload a photo and I check the balance against it.';
+        const m = this.photoMetrics(p);
+        return m.ratio >= 4.5 ? 'Balance is readable over this photo. Ship it.' : 'The balance gets lost here. Add scrim, blur it, or pick a calmer photo.';
+      })(),
+
+      edName: s.ed ? s.ed.nick : '', setEdName: e => this.setEd({ nick: e.target.value }),
+      edBal: s.ed ? String(s.ed.bal) : '', setEdBal: e => this.setEd({ bal: parseFloat(e.target.value.replace(/[^0-9.]/g, '')) || 0 }),
+      edLimit: s.ed ? String(s.ed.limit || 0) : '', setEdLimit: e => this.setEd({ limit: parseFloat(e.target.value.replace(/[^0-9.]/g, '')) || 0 }),
+      randomize: this.randomize, saveCard: this.saveCard, deleteCard: this.deleteCard,
+
+      // transfer
+      fromNick: this.card(s.from).nick, toNick: this.card(s.to).nick,
+      fromBal: PESO(this.card(s.from).bal), toBal: PESO(this.card(s.to).bal),
+      fromBase: this.card(s.sheet ? s.sheetCard : s.from).art.c1, toBase: this.card(s.to).art.c1,
+      fromArt: this.art(this.card(s.sheet ? s.sheetCard : s.from).art, 52, 34, 8),
+      toArt: this.art(this.card(s.to).art, 52, 34, 8),
+      swapRot: s.swapRot,
+      swapCards: () => this.setState({ from: s.to, to: s.from, swapRot: s.swapRot + 180 }),
+      toPicker: cards.map((c, i) => ({
+        nick: c.nick, bg: i === s.to ? '#ffca28' : 'rgba(255,255,255,.09)', fg: i === s.to ? '#0b0b0c' : '#fff',
+        go: () => this.setState(i === s.from ? { to: s.from, from: s.to } : { to: i }),
+      })),
+      quickAmts: [500, 1000, 2500, 5000].map(v => ({ label: '₱' + PESO0(v), go: () => this.setState({ amt: String(v) }) })),
+      transferBtnBg: parseFloat(s.amt) > 0 ? '#ffca28' : 'rgba(255,255,255,.16)',
+      doTransfer: this.doTransfer,
+      keypad: on('transfer') ? this.keypadNode(false) : null,
+      keypadLight: s.sheet ? this.keypadNode(true) : null,
+
+      // settings
+      cardCountStr: cards.length + ' cards',
+      settingsName: s.userName.trim().split(' ')[0] || 'Charles',
+      settingsInitials: (s.userName.trim() || 'Charles').split(' ').map(w => w.charAt(0).toUpperCase()).slice(0, 2).join(''),
+      settingGroups: [
+        {
+          title: 'Money', rows: [
+            { label: 'Monthly limits', sub: 'Per card, resets on the 1st', bg: '#ffca2833', icon: R('svg', { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: '#a4801a', strokeWidth: 2.2, strokeLinecap: 'round' }, R('path', { d: 'M4 18V8M10 18V5M16 18v-6M4 21h16' })), go: () => this.go('detail'), bd: '#ecebE5' },
+            { label: 'Recurring bills', sub: '3 set up · next is rent on Friday', bg: '#1d6ff233', icon: R('svg', { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: '#1d6ff2', strokeWidth: 2.2, strokeLinecap: 'round' }, R('rect', { x: 3.5, y: 4.5, width: 17, height: 16, rx: 3 }), R('path', { d: 'M8 3v4M16 3v4M3.5 10h17' })), go: () => this.go('insights'), bd: '#ecebe5' },
+            { label: 'Payday', sub: '15th and 30th', bg: '#0b8f6a33', icon: R('svg', { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: '#0b8f6a', strokeWidth: 2.2, strokeLinecap: 'round' }, R('path', { d: 'M12 3v18M8 7h6a3 3 0 010 6H9a3 3 0 000 6h7' })), go: () => this.toast('Payday reminders on.'), bd: 'transparent' },
+          ],
+        },
+        {
+          title: 'Nudges', rows: [
+            { label: 'Low balance nudge', sub: 'When a card drops under ₱1,500', bg: '#f0483e33', icon: R('svg', { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: '#f0483e', strokeWidth: 2.2, strokeLinecap: 'round' }, R('path', { d: 'M12 4l9 16H3z M12 10v4M12 17h.01' })), go: () => this.toast('Nudges stay on.'), right: this.toggleNode(true), bd: '#ecebe5' },
+            { label: 'Daily log reminder', sub: '9pm, only if you forgot', bg: '#7c3aed33', icon: R('svg', { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: '#7c3aed', strokeWidth: 2.2, strokeLinecap: 'round' }, R('path', { d: 'M18 8a6 6 0 10-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4' })), go: () => this.toast('Reminder set for 9pm.'), right: this.toggleNode(true), bd: 'transparent' },
+          ],
+        },
+        {
+          title: 'Privacy', rows: [
+            { label: 'Hide balances', sub: 'Blur every number on unlock', bg: '#0b0b0c14', icon: R('svg', { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: '#0b0b0c', strokeWidth: 2.2, strokeLinecap: 'round' }, R('path', { d: 'M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z' }), R('circle', { cx: 12, cy: 12, r: 2.8 })), go: () => this.setState({ privacy: !s.privacy }), right: this.toggleNode(s.privacy), bd: '#ecebe5' },
+            { label: 'Export CSV', sub: 'Everything you ever typed in', bg: '#0b0b0c14', icon: R('svg', { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: '#0b0b0c', strokeWidth: 2.2, strokeLinecap: 'round' }, R('path', { d: 'M12 3v12M7 10l5 5 5-5M4 20h16' })), go: () => this.toast('CSV exported to Files.'), bd: 'transparent' },
+          ],
+        },
+      ],
+
+      // sheet
+      sheetOpen: !!s.sheet, closeSheet: () => this.setState({ sheet: null }),
+      sheetTitle: s.sheet === 'deposit' ? 'Top up a card' : s.sheet === 'move' ? 'Move money' : 'Log a spend',
+      sheetSub: s.sheet === 'deposit' ? 'Cash in, salary, refund — anything coming in'
+        : s.sheet === 'move' ? 'Same money, different pocket. Your total will not budge.'
+        : 'Cash, card, tap — you type it, we remember it',
+      sheetSign: s.sheet === 'deposit' ? '+' : s.sheet === 'move' ? '' : '−',
+      sheetAccent: s.sheet === 'deposit' ? '#0b8f6a' : s.sheet === 'move' ? '#1d6ff2' : '#f0483e',
+      sheetCardLabel: s.sheet === 'deposit' ? 'Into' : s.sheet === 'move' ? 'From' : 'Out of',
+      isMove: s.sheet === 'move',
+      notMove: s.sheet !== 'move',
+      sheetModes: [['withdraw', 'Spend'], ['deposit', 'Top up'], ['move', 'Move']].map(([k, name]) => ({
+        name, go: () => this.setState({ sheet: k }),
+        bg: s.sheet === k ? '#0b0b0c' : 'transparent', fg: s.sheet === k ? '#fff' : '#6d6d72',
+      })),
+      moveToNick: this.card(s.moveTo).nick,
+      moveToArt: this.artOf(this.card(s.moveTo), 44, 29, 7),
+      moveToBase: this.card(s.moveTo).art.c1,
+      movePicker: cards.map((c, i) => ({
+        nick: c.nick, go: () => this.setState(i === s.sheetCard ? { moveTo: s.sheetCard, sheetCard: s.moveTo } : { moveTo: i }),
+        bg: i === s.moveTo ? '#0b0b0c' : '#f5f4f0', fg: i === s.moveTo ? '#fff' : '#0b0b0c',
+      })),
+      amtDisplay: s.amt || '0',
+      catChips: CATS.map(c => ({
+        name: c.name, dot: c.color, go: () => this.setState({ cat: c.name }),
+        bg: s.cat === c.name ? '#0b0b0c' : '#f5f4f0', fg: s.cat === c.name ? '#fff' : '#0b0b0c',
+      })),
+      note: s.note, setNote: e => this.setState({ note: e.target.value }),
+      hasGuess: !!g, guessCat: g || '', acceptGuess: () => this.setState({ cat: g }),
+      receipt: s.receipt, toggleReceipt: () => { this.setState({ receipt: !s.receipt }); if (!s.receipt) this.toast('Camera would open here.'); },
+      receiptBg: s.receipt ? '#0b0b0c' : '#f5f4f0', receiptFg: s.receipt ? '#fff' : '#6d6d72',
+      receiptLabel: s.receipt ? 'Receipt attached' : 'Attach receipt',
+      split: s.split, toggleSplit: () => this.setState({ split: !s.split }),
+      splitBg: s.split ? '#0b0b0c' : '#f5f4f0', splitFg: s.split ? '#fff' : '#6d6d72',
+      splitLabel: s.split ? 'Split 50/50' : 'Split it',
+      splitHalf: PESO((parseFloat(s.amt) || 0) / 2),
+      cycleCard: () => this.setState({ sheetCard: (s.sheetCard + 1) % cards.length }),
+      saveTx: this.saveTx,
+      saveTxBg: parseFloat(s.amt) > 0 ? '#0b0b0c' : '#eceae4',
+      saveTxFg: parseFloat(s.amt) > 0 ? '#fff' : '#a9a9ae',
+      saveTxLabel: s.sheet === 'deposit' ? 'Add it' : s.sheet === 'move' ? 'Move it' : 'Log it',
+
+      // success
+      successOpen: !!s.success,
+      successHead: s.success ? s.success.head : '', successBody: s.success ? s.success.body : '',
+      closeSuccess: () => this.setState({ success: null, amt: '', screen: 'home' }, () => this.animateSts()),
+      successArt: !s.success ? null : R('div', { style: { position: 'relative', width: 150, height: 150 } },
+        R('div', { style: { position: 'absolute', left: 18, top: 26, width: 92, height: 106, borderRadius: '46% 54% 44% 56%/40% 40% 60% 60%', background: '#f4eedc' } }),
+        R('div', { style: { position: 'absolute', left: 34, top: 52, width: 13, height: 13, borderRadius: 100, background: '#0b0b0c' } }),
+        R('div', { style: { position: 'absolute', left: 62, top: 52, width: 13, height: 13, borderRadius: 100, background: '#0b0b0c' } }),
+        R('div', { style: { position: 'absolute', left: 40, top: 76, width: 30, height: 15, borderRadius: '0 0 40px 40px', background: '#0b0b0c' } }),
+        R('div', { style: { position: 'absolute', right: 6, top: 8, width: 62, height: 62, borderRadius: 100, background: '#ffca28', animation: 'bwFloat 2.8s ease-in-out infinite' } }),
+        R('div', { style: { position: 'absolute', right: 22, bottom: 6, width: 40, height: 40, borderRadius: 12, background: '#f9a8b4', transform: 'rotate(18deg)' } })),
+      confetti: !s.success ? null : R('div', { style: { position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' } },
+        Array.from({ length: 22 }).map((_, i) => {
+          const a = (i / 22) * Math.PI * 2, d = 150 + (i % 5) * 46;
+          return R('div', {
+            key: i, style: {
+              position: 'absolute', left: '50%', top: '42%', width: 8, height: 8, borderRadius: i % 3 ? 100 : 2,
+              background: [ '#ffca28', '#f4eedc', '#f9a8b4', '#ffffff' ][i % 4],
+              '--bwX': Math.cos(a) * d + 'px', '--bwY': Math.sin(a) * d + 'px', '--bwR': (i * 47) + 'deg',
+              animation: 'bwConfetti 1.5s cubic-bezier(.15,.75,.3,1) both', animationDelay: (i % 6) * 0.035 + 's',
+            },
+          });
+        })),
+
+      // toast + jumps
+      toast: s.toast ? R('div', { style: { position: 'absolute', left: 20, right: 20, bottom: 104, zIndex: 95, borderRadius: 100, background: 'rgba(11,11,12,.94)', color: '#fff', padding: '13px 18px', font: '500 12.5px/1.35 Outfit,sans-serif', textAlign: 'center', animation: 'bwToast 2.4s both', boxShadow: '0 10px 30px rgba(0,0,0,.35)' } }, s.toast) : null,
+      jumps: [['onboard', 'Onboarding'], ['home', 'Home'], ['detail', 'Card detail'], ['insights', 'Insights'], ['search', 'Search'], ['editor', 'Card editor'], ['transfer', 'Transfer'], ['settings', 'Settings']].map(([k, label]) => ({
+        label, bg: s.screen === k ? '#0b0b0c' : 'rgba(0,0,0,.06)', fg: s.screen === k ? '#fff' : 'rgba(0,0,0,.62)',
+        go: () => { if (k === 'editor') this.openEditor(s.active); else if (k === 'onboard') this.setState({ screen: 'onboard', obStep: 0 }); else this.go(k); },
+      })),
+    };
+  }
+
+  toggleNode(on) {
+    return R('div', { style: { width: 42, height: 25, borderRadius: 100, background: on ? '#0b8f6a' : '#dcdbd5', padding: 3, display: 'flex', flex: 'none' } },
+      R('div', { style: { width: 19, height: 19, borderRadius: 100, background: '#fff', transform: on ? 'translateX(17px)' : 'none', transition: 'transform .26s cubic-bezier(.2,.8,.2,1)' } }));
+  }
+}
+
+</script>
+</body>
+</html>

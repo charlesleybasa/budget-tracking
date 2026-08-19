@@ -1,0 +1,316 @@
+.screen {
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.4s var(--ease-out),
+    opacity 0.3s;
+}
+
+.header {
+  flex: none;
+  background: var(--ink);
+  padding: var(--screen-top) 20px 22px;
+  border-radius: 0 0 26px 26px;
+  color: #fff;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navTitle {
+  font: 600 14px/1 inherit;
+}
+
+.roundBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 100px;
+  background: var(--dark-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+  transition: background 0.2s;
+}
+
+.roundBtn:hover {
+  background: var(--dark-hover);
+}
+
+.navSpacer {
+  width: 36px;
+}
+
+.insight {
+  margin-top: 18px;
+  border-radius: 20px;
+  background: var(--accent);
+  padding: 17px 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.insightArt {
+  position: absolute;
+  right: -30px;
+  top: -34px;
+  width: 132px;
+  height: 132px;
+  border-radius: 54% 46% 38% 62%/48% 56% 44% 52%;
+  background: rgba(11, 11, 12, 0.1);
+}
+
+.insightKicker {
+  font: 600 10.5px/1 inherit;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(11, 11, 12, 0.5);
+}
+
+.insightHead {
+  margin-top: 8px;
+  font: 800 22px/1.13 inherit;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  max-width: 250px;
+  text-wrap: pretty;
+}
+
+.insightBody {
+  margin-top: 8px;
+  font: 400 12.5px/1.45 inherit;
+  color: rgba(11, 11, 12, 0.66);
+  max-width: 255px;
+  text-wrap: pretty;
+}
+
+.scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 20px 20px calc(118px + var(--screen-bottom));
+}
+
+.stats {
+  display: flex;
+  gap: 10px;
+}
+
+.stat {
+  flex: 1;
+  border-radius: 18px;
+  padding: 14px 15px;
+  min-width: 0;
+}
+
+.statLabel {
+  font: 500 10.5px/1.2 inherit;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.statValue {
+  margin-top: 8px;
+  font: 700 21px/1 inherit;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.statSub {
+  margin-top: 5px;
+  font: 400 11px/1.3 inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sectionTitle {
+  margin-top: 22px;
+  font: 700 15px/1 inherit;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+
+.catList {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.catHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.catName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 13px/1 inherit;
+  color: var(--ink);
+}
+
+.catDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 100px;
+  flex: none;
+}
+
+.catAmount {
+  font: 600 12.5px/1 inherit;
+  color: var(--muted-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.catTrack {
+  margin-top: 7px;
+  height: 9px;
+  border-radius: 100px;
+  background: var(--line-1);
+  overflow: hidden;
+}
+
+.catFill {
+  height: 100%;
+  border-radius: 100px;
+  animation: bwBarGrow 0.75s var(--ease-out) both;
+}
+
+.bills {
+  margin-top: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 16px;
+  background: var(--sand-1);
+  padding: 12px 14px;
+}
+
+.billDate {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.billDay {
+  font: 700 13px/1 inherit;
+}
+
+.billMonth {
+  font: 500 8px/1 inherit;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.billName {
+  font: 600 13.5px/1 inherit;
+  color: var(--ink);
+}
+
+.billWhen {
+  margin-top: 4px;
+  font: 400 11.5px/1 inherit;
+  color: var(--muted-2);
+}
+
+.billAmount {
+  font: 700 14px/1 inherit;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.empty {
+  margin-top: 14px;
+  padding: 30px 12px;
+  text-align: center;
+  border-radius: 18px;
+  background: var(--sand-1);
+  font: 400 12.5px/1.5 inherit;
+  color: var(--muted-2);
+}
+
+/* ── wide screens ── */
+@media (min-width: 760px) {
+  .header {
+    border-radius: 0 0 26px 26px;
+    padding: var(--screen-top) var(--pane-gap) 22px;
+  }
+
+  .headerInner,
+  .scrollInner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .scroll {
+    padding: 22px var(--pane-gap) 28px;
+  }
+
+  .insightHead {
+    max-width: 34ch;
+    font-size: 26px;
+  }
+
+  /* The rail already owns "back". */
+  .backBtn {
+    display: none;
+  }
+
+  .nav {
+    justify-content: flex-start;
+  }
+
+  .insightBody {
+    max-width: 60ch;
+  }
+}
+
+/* Stats and the spend breakdown share the width once there is room for both. */
+@media (min-width: 1180px) {
+  .scrollInner {
+    max-width: 900px;
+  }
+}
+
+@media (pointer: coarse) {
+  .roundBtn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/*
+ * Declared here, not imported: CSS Modules scopes animation names, so a reference to a
+ * keyframe defined in globals.css is renamed to one that does not exist and the animation
+ * silently never runs. Keeping the keyframes beside their only user keeps them honest.
+ */
+@keyframes bwBarGrow {
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--bar-w);
+  }
+}

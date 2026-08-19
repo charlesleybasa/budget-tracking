@@ -1,0 +1,168 @@
+.screen {
+  position: absolute;
+  inset: 0;
+  z-index: 90;
+  background: var(--blue);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 34px;
+  overflow: hidden;
+  color: #fff;
+}
+
+.confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.piece {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 8px;
+  height: 8px;
+  animation: bwConfetti 1.5s cubic-bezier(0.15, 0.75, 0.3, 1) both;
+}
+
+.art {
+  animation: bwPop 0.55s var(--ease-spring) both;
+  position: relative;
+  width: 150px;
+  height: 150px;
+  flex: none;
+}
+
+.face {
+  position: absolute;
+  left: 18px;
+  top: 26px;
+  width: 92px;
+  height: 106px;
+  border-radius: 46% 54% 44% 56%/40% 40% 60% 60%;
+  background: var(--cream);
+}
+
+.eye {
+  position: absolute;
+  top: 52px;
+  width: 13px;
+  height: 13px;
+  border-radius: 100px;
+  background: var(--ink);
+}
+
+.mouth {
+  position: absolute;
+  left: 40px;
+  top: 76px;
+  width: 30px;
+  height: 15px;
+  border-radius: 0 0 40px 40px;
+  background: var(--ink);
+}
+
+.coin {
+  position: absolute;
+  right: 6px;
+  top: 8px;
+  width: 62px;
+  height: 62px;
+  border-radius: 100px;
+  background: var(--accent);
+  animation: bwFloat 2.8s ease-in-out infinite;
+}
+
+.tile {
+  position: absolute;
+  right: 22px;
+  bottom: 6px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--pink);
+  transform: rotate(18deg);
+}
+
+.copy {
+  margin-top: 26px;
+  text-align: center;
+  position: relative;
+}
+
+.head {
+  font: 800 27px/1.14 inherit;
+  letter-spacing: -0.03em;
+  text-wrap: pretty;
+}
+
+.body {
+  margin-top: 11px;
+  font: 400 14px/1.5 inherit;
+  color: rgba(255, 255, 255, 0.78);
+  text-wrap: pretty;
+}
+
+.footer {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: 44px;
+}
+
+.button {
+  height: 54px;
+  width: 100%;
+  border-radius: 100px;
+  background: var(--accent);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 15.5px/1 inherit;
+  cursor: pointer;
+  transition: transform 0.16s;
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+/*
+ * Declared here, not imported: CSS Modules scopes animation names, so a reference to a
+ * keyframe defined in globals.css is renamed to one that does not exist and the animation
+ * silently never runs. Keeping the keyframes beside their only user keeps them honest.
+ */
+@keyframes bwConfetti {
+  0% {
+    transform: translate(0, 0) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--bwX), var(--bwY)) rotate(var(--bwR));
+    opacity: 0;
+  }
+}
+@keyframes bwPop {
+  0% {
+    transform: scale(0.72);
+  }
+  55% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes bwFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}

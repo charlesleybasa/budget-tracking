@@ -1,0 +1,49 @@
+.pad {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.light {
+  padding: 8px 20px 0;
+}
+
+.dark {
+  padding: 2px 20px 6px;
+}
+
+.key {
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 20px/1 inherit;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform 0.12s,
+    background 0.18s;
+}
+
+.light .key {
+  height: 46px;
+  background: var(--sand-1);
+  color: var(--ink);
+}
+
+.light .key:active {
+  transform: scale(0.93);
+  background: #e8e7e1;
+}
+
+.dark .key {
+  height: 50px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+.dark .key:active {
+  transform: scale(0.93);
+  background: rgba(255, 255, 255, 0.16);
+}

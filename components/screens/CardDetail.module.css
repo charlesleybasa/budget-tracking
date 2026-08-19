@@ -1,0 +1,330 @@
+.screen {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.36s var(--ease-out),
+    opacity 0.3s;
+}
+
+.nav {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px 14px;
+}
+
+.navTitle {
+  font: 600 14px/1 inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 55%;
+}
+
+.roundBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 100px;
+  background: var(--dark-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+  transition: background 0.2s;
+}
+
+.roundBtn:hover {
+  background: var(--dark-hover);
+}
+
+.cardWrap {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 16px;
+}
+
+.card {
+  container-type: inline-size;
+  border-radius: 22px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.45);
+  transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.cardInner {
+  position: absolute;
+  inset: 0;
+  padding: 17px 19px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cardKind {
+  font: 600 10.5px/1 inherit;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.balanceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.balancePeso {
+  font: 600 24px/1 inherit;
+}
+
+.balanceValue {
+  font: 700 clamp(24px, 11cqw, 38px) / 1 inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: -0.038em;
+  font-variant-numeric: tabular-nums;
+}
+
+.cardMask {
+  margin-top: 10px;
+  font: 600 12px/1 inherit;
+  letter-spacing: 0.06em;
+}
+
+.sheet {
+  flex: 1;
+  min-height: 0;
+  background: var(--paper);
+  border-radius: 26px 26px 0 0;
+  overflow: hidden;
+}
+
+.sheetScroll {
+  height: 100%;
+  overflow-y: auto;
+  padding: 18px 20px 40px;
+}
+
+.limitCard {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  border-radius: 20px;
+  background: var(--sand-1);
+  padding: 15px 16px;
+}
+
+.ringWrap {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  flex: none;
+}
+
+.ringLabel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 15px/1 inherit;
+  color: var(--ink);
+}
+
+.limitLabel {
+  font: 500 11px/1 inherit;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.limitValue {
+  margin-top: 6px;
+  font: 700 20px/1 inherit;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.limitOf {
+  font: 500 13px/1 inherit;
+  color: var(--muted-2);
+}
+
+.limitCopy {
+  margin-top: 6px;
+  font: 400 11.5px/1.35 inherit;
+  color: var(--muted-1);
+  text-wrap: pretty;
+}
+
+.actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 9px;
+}
+
+.actionBtn {
+  flex: 1;
+  height: 44px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font: 600 13px/1 inherit;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.16s;
+}
+
+.actionBtn:active {
+  transform: scale(0.96);
+}
+
+.actionInk {
+  background: var(--ink);
+  color: #fff;
+}
+
+.actionSand {
+  background: var(--sand-1);
+  color: var(--ink);
+}
+
+.actionSand:hover {
+  background: var(--sand-3);
+}
+
+.historyTitle {
+  margin-top: 24px;
+  font: 700 15px/1 inherit;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+
+.group {
+  margin-top: 16px;
+}
+
+.groupHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.groupDay {
+  font: 600 11.5px/1 inherit;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-3);
+}
+
+.groupTotal {
+  font: 500 11.5px/1 inherit;
+  color: var(--muted-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.groupRows {
+  margin-top: 4px;
+}
+
+.empty {
+  margin-top: 26px;
+  padding: 34px 12px;
+  text-align: center;
+  border-radius: 18px;
+  background: var(--sand-1);
+}
+
+.emptyTitle {
+  font: 700 15px/1.3 inherit;
+  color: var(--ink);
+}
+
+.emptyBody {
+  margin-top: 7px;
+  font: 400 12.5px/1.5 inherit;
+  color: var(--muted-2);
+  text-wrap: pretty;
+}
+
+.topInset {
+  height: var(--screen-top);
+  flex: none;
+}
+
+/*
+ * Two panes from 900px: the card keeps a column of its own and the whole white sheet —
+ * limit, actions and history — becomes a full-height column beside it.
+ */
+@media (min-width: 760px) {
+  .screen {
+    display: grid;
+    grid-template-columns: minmax(264px, 380px) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    column-gap: var(--pane-gap);
+    padding: 0 var(--pane-gap) var(--pane-gap);
+    align-items: start;
+  }
+
+  .topInset,
+  .nav {
+    grid-column: 1 / -1;
+  }
+
+  .nav {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .cardWrap {
+    grid-column: 1;
+    grid-row: 3;
+    align-self: start;
+    justify-content: flex-start;
+    padding-bottom: 0;
+  }
+
+  .sheet {
+    grid-column: 2;
+    grid-row: 3;
+    height: 100%;
+    border-radius: 24px;
+  }
+
+  .sheetScroll {
+    padding: 22px 24px 28px;
+  }
+
+  /* The rail owns "back" on desktop. */
+  .backBtn {
+    display: none;
+  }
+
+  .navTitle {
+    font-size: 17px;
+    letter-spacing: -0.02em;
+  }
+
+  .nav {
+    justify-content: space-between;
+  }
+}
+
+/* A finger cannot aim like a mouse; the round controls meet the 44px floor on touch. */
+@media (pointer: coarse) {
+  .roundBtn {
+    width: 44px;
+    height: 44px;
+  }
+}
