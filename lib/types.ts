@@ -76,6 +76,10 @@ export interface Card {
   frozen: boolean;
   /** Present on savings cards — progress is measured toward this, not against `limit`. */
   goal?: number;
+  /** Shown on the back of the card, so money can be sent to it. */
+  accountNumber?: string;
+  /** A receiving QR the user photographed or saved, as a data URL. */
+  qr?: string;
 }
 
 export type CategoryName =
@@ -110,6 +114,8 @@ export interface Transaction {
    */
   at: number;
   note: string;
+  /** Photo of the receipt, downscaled to a data URL. */
+  receipt?: string;
 }
 
 export type NoticeKind = "low";
@@ -152,4 +158,6 @@ export interface CardDraft {
   art: CardArt;
   frozen: boolean;
   goal?: number;
+  accountNumber?: string;
+  qr?: string;
 }

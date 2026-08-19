@@ -33,7 +33,9 @@
 }
 
 .navTitle {
-  font: 600 14px/1 inherit;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
   color: #fff;
 }
 
@@ -76,13 +78,17 @@
 }
 
 .sectionTitle {
-  font: 700 15px/1 inherit;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
   color: var(--ink);
   letter-spacing: -0.015em;
 }
 
 .kicker {
-  font: 600 11px/1 inherit;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted-3);
@@ -101,14 +107,18 @@
 }
 
 .fieldLabel {
-  font: 500 10.5px/1 inherit;
+  font-weight: 500;
+  font-size: 10.5px;
+  line-height: 1;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.38);
 }
 
 .fieldLabelLight {
-  font: 500 10.5px/1 inherit;
+  font-weight: 500;
+  font-size: 10.5px;
+  line-height: 1;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted-3);
@@ -120,7 +130,9 @@
   border: 0;
   background: transparent;
   color: #fff;
-  font: 600 17px/1.2 inherit;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.2;
 }
 
 .inputLight {
@@ -129,7 +141,9 @@
   border: 0;
   background: transparent;
   color: var(--ink);
-  font: 600 16px/1.2 inherit;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.2;
 }
 
 /* Buttons */
@@ -141,7 +155,9 @@
   justify-content: center;
   gap: 8px;
   width: 100%;
-  font: 700 15.5px/1 inherit;
+  font-weight: 700;
+  font-size: 15.5px;
+  line-height: 1;
   cursor: pointer;
   transition:
     background 0.2s,
@@ -180,7 +196,9 @@
   display: flex;
   align-items: center;
   white-space: nowrap;
-  font: 600 12px/1 inherit;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
   cursor: pointer;
   transition:
     background 0.2s,
@@ -207,7 +225,9 @@
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  font: 600 11.5px/1 inherit;
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1;
   cursor: pointer;
   transition:
     background 0.2s,

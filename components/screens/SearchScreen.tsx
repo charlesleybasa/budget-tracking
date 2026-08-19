@@ -1,16 +1,20 @@
 "use client";
 
+import { useState } from "react";
+
+import { ReceiptViewer } from "@/components/ReceiptViewer";
 import { TxRow } from "@/components/TxRow";
 import { SEARCH_FILTERS } from "@/lib/constants";
 import { peso0 } from "@/lib/format";
 import { findCard, searchTransactions } from "@/lib/selectors";
 import { useWallet } from "@/lib/store";
-import type { SearchFilter } from "@/lib/types";
+import type { SearchFilter, Transaction } from "@/lib/types";
 
 import styles from "./SearchScreen.module.css";
 
 export function SearchScreen() {
   const { state, actions } = useWallet();
+  const [receipt, setReceipt] = useState<Transaction | null>(null);
   const results = searchTransactions(state.tx, state.query, state.filter);
   const total = results.reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
@@ -84,6 +88,7 @@ export function SearchScreen() {
               actions.patch({ activeId: t.cardId });
               actions.go("detail");
             }}
+            onViewReceipt={setReceipt}
           />
         ))}
 
@@ -97,6 +102,10 @@ export function SearchScreen() {
         ) : null}
         </div>
       </div>
+
+      {receipt?.receipt ? (
+        <ReceiptViewer src={receipt.receipt} merchant={receipt.merchant} onClose={() => setReceipt(null)} />
+      ) : null}
     </section>
   );
 }

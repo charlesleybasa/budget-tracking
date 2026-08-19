@@ -24,7 +24,9 @@
 }
 
 .navTitle {
-  font: 600 14px/1 inherit;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
 }
 
 .roundBtn {
@@ -63,19 +65,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font: 800 20px/1 inherit;
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 1;
   color: var(--ink);
   flex: none;
 }
 
 .name {
-  font: 700 17px/1 inherit;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1;
   letter-spacing: -0.02em;
 }
 
 .meta {
   margin-top: 5px;
-  font: 400 12px/1 inherit;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1;
   color: rgba(255, 255, 255, 0.45);
 }
 
@@ -83,7 +91,7 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 18px 20px calc(118px + var(--screen-bottom));
+  padding: 18px 20px var(--nav-clearance);
 }
 
 .group {
@@ -91,7 +99,9 @@
 }
 
 .groupTitle {
-  font: 600 11px/1 inherit;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted-3);
@@ -133,7 +143,9 @@
 }
 
 .rowLabel {
-  font: 600 13.5px/1 inherit;
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1;
   color: var(--ink);
 }
 
@@ -143,7 +155,9 @@
 
 .rowSub {
   margin-top: 4px;
-  font: 400 11.5px/1.3 inherit;
+  font-weight: 400;
+  font-size: 11.5px;
+  line-height: 1.3;
   color: var(--muted-2);
 }
 
@@ -167,11 +181,13 @@
 
 .footer {
   text-align: center;
-  font: 400 11.5px/1.5 inherit;
+  font-weight: 400;
+  font-size: 11.5px;
+  line-height: 1.5;
   color: var(--muted-3);
 }
 
-@media (min-width: 760px) {
+@media (min-width: 620px) {
   .header {
     padding: var(--screen-top) var(--pane-gap) 20px;
   }
@@ -186,6 +202,10 @@
   .scroll {
     padding: 24px var(--pane-gap) 28px;
   }
+}
+
+/* Rail-dependent: these only make sense once the rail has replaced the bottom bar. */
+@media (min-width: 760px) {
 
   /* The rail already owns "back". */
   .backBtn {
@@ -196,6 +216,7 @@
     justify-content: flex-start;
   }
 }
+
 
 @media (min-width: 1180px) {
   .scrollInner {

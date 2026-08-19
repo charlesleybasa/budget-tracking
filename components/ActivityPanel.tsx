@@ -2,6 +2,7 @@
 
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
+import { ReceiptViewer } from "@/components/ReceiptViewer";
 import { TxRow } from "@/components/TxRow";
 import { daysLeftInMonth, monthName, peso } from "@/lib/format";
 import {
@@ -14,7 +15,7 @@ import {
 } from "@/lib/selectors";
 import { useWallet } from "@/lib/store";
 import { useAnimatedNumber } from "@/lib/useAnimatedNumber";
-import type { Notice } from "@/lib/types";
+import type { Notice, Transaction } from "@/lib/types";
 
 import styles from "./ActivityPanel.module.css";
 
@@ -90,6 +91,7 @@ function NoticeCard({ notice }: { notice: Notice }) {
 
 export function ActivityPanel() {
   const { state, actions } = useWallet();
+  const [receipt, setReceipt] = useState<Transaction | null>(null);
   const active = findCard(state.cards, state.activeId);
   const progress = active ? cardProgress(active, state.tx) : 0;
   const safe = safeToSpend(state.cards, state.tx, state.activeId);
@@ -171,6 +173,7 @@ export function ActivityPanel() {
                     actions.patch({ activeId: t.cardId });
                     actions.go("detail");
                   }}
+                  onViewReceipt={setReceipt}
                 />
               ))}
             </div>
@@ -183,6 +186,10 @@ export function ActivityPanel() {
           </>
         )}
       </div>
+
+      {receipt?.receipt ? (
+        <ReceiptViewer src={receipt.receipt} merchant={receipt.merchant} onClose={() => setReceipt(null)} />
+      ) : null}
     </div>
   );
 }

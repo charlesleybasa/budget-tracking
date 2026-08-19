@@ -13,9 +13,11 @@ export interface TxRowProps {
   /** Stagger index for the entrance. */
   index?: number;
   onClick: () => void;
+  /** Present when the entry carries a receipt; opens the viewer instead of the row action. */
+  onViewReceipt?: (tx: Transaction) => void;
 }
 
-export function TxRow({ tx, cardNick, variant, index = 0, onClick }: TxRowProps) {
+export function TxRow({ tx, cardNick, variant, index = 0, onClick, onViewReceipt }: TxRowProps) {
   const incoming = tx.amount > 0;
   const color = categoryColor(tx.cat);
 
@@ -48,6 +50,30 @@ export function TxRow({ tx, cardNick, variant, index = 0, onClick }: TxRowProps)
         <div className={styles.merchant}>{tx.merchant}</div>
         <div className={styles.meta}>{meta}</div>
       </div>
+
+      {tx.receipt && onViewReceipt ? (
+        <span
+          role="button"
+          tabIndex={0}
+          className={styles.receipt}
+          aria-label={`View receipt for ${tx.merchant}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            onViewReceipt(tx);
+          }}
+          onKeyDown={(e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            e.preventDefault();
+            e.stopPropagation();
+            onViewReceipt(tx);
+          }}
+        >
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round">
+            <rect x={3} y={5} width={18} height={14} rx={3} />
+            <circle cx={12} cy={12} r={3.2} />
+          </svg>
+        </span>
+      ) : null}
 
       <div className={styles.amountBlock}>
         <div className={styles.amount} style={{ color: incoming ? "#0b8f6a" : "#0b0b0c" }}>

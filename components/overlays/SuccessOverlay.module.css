@@ -94,14 +94,18 @@
 }
 
 .head {
-  font: 800 27px/1.14 inherit;
+  font-weight: 800;
+  font-size: 27px;
+  line-height: 1.14;
   letter-spacing: -0.03em;
   text-wrap: pretty;
 }
 
 .body {
   margin-top: 11px;
-  font: 400 14px/1.5 inherit;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
   color: rgba(255, 255, 255, 0.78);
   text-wrap: pretty;
 }
@@ -122,7 +126,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font: 700 15.5px/1 inherit;
+  font-weight: 700;
+  font-size: 15.5px;
+  line-height: 1;
   cursor: pointer;
   transition: transform 0.16s;
 }

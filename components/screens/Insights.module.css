@@ -24,7 +24,9 @@
 }
 
 .navTitle {
-  font: 600 14px/1 inherit;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
 }
 
 .roundBtn {
@@ -68,7 +70,9 @@
 }
 
 .insightKicker {
-  font: 600 10.5px/1 inherit;
+  font-weight: 600;
+  font-size: 10.5px;
+  line-height: 1;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(11, 11, 12, 0.5);
@@ -76,7 +80,9 @@
 
 .insightHead {
   margin-top: 8px;
-  font: 800 22px/1.13 inherit;
+  font-weight: 800;
+  font-size: 22px;
+  line-height: 1.13;
   color: var(--ink);
   letter-spacing: -0.03em;
   max-width: 250px;
@@ -85,7 +91,9 @@
 
 .insightBody {
   margin-top: 8px;
-  font: 400 12.5px/1.45 inherit;
+  font-weight: 400;
+  font-size: 12.5px;
+  line-height: 1.45;
   color: rgba(11, 11, 12, 0.66);
   max-width: 255px;
   text-wrap: pretty;
@@ -95,7 +103,7 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 20px 20px calc(118px + var(--screen-bottom));
+  padding: 20px 20px var(--nav-clearance);
 }
 
 .stats {
@@ -111,28 +119,36 @@
 }
 
 .statLabel {
-  font: 500 10.5px/1.2 inherit;
+  font-weight: 500;
+  font-size: 10.5px;
+  line-height: 1.2;
   letter-spacing: 0.09em;
   text-transform: uppercase;
 }
 
 .statValue {
   margin-top: 8px;
-  font: 700 21px/1 inherit;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 1;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
 }
 
 .statSub {
   margin-top: 5px;
-  font: 400 11px/1.3 inherit;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.3;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .sectionTitle {
   margin-top: 22px;
-  font: 700 15px/1 inherit;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
   color: var(--ink);
   letter-spacing: -0.015em;
 }
@@ -154,7 +170,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font: 600 13px/1 inherit;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
   color: var(--ink);
 }
 
@@ -166,7 +184,9 @@
 }
 
 .catAmount {
-  font: 600 12.5px/1 inherit;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
   color: var(--muted-1);
   font-variant-numeric: tabular-nums;
 }
@@ -213,29 +233,39 @@
 }
 
 .billDay {
-  font: 700 13px/1 inherit;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
 }
 
 .billMonth {
-  font: 500 8px/1 inherit;
+  font-weight: 500;
+  font-size: 8px;
+  line-height: 1;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.7;
 }
 
 .billName {
-  font: 600 13.5px/1 inherit;
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1;
   color: var(--ink);
 }
 
 .billWhen {
   margin-top: 4px;
-  font: 400 11.5px/1 inherit;
+  font-weight: 400;
+  font-size: 11.5px;
+  line-height: 1;
   color: var(--muted-2);
 }
 
 .billAmount {
-  font: 700 14px/1 inherit;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
@@ -246,12 +276,14 @@
   text-align: center;
   border-radius: 18px;
   background: var(--sand-1);
-  font: 400 12.5px/1.5 inherit;
+  font-weight: 400;
+  font-size: 12.5px;
+  line-height: 1.5;
   color: var(--muted-2);
 }
 
 /* ── wide screens ── */
-@media (min-width: 760px) {
+@media (min-width: 620px) {
   .header {
     border-radius: 0 0 26px 26px;
     padding: var(--screen-top) var(--pane-gap) 22px;
@@ -273,6 +305,14 @@
     font-size: 26px;
   }
 
+  .insightBody {
+    max-width: 60ch;
+  }
+}
+
+/* Rail-dependent: these only make sense once the rail has replaced the bottom bar. */
+@media (min-width: 760px) {
+
   /* The rail already owns "back". */
   .backBtn {
     display: none;
@@ -281,11 +321,8 @@
   .nav {
     justify-content: flex-start;
   }
-
-  .insightBody {
-    max-width: 60ch;
-  }
 }
+
 
 /* Stats and the spend breakdown share the width once there is room for both. */
 @media (min-width: 1180px) {

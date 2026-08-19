@@ -75,7 +75,9 @@
 
 .tabLabel {
   display: none;
-  font: 600 13px/1 inherit;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
   white-space: nowrap;
 }
 
@@ -182,7 +184,9 @@
 
   .brandName {
     display: none;
-    font: 700 16px/1 inherit;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
     letter-spacing: -0.02em;
     color: #fff;
   }
@@ -190,6 +194,9 @@
   .tab {
     color: rgba(255, 255, 255, 0.45);
     border-radius: 18px;
+    /* In the rail a tab IS its grid row — a fixed 56px would overhang the row once the
+       short-viewport tier tightens it, and the tabs would overlap each other. */
+    height: var(--rail-row);
   }
 
   .tabActive {
@@ -245,7 +252,9 @@
   }
 
   .fabLabel {
-    font: 700 14px/1 inherit;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1;
     color: #fff;
   }
 }
@@ -259,11 +268,50 @@
 /* Under 560px of height the brand block is the first thing to go; the grid track collapses
    with it, so the indicator's lead-in shrinks to match. */
 @media (max-height: 560px) {
+  /*
+   * Collapsed, not removed. `display: none` takes the brand out of the grid entirely, so the
+   * four tabs and the compose button each auto-place one track earlier than the template
+   * intends and the rail's rhythm falls apart. Zeroing the track keeps the mapping intact;
+   * the brand already clips its own contents at `overflow: hidden`.
+   */
   .brand {
-    display: none !important;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
   }
 
   .nav {
     --rail-brand: 0px;
+    /*
+     * A safety net, not the layout: the tiers below keep the rail inside any realistic
+     * viewport, but a rail taller than the screen would put the compose button somewhere
+     * the user cannot reach at all, and that must not be possible.
+     */
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/*
+ * A flip phone unfolded on its side is only ~344px tall. At the 560px rhythm the rail came
+ * out 368px — taller than the screen — and the compose button fell off the bottom edge.
+ * Everything the rail is built from tightens together so the whole set stays on screen.
+ */
+@media (max-height: 460px) {
+  .nav {
+    --rail-pad: 10px;
+    --rail-gap: 5px;
+    --rail-row: 44px;
+  }
+
+  .fab {
+    margin-top: 6px;
+    width: 46px;
+    height: 46px;
   }
 }

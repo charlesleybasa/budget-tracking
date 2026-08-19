@@ -40,6 +40,8 @@ export function migrateCards(raw: unknown): Card[] {
         limit: Number.isFinite(card.limit) ? (card.limit as number) : 0,
         frozen: !!card.frozen,
         ...(card.goal ? { goal: card.goal } : {}),
+        ...(typeof card.accountNumber === "string" ? { accountNumber: card.accountNumber } : {}),
+        ...(typeof card.qr === "string" ? { qr: card.qr } : {}),
         art: {
           ...card.art,
           style: (RETIRED_STYLES[style] ?? style ?? "blob") as Card["art"]["style"],
@@ -76,6 +78,7 @@ export function migrateTransactions(raw: unknown, cards: readonly Card[], now = 
         amount: tx.amount as number,
         at,
         note: tx.note ?? "",
+        ...(typeof tx.receipt === "string" ? { receipt: tx.receipt } : {}),
       } satisfies Transaction,
     ];
   });

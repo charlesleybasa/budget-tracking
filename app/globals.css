@@ -71,6 +71,12 @@
   --tabbar-gap: calc(var(--screen-bottom) + 18px);
   /* Widest a single reading column grows to before it stops stretching. */
   --app-max-w: 480px;
+  /*
+   * Room the bottom bar needs at the foot of a scrolling panel. The rail replaces the bar
+   * from 760px, so panels get that space back — a foldable's inner screen is wide enough
+   * for two panes but not for a rail, and it sits between those two states.
+   */
+  --nav-clearance: calc(118px + var(--screen-bottom));
   /* Persistent navigation rail, from the two-pane breakpoint up. */
   --rail-w: 76px;
   --pane-gap: 20px;
@@ -124,6 +130,18 @@ button {
   cursor: pointer;
   text-align: left;
   font-size: inherit;
+  /*
+   * A control's label is not content. Without this, tapping one on a touch device selects
+   * the word and raises the text magnifier instead of pressing the button, and a quick
+   * double-press selects rather than firing twice.
+   */
+  -webkit-user-select: none;
+  user-select: none;
+  /* Suppresses the grey flash Android paints over the whole control on tap; the app draws
+     its own press states. */
+  -webkit-tap-highlight-color: transparent;
+  /* Removes the 300ms click delay without disabling pinch-zoom on the page. */
+  touch-action: manipulation;
 }
 
 ::selection {
@@ -390,9 +408,16 @@ input {
  * nowhere. The top inset collapses to the notch and nothing more.
  */
 /* Between the phone and the two-pane breakpoint, let the single column breathe wider. */
-@media (min-width: 600px) {
+@media (min-width: 481px) {
   :root {
     --app-max-w: 560px;
+  }
+}
+
+/* From the rail up, the bar is gone and panels reclaim its footprint. */
+@media (min-width: 760px) {
+  :root {
+    --nav-clearance: 24px;
   }
 }
 

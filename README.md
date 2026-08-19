@@ -65,6 +65,15 @@ Sizing follows the pointer rather than the screen: hover effects are gated behin
 `(pointer: coarse)`. Card geometry is measured with a `ResizeObserver` rather than assumed,
 because the artwork scales every dimension off its rendered width.
 
+## Typography
+
+> **Never `font: <weight> <size>/<lh> inherit`.** The `font` shorthand's family slot cannot
+> take `inherit`, so the whole declaration is invalid and the browser drops it silently — the
+> element then falls back to the UA default, which is 16px for a span and 2em bold for an h1.
+> This was true of 205 declarations across 17 stylesheets and suppressed nearly the entire type
+> hierarchy without any error. Use `font-weight` / `font-size` / `line-height` longhands; the
+> family already inherits from `body`.
+
 ## Motion
 
 > **Keyframes live beside their user, not in `globals.css`.** CSS Modules scopes animation

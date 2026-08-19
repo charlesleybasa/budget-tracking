@@ -63,6 +63,10 @@ export function AppShell() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
+      // A picker or a receipt sits above the sheet and handles its own dismissal. Checking
+      // the DOM is deterministic; relying on listener order or defaultPrevented is not,
+      // because the app-level listener is registered first and can win the race.
+      if (document.querySelector("[data-overlay-layer]")) return;
       if (state.success) actions.closeSuccess();
       else if (state.sheet) actions.closeSheet();
       else if (DISMISSABLE.includes(state.screen)) actions.go("home");

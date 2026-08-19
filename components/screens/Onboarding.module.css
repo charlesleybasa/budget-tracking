@@ -30,12 +30,16 @@
 }
 
 .brandName {
-  font: 700 15px/1 inherit;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
   letter-spacing: -0.02em;
 }
 
 .skip {
-  font: 500 12.5px/1 inherit;
+  font-weight: 500;
+  font-size: 12.5px;
+  line-height: 1;
   color: rgba(255, 255, 255, 0.45);
   cursor: pointer;
   padding: 8px;
@@ -94,14 +98,18 @@
 }
 
 .introHead {
-  font: 800 38px/1.02 inherit;
+  font-weight: 800;
+  font-size: 38px;
+  line-height: 1.02;
   letter-spacing: -0.035em;
   text-wrap: pretty;
 }
 
 .introBody {
   margin-top: 14px;
-  font: 400 14.5px/1.5 inherit;
+  font-weight: 400;
+  font-size: 14.5px;
+  line-height: 1.5;
   color: rgba(255, 255, 255, 0.55);
   max-width: 290px;
   text-wrap: pretty;
@@ -118,7 +126,9 @@
   align-items: center;
   justify-content: center;
   gap: 9px;
-  font: 700 16px/1 inherit;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
   cursor: pointer;
   transition:
     transform 0.16s var(--ease-out),
@@ -132,18 +142,24 @@
 
 /* ── steps 1–3 ── */
 .head {
-  font: 800 30px/1.06 inherit;
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 1.06;
   letter-spacing: -0.03em;
 }
 
 .headTight {
-  font: 800 27px/1.06 inherit;
+  font-weight: 800;
+  font-size: 27px;
+  line-height: 1.06;
   letter-spacing: -0.03em;
 }
 
 .sub {
   margin-top: 9px;
-  font: 400 13.5px/1.45 inherit;
+  font-weight: 400;
+  font-size: 13.5px;
+  line-height: 1.45;
   color: rgba(255, 255, 255, 0.5);
   max-width: 280px;
   text-wrap: pretty;
@@ -157,7 +173,9 @@
 }
 
 .darkFieldLabel {
-  font: 500 10.5px/1 inherit;
+  font-weight: 500;
+  font-size: 10.5px;
+  line-height: 1;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.38);
@@ -170,13 +188,17 @@
   border: 0;
   background: transparent;
   color: #fff;
-  font: 700 24px/1.2 inherit;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
 .greeting {
   margin-top: 16px;
-  font: 600 15px/1 inherit;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
   color: var(--accent);
 }
 
@@ -214,13 +236,17 @@
 
 .kindLabel {
   margin-top: 11px;
-  font: 600 13.5px/1.2 inherit;
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.2;
   color: #fff;
 }
 
 .kindHint {
   margin-top: 3px;
-  font: 400 11px/1.3 inherit;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.3;
   color: rgba(255, 255, 255, 0.42);
 }
 
@@ -236,7 +262,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font: 700 15.5px/1 inherit;
+  font-weight: 700;
+  font-size: 15.5px;
+  line-height: 1;
   cursor: pointer;
   transition:
     background 0.2s,
@@ -271,7 +299,9 @@
 }
 
 .previewKind {
-  font: 600 10px/1 inherit;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 1;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(11, 11, 12, 0.5);
@@ -285,18 +315,24 @@
 }
 
 .previewPeso {
-  font: 600 20px/1 inherit;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1;
 }
 
 .previewValue {
-  font: 700 33px/1 inherit;
+  font-weight: 700;
+  font-size: 33px;
+  line-height: 1;
   letter-spacing: -0.035em;
   font-variant-numeric: tabular-nums;
 }
 
 .previewNick {
   margin-top: 8px;
-  font: 700 13px/1 inherit;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
   color: var(--ink);
 }
 
@@ -316,7 +352,9 @@
 }
 
 .amountPeso {
-  font: 600 20px/1 inherit;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1;
   color: var(--accent);
 }
 
@@ -326,14 +364,18 @@
   border: 0;
   background: transparent;
   color: #fff;
-  font: 700 24px/1.2 inherit;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
 .footnote {
   margin-top: 12px;
   text-align: center;
-  font: 400 11.5px/1.4 inherit;
+  font-weight: 400;
+  font-size: 11.5px;
+  line-height: 1.4;
   color: rgba(255, 255, 255, 0.35);
 }
 
@@ -370,7 +412,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font: 500 13px/1 inherit;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1;
   color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   transition:

@@ -18,7 +18,9 @@
 }
 
 .navTitle {
-  font: 600 14px/1 inherit;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
 }
 
 .roundBtn {
@@ -74,7 +76,9 @@
 }
 
 .previewKind {
-  font: 600 10.5px/1 inherit;
+  font-weight: 600;
+  font-size: 10.5px;
+  line-height: 1;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -86,21 +90,31 @@
 }
 
 .previewPeso {
-  font: 600 24px/1 inherit;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1;
 }
 
 .previewValue {
-  font: 700 clamp(24px, 11cqw, 38px) / 1 inherit;
+  font-weight: 700;
+  font-size: clamp(24px, 11cqw, 38px);
+  line-height: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   letter-spacing: -0.038em;
   font-variant-numeric: tabular-nums;
+  /* Negative tracking is applied after the last glyph too, so the box ends up
+     narrower than the text and `overflow: hidden` shaves the final character.
+     This gives that tracking back as padding. */
+  padding-right: 0.038em;
 }
 
 .previewNick {
   margin-top: 9px;
-  font: 700 13.5px/1 inherit;
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -122,7 +136,9 @@
 }
 
 .label {
-  font: 600 11px/1 inherit;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted-3);
@@ -136,7 +152,9 @@
 }
 
 .labelHint {
-  font: 400 10.5px/1.3 inherit;
+  font-weight: 400;
+  font-size: 10.5px;
+  line-height: 1.3;
   color: var(--muted-5);
   text-align: right;
 }
@@ -190,7 +208,9 @@
 .tileCaption {
   padding: 6px 8px;
   background: var(--sand-1);
-  font: 600 10.5px/1 inherit;
+  font-weight: 600;
+  font-size: 10.5px;
+  line-height: 1;
   color: var(--ink);
   text-align: center;
 }
@@ -202,7 +222,9 @@
 }
 
 .tileName {
-  font: 600 11.5px/1 inherit;
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1;
   color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
@@ -211,7 +233,9 @@
 
 .tileSub {
   margin-top: 3px;
-  font: 400 9.5px/1.25 inherit;
+  font-weight: 400;
+  font-size: 9.5px;
+  line-height: 1.25;
   color: var(--muted-3);
 }
 
@@ -222,14 +246,18 @@
 }
 
 .tileNameSmall {
-  font: 600 10.5px/1 inherit;
+  font-weight: 600;
+  font-size: 10.5px;
+  line-height: 1;
   color: var(--ink);
   white-space: nowrap;
 }
 
 .tileSubSmall {
   margin-top: 3px;
-  font: 400 8.5px/1.2 inherit;
+  font-weight: 400;
+  font-size: 8.5px;
+  line-height: 1.2;
   color: var(--muted-3);
 }
 
@@ -247,7 +275,9 @@
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  font: 600 11.5px/1 inherit;
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1;
   cursor: pointer;
   transition:
     background 0.2s,
@@ -263,7 +293,9 @@
   align-items: center;
   justify-content: center;
   gap: 9px;
-  font: 600 12.5px/1 inherit;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
   white-space: nowrap;
   cursor: pointer;
   transition:
@@ -287,7 +319,9 @@
 }
 
 .photoTitle {
-  font: 700 13.5px/1 inherit;
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1;
   color: var(--ink);
   letter-spacing: -0.01em;
 }
@@ -299,7 +333,9 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font: 700 11px/1 inherit;
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 1;
   white-space: nowrap;
   flex: none;
 }
@@ -311,7 +347,9 @@
 
 .photoCopy {
   margin-top: 5px;
-  font: 400 11.5px/1.4 inherit;
+  font-weight: 400;
+  font-size: 11.5px;
+  line-height: 1.4;
   color: var(--muted-1);
   text-wrap: pretty;
 }
@@ -332,7 +370,9 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font: 600 12.5px/1 inherit;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
   cursor: pointer;
   white-space: nowrap;
   transition: transform 0.16s;
@@ -351,7 +391,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font: 600 12.5px/1 inherit;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
   cursor: pointer;
   white-space: nowrap;
   flex: none;
@@ -381,14 +423,18 @@
 }
 
 .controlLabel {
-  font: 600 10.5px/1 inherit;
+  font-weight: 600;
+  font-size: 10.5px;
+  line-height: 1;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--muted-3);
 }
 
 .recentre {
-  font: 600 11px/1 inherit;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1;
   color: var(--blue);
   cursor: pointer;
   padding: 4px;
@@ -415,7 +461,9 @@
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  font: 600 11.5px/1 inherit;
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1;
   cursor: pointer;
   transition:
     background 0.2s,
@@ -432,7 +480,9 @@
   margin-top: 13px;
   padding-top: 12px;
   border-top: 1px solid var(--line-4);
-  font: 400 11px/1.5 inherit;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.5;
   color: var(--muted-2);
   text-wrap: pretty;
 }
@@ -480,7 +530,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font: 600 12px/1 inherit;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
   cursor: pointer;
   transition:
     background 0.2s,
@@ -501,7 +553,9 @@
 }
 
 .fieldLabel {
-  font: 500 10.5px/1 inherit;
+  font-weight: 500;
+  font-size: 10.5px;
+  line-height: 1;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted-3);
@@ -513,7 +567,9 @@
   border: 0;
   background: transparent;
   color: var(--ink);
-  font: 600 16px/1.2 inherit;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.2;
 }
 
 .fieldPair {
@@ -536,7 +592,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font: 700 15px/1 inherit;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
   cursor: pointer;
   transition: transform 0.16s;
 }
@@ -554,7 +612,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font: 600 13.5px/1 inherit;
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1;
   cursor: pointer;
 }
 
@@ -567,7 +627,7 @@
  * The editor is a long list of controls against one preview. From 900px the preview stops
  * scrolling away: it holds a column while the controls scroll beside it.
  */
-@media (min-width: 760px) {
+@media (min-width: 620px) {
   .screen {
     display: grid;
     grid-template-columns: minmax(264px, 380px) minmax(0, 1fr);
@@ -664,7 +724,9 @@
   border-radius: 100px;
   background: var(--sand-1);
   color: var(--ink);
-  font: 600 12px/1 inherit;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
   white-space: nowrap;
   cursor: pointer;
   transition:
@@ -699,5 +761,105 @@
 @media (pointer: coarse) {
   .bankChip {
     height: 40px;
+  }
+}
+
+/* ── receiving details ── */
+.receiving {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.qrRow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border-radius: 16px;
+  background: var(--sand-1);
+  padding: 10px 12px;
+}
+
+.qrThumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex: none;
+  background: #fff;
+}
+
+.qrEmpty {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sand-3);
+}
+
+.qrMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.qrTitle {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.qrSub {
+  margin-top: 4px;
+  font-weight: 400;
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: var(--muted-2);
+  text-wrap: pretty;
+}
+
+.qrBtn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 100px;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
+  cursor: pointer;
+  flex: none;
+  transition: transform 0.16s var(--ease-out);
+}
+
+.qrBtn:active {
+  transform: scale(0.95);
+}
+
+.qrRemove {
+  width: 36px;
+  height: 36px;
+  border-radius: 100px;
+  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+}
+
+@media (pointer: coarse) {
+  .qrBtn,
+  .qrRemove {
+    height: 44px;
+    min-height: 44px;
+  }
+
+  .qrRemove {
+    width: 44px;
   }
 }

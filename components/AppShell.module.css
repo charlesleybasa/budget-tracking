@@ -4,8 +4,17 @@
  * column floating in a void.
  */
 .app {
+  /*
+   * Height is the DYNAMIC viewport, not `inset: 0`. A fixed element with inset:0 sizes to the
+   * layout viewport, which on mobile stays tall behind the browser's URL bar and toolbar — so
+   * the bottom of the app, and with it the sheet's submit button, sat underneath the chrome
+   * and could not be reached.
+   */
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100dvh;
   display: flex;
   justify-content: center;
   background: var(--ink);
@@ -19,11 +28,15 @@
   overflow: hidden;
   background: var(--ink);
   color: #fff;
-  isolation: isolate;
+  /*
+   * Deliberately NOT `isolation: isolate`. The navigation is a sibling of this element, so
+   * isolating here would trap the overlays' z-index inside the surface and let the bottom
+   * bar paint over the transaction sheet — hiding its submit button on a phone.
+   */
 }
 
 /* Between phone and two-pane the column stops stretching, so give it an edge. */
-@media (min-width: 481px) and (max-width: 759px) {
+@media (min-width: 481px) and (max-width: 619px) {
   .app {
     background: radial-gradient(120% 90% at 50% 0%, #17171b 0%, #0b0b0c 100%);
   }
@@ -34,15 +47,22 @@
   }
 }
 
+/*
+ * A foldable's inner screen is the case this split exists for: wide enough to hold two
+ * panes, not wide enough to also give up 76px to a rail. So the surface stops being a
+ * centred column here, and the rail arrives later, on its own breakpoint.
+ */
+@media (min-width: 620px) {
+  .surface {
+    max-width: none;
+  }
+}
+
 @media (min-width: 760px), (min-width: 560px) and (max-height: 560px) {
   .app {
     display: grid;
     grid-template-columns: var(--rail-w) minmax(0, 1fr);
     justify-content: stretch;
-  }
-
-  .surface {
-    max-width: none;
   }
 }
 
@@ -60,8 +80,10 @@
 }
 
 /*
- * Book-posture foldables report two horizontal segments with the hinge between them.
- * Content is kept out of that seam rather than being folded across it.
+ * Book posture: the device reports two horizontal segments with the hinge between them.
+ * The panes are sized to the segments and the gap is the hinge itself, so no card, panel or
+ * row is ever folded down the middle. Unsupported browsers never match and keep the normal
+ * grid, so this is purely additive.
  */
 @media (horizontal-viewport-segments: 2) {
   .app {
@@ -77,6 +99,13 @@
   }
 }
 
+/*
+ * Tabletop posture (horizontal hinge) is deliberately not special-cased. The app already
+ * fills the viewport across both segments, the floating nav sits at the bottom of the lower
+ * one, and nothing here is anchored to the crease — so the default layout is already correct.
+ * A speculative rule for it could not be verified without the hardware, and an unverified
+ * layout branch is worse than none.
+ */
 
 .splash {
   position: absolute;

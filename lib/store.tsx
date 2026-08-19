@@ -75,8 +75,8 @@ export interface WalletState {
   amt: string;
   cat: CategoryName;
   note: string;
-  receipt: boolean;
-  split: boolean;
+  /** Attached receipt photo as a data URL, or null when none is attached. */
+  receipt: string | null;
 
   // transfer screen
   fromId: string;
@@ -140,8 +140,7 @@ function initialState(): WalletState {
     amt: "",
     cat: "Food",
     note: "",
-    receipt: false,
-    split: false,
+    receipt: null,
     fromId: "",
     toId: "",
     swapRot: 0,
@@ -167,7 +166,6 @@ type UiPatch = Partial<
     | "cat"
     | "note"
     | "receipt"
-    | "split"
     | "amt"
     | "userName"
     | "obStep"
@@ -318,8 +316,7 @@ function reducer(state: WalletState, action: Action): WalletState {
         amt: "",
         note: "",
         cat: "Food",
-        receipt: false,
-        split: false,
+        receipt: null,
         sheetCardId: action.cardId ?? state.activeId,
       };
 
@@ -380,6 +377,7 @@ function reducer(state: WalletState, action: Action): WalletState {
             amount: sign * amount,
             at: Date.now(),
             note: state.note,
+            ...(state.receipt ? { receipt: state.receipt } : {}),
           },
           ...state.tx,
         ],
@@ -389,9 +387,7 @@ function reducer(state: WalletState, action: Action): WalletState {
           body:
             sign > 0
               ? `₱${peso(amount)} added to ${from.nick}. Look at you, being responsible.`
-              : `₱${peso(amount)} off ${from.nick}. ${
-                  state.split ? `Half of it — ₱${peso(amount / 2)} — is someone else\u2019s.` : "That took four seconds."
-                }`,
+              : `₱${peso(amount)} off ${from.nick}. That took four seconds.`,
         },
       };
     }

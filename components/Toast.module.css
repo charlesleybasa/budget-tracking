@@ -8,7 +8,9 @@
   background: rgba(11, 11, 12, 0.94);
   color: #fff;
   padding: 13px 18px;
-  font: 500 12.5px/1.35 inherit;
+  font-weight: 500;
+  font-size: 12.5px;
+  line-height: 1.35;
   text-align: center;
   animation: bwToast 2.4s both;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);

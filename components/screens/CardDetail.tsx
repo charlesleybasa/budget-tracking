@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { CardArtFor } from "@/components/CardArt";
 import { ProgressRing } from "@/components/ProgressRing";
+import { ReceiptViewer } from "@/components/ReceiptViewer";
 import { TxRow } from "@/components/TxRow";
 import { cardTheme } from "@/components/cardTheme";
 import { dayLabel, minusIfNegative, peso, peso0 } from "@/lib/format";
@@ -11,7 +12,7 @@ import { useWallet } from "@/lib/store";
 import { cardProgress, findCard, groupByDay, limitCopy, maskFor, spentOnCard } from "@/lib/selectors";
 import { useElementWidth } from "@/lib/useElementWidth";
 
-import type { CardArt } from "@/lib/types";
+import type { CardArt, Transaction } from "@/lib/types";
 
 import styles from "./CardDetail.module.css";
 
@@ -30,6 +31,9 @@ export function CardDetail() {
   const theme = cardTheme(card?.art ?? DEFAULT_ART);
 
   // The artwork scales off its rendered width, so the hero card is measured, not fixed.
+  const [receipt, setReceipt] = useState<Transaction | null>(null);
+  const [flipped, setFlipped] = useState(false);
+  const [copied, setCopied] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const wrapWidth = useElementWidth(wrapRef);
   const cardW = Math.min(320, Math.max(240, (wrapWidth ?? 360) - 40));
@@ -74,22 +78,97 @@ export function CardDetail() {
           style={{
             width: cardW,
             height: cardH,
-            background: card.art.c1,
             viewTransitionName: "wallet-card",
           }}
         >
-          <CardArtFor card={card} w={cardW} h={cardH} />
-          <div className={styles.cardInner}>
-            <div className={styles.cardKind} style={{ color: theme.fgDim }}>
-              {card.kind}
-            </div>
-            <div>
-              <div className={styles.balanceRow} style={{ color: theme.fg }}>
-                <span className={styles.balancePeso}>{state.privacy ? "" : minusIfNegative(card.bal)}₱</span>
-                <span className={styles.balanceValue}>{state.privacy ? "•••••" : peso(card.bal)}</span>
+          {/* The flip rides an inner element so the outer keeps its view-transition name. */}
+          <div className={`${styles.flipper} ${flipped ? styles.flipped : ""}`}>
+            <button
+              type="button"
+              className={`${styles.face} ${styles.front}`}
+              style={{ background: card.art.c1 }}
+              onClick={() => setFlipped(true)}
+              aria-label={`${card.nick}. Show receiving details`}
+              tabIndex={flipped ? -1 : 0}
+            >
+              <CardArtFor card={card} w={cardW} h={cardH} />
+              <span className={styles.cardInner}>
+                <span className={styles.cardKind} style={{ color: theme.fgDim }}>
+                  {card.kind}
+                </span>
+                <span className={styles.cardFoot}>
+                  <span className={styles.balanceRow} style={{ color: theme.fg }}>
+                    <span className={styles.balancePeso}>{state.privacy ? "" : minusIfNegative(card.bal)}₱</span>
+                    <span className={styles.balanceValue}>{state.privacy ? "•••••" : peso(card.bal)}</span>
+                  </span>
+                  <span
+                    className={styles.cardMask}
+                    style={{ color: theme.dark ? "rgba(11,11,12,.6)" : "rgba(255,255,255,.6)" }}
+                  >
+                    {maskFor(card)}
+                  </span>
+                </span>
+              </span>
+              <span className={styles.flipHint} style={{ color: theme.fgDim }} aria-hidden="true">
+                <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round">
+                  <path d="M3 12a9 9 0 0114-7.5M21 12a9 9 0 01-14 7.5M17 4v4h-4M7 20v-4h4" />
+                </svg>
+              </span>
+            </button>
+
+            <div className={`${styles.face} ${styles.back}`}>
+              <div className={styles.backHead}>
+                <div className={styles.backTitle}>Receive money</div>
+                <button
+                  type="button"
+                  className={styles.backClose}
+                  onClick={() => setFlipped(false)}
+                  aria-label="Show the front of the card"
+                  tabIndex={flipped ? 0 : -1}
+                >
+                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.4} strokeLinecap="round">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
-              <div className={styles.cardMask} style={{ color: theme.dark ? "rgba(11,11,12,.6)" : "rgba(255,255,255,.6)" }}>
-                {maskFor(card)}
+
+              {card.qr ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img className={styles.backQr} src={card.qr} alt={`Receiving QR for ${card.nick}`} />
+              ) : null}
+
+              <div className={styles.backDetails}>
+                {card.accountNumber ? (
+                  <button
+                    type="button"
+                    className={styles.backAccount}
+                    tabIndex={flipped ? 0 : -1}
+                    onClick={() => {
+                      navigator.clipboard
+                        ?.writeText(card.accountNumber ?? "")
+                        .then(() => {
+                          setCopied(true);
+                          window.setTimeout(() => setCopied(false), 1600);
+                        })
+                        .catch(() => actions.toast("Could not copy — long-press to select it."));
+                    }}
+                  >
+                    <span className={styles.backLabel}>{copied ? "Copied" : "Account number · tap to copy"}</span>
+                    <span className={styles.backNumber}>{card.accountNumber}</span>
+                  </button>
+                ) : null}
+
+                {!card.qr && !card.accountNumber ? (
+                  <button
+                    type="button"
+                    className={styles.backEmpty}
+                    tabIndex={flipped ? 0 : -1}
+                    onClick={() => actions.openEditor(card.id)}
+                  >
+                    <span className={styles.backEmptyTitle}>Nothing to show yet</span>
+                    <span className={styles.backEmptySub}>Add your QR or account number so people can pay you</span>
+                  </button>
+                ) : null}
               </div>
             </div>
           </div>
@@ -149,7 +228,14 @@ export function CardDetail() {
                 </div>
                 <div className={styles.groupRows}>
                   {group.rows.map((t) => (
-                    <TxRow key={t.id} tx={t} cardNick={card.nick} variant="detail" onClick={() => actions.go("search")} />
+                    <TxRow
+                      key={t.id}
+                      tx={t}
+                      cardNick={card.nick}
+                      variant="detail"
+                      onClick={() => actions.go("search")}
+                      onViewReceipt={setReceipt}
+                    />
                   ))}
                 </div>
               </div>
@@ -157,6 +243,10 @@ export function CardDetail() {
           )}
         </div>
       </div>
+
+      {receipt?.receipt ? (
+        <ReceiptViewer src={receipt.receipt} merchant={receipt.merchant} onClose={() => setReceipt(null)} />
+      ) : null}
     </section>
   );
 }

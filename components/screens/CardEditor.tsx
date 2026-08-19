@@ -7,6 +7,7 @@ import { cardTheme } from "@/components/cardTheme";
 import { BANK_PRESETS } from "@/lib/bankPresets";
 import { CARD_STYLES, PALETTES, SCRIM_NAMES, SCRIM_ORDER, TEXTURES, TIERS } from "@/lib/constants";
 import { minusIfNegative, moneyInput, peso } from "@/lib/format";
+import { ImageError, QR_OPTIONS, readImage } from "@/lib/image";
 import { autoTuneScrim, measure } from "@/lib/legibility";
 import { useWallet } from "@/lib/store";
 import { useElementWidth } from "@/lib/useElementWidth";
@@ -57,6 +58,7 @@ export function CardEditor() {
   const fileRef = useRef<HTMLInputElement>(null);
   const dragRef = useRef<{ x: number; y: number; px: number; py: number } | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const qrRef = useRef<HTMLInputElement>(null);
   const wrapWidth = useElementWidth(wrapRef);
   // Money fields keep their own text so a half-typed "100." survives the keystroke.
   const [balText, setBalText] = useState<string | null>(null);
@@ -130,6 +132,20 @@ export function CardEditor() {
 
   const endDrag = () => {
     dragRef.current = null;
+  };
+
+  const onQrFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    readImage(file, QR_OPTIONS)
+      .then((qr) => {
+        actions.editCard({ qr });
+        actions.toast("QR added to the back of this card.");
+      })
+      .catch((err: unknown) => {
+        actions.toast(err instanceof ImageError ? err.message : "Could not read that image.");
+      });
   };
 
   const activeStyle = (isActive: boolean) => ({
@@ -457,6 +473,73 @@ export function CardEditor() {
               ))}
             </div>
           ) : null}
+
+          {/* ── how people pay you: this is what the back of the card shows ── */}
+          <div className={`${styles.labelRow} ${styles.spaced}`}>
+            <div className={styles.label} style={{ whiteSpace: "nowrap" }}>
+              Receiving details
+            </div>
+            <div className={styles.labelHint}>Shown on the back of the card</div>
+          </div>
+
+          <input ref={qrRef} type="file" accept="image/*" onChange={onQrFile} style={{ display: "none" }} />
+
+          <div className={styles.receiving}>
+            <div className={styles.field}>
+              <label className={styles.fieldLabel} htmlFor="ed-account">
+                Account number
+              </label>
+              <input
+                id="ed-account"
+                className={styles.fieldInput}
+                value={ed.accountNumber ?? ""}
+                onChange={(e) => actions.editCard({ accountNumber: e.target.value })}
+                placeholder="e.g. 0917 123 4567"
+                inputMode="numeric"
+                autoComplete="off"
+              />
+            </div>
+
+            <div className={styles.qrRow}>
+              {ed.qr ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img className={styles.qrThumb} src={ed.qr} alt="Your receiving QR" />
+              ) : (
+                <div className={styles.qrEmpty} aria-hidden="true">
+                  <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="#a9a9ae" strokeWidth={2}>
+                    <rect x={3} y={3} width={7} height={7} rx={1.5} />
+                    <rect x={14} y={3} width={7} height={7} rx={1.5} />
+                    <rect x={3} y={14} width={7} height={7} rx={1.5} />
+                    <path d="M14 14h3v3h-3zM19 19h2M19 14h2v2" strokeLinecap="round" />
+                  </svg>
+                </div>
+              )}
+
+              <div className={styles.qrMeta}>
+                <div className={styles.qrTitle}>{ed.qr ? "QR attached" : "Receiving QR"}</div>
+                <div className={styles.qrSub}>
+                  {ed.qr ? "Flip the card to show it" : "Add the QR people scan to pay you"}
+                </div>
+              </div>
+
+              <button type="button" className={styles.qrBtn} onClick={() => qrRef.current?.click()}>
+                {ed.qr ? "Replace" : "Add"}
+              </button>
+
+              {ed.qr ? (
+                <button
+                  type="button"
+                  className={styles.qrRemove}
+                  onClick={() => actions.editCard({ qr: undefined })}
+                  aria-label="Remove QR"
+                >
+                  <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="#c62f26" strokeWidth={2.2} strokeLinecap="round">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              ) : null}
+            </div>
+          </div>
 
           {/* ── fields ── */}
           <div className={styles.fields}>

@@ -18,7 +18,9 @@
 }
 
 .navTitle {
-  font: 600 14px/1 inherit;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -53,14 +55,181 @@
   container-type: inline-size;
   border-radius: 22px;
   position: relative;
-  overflow: hidden;
   box-shadow: 0 18px 34px rgba(0, 0, 0, 0.45);
-  transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+  /* A stage for the flip. Overflow stays visible so the back is not clipped mid-rotation. */
+  perspective: 1400px;
+}
+
+.flipper {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.62s cubic-bezier(0.22, 1, 0.28, 1);
+}
+
+.flipped {
+  transform: rotateY(180deg);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: block;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+}
+
+.front {
+  cursor: pointer;
+}
+
+.back {
+  transform: rotateY(180deg);
+  background: linear-gradient(160deg, #17171b 0%, #0b0b0c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px 16px;
+  cursor: default;
+}
+
+.backHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex: none;
+}
+
+.backTitle {
+  font-weight: 600;
+  font-size: 10.5px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.backClose {
+  width: 28px;
+  height: 28px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+}
+
+.backQr {
+  width: 84px;
+  height: 84px;
+  border-radius: 10px;
+  object-fit: contain;
+  background: #fff;
+  padding: 4px;
+  align-self: center;
+  flex: none;
+}
+
+.backDetails {
+  margin-top: auto;
+  min-width: 0;
+}
+
+.backAccount {
+  display: block;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 4px 2px;
+  transition: background 0.18s;
+}
+
+.backAccount:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.backLabel {
+  display: block;
+  font-weight: 500;
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.2s;
+}
+
+.backNumber {
+  display: block;
+  margin-top: 6px;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.1;
+  color: #fff;
+  letter-spacing: 0.02em;
+  word-break: break-all;
+}
+
+.backEmpty {
+  display: block;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.backEmptyTitle {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.backEmptySub {
+  display: block;
+  margin-top: 5px;
+  font-weight: 400;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.5);
+  text-wrap: pretty;
+}
+
+/* A quiet affordance that the card has another side. */
+.flipHint {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  width: 26px;
+  height: 26px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(127, 127, 127, 0.18);
+  backdrop-filter: blur(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flipper {
+    transition-duration: 0.01ms;
+  }
 }
 
 .cardInner {
   position: absolute;
   inset: 0;
+  z-index: 1;
   padding: 17px 19px;
   display: flex;
   flex-direction: column;
@@ -68,7 +237,9 @@
 }
 
 .cardKind {
-  font: 600 10.5px/1 inherit;
+  font-weight: 600;
+  font-size: 10.5px;
+  line-height: 1;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -80,21 +251,41 @@
 }
 
 .balancePeso {
-  font: 600 24px/1 inherit;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1;
 }
 
 .balanceValue {
-  font: 700 clamp(24px, 11cqw, 38px) / 1 inherit;
+  font-weight: 700;
+  font-size: clamp(24px, 11cqw, 38px);
+  line-height: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   letter-spacing: -0.038em;
   font-variant-numeric: tabular-nums;
+  /* Negative tracking is applied after the last glyph too, so the box ends up
+     narrower than the text and `overflow: hidden` shaves the final character.
+     This gives that tracking back as padding. */
+  padding-right: 0.038em;
+}
+
+/* The face is built from spans so it can live inside a button; they need to be blocks. */
+.cardFoot {
+  display: block;
+}
+
+.cardKind {
+  display: block;
 }
 
 .cardMask {
+  display: block;
   margin-top: 10px;
-  font: 600 12px/1 inherit;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
   letter-spacing: 0.06em;
 }
 
@@ -134,12 +325,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font: 700 15px/1 inherit;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
   color: var(--ink);
 }
 
 .limitLabel {
-  font: 500 11px/1 inherit;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 1;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--muted-2);
@@ -147,20 +342,26 @@
 
 .limitValue {
   margin-top: 6px;
-  font: 700 20px/1 inherit;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1;
   color: var(--ink);
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
 }
 
 .limitOf {
-  font: 500 13px/1 inherit;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1;
   color: var(--muted-2);
 }
 
 .limitCopy {
   margin-top: 6px;
-  font: 400 11.5px/1.35 inherit;
+  font-weight: 400;
+  font-size: 11.5px;
+  line-height: 1.35;
   color: var(--muted-1);
   text-wrap: pretty;
 }
@@ -179,7 +380,9 @@
   align-items: center;
   justify-content: center;
   gap: 7px;
-  font: 600 13px/1 inherit;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
   cursor: pointer;
   transition:
     background 0.2s,
@@ -206,7 +409,9 @@
 
 .historyTitle {
   margin-top: 24px;
-  font: 700 15px/1 inherit;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
   color: var(--ink);
   letter-spacing: -0.015em;
 }
@@ -222,14 +427,18 @@
 }
 
 .groupDay {
-  font: 600 11.5px/1 inherit;
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted-3);
 }
 
 .groupTotal {
-  font: 500 11.5px/1 inherit;
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 1;
   color: var(--muted-3);
   font-variant-numeric: tabular-nums;
 }
@@ -247,13 +456,17 @@
 }
 
 .emptyTitle {
-  font: 700 15px/1.3 inherit;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.3;
   color: var(--ink);
 }
 
 .emptyBody {
   margin-top: 7px;
-  font: 400 12.5px/1.5 inherit;
+  font-weight: 400;
+  font-size: 12.5px;
+  line-height: 1.5;
   color: var(--muted-2);
   text-wrap: pretty;
 }
@@ -267,10 +480,32 @@
  * Two panes from 900px: the card keeps a column of its own and the whole white sheet —
  * limit, actions and history — becomes a full-height column beside it.
  */
-@media (min-width: 760px) {
+@media (min-width: 620px) {
+  .sheetScroll {
+    padding: 22px 24px 28px;
+  }
+
+  .navTitle {
+    font-size: 17px;
+    letter-spacing: -0.02em;
+  }
+
+  .nav {
+    justify-content: space-between;
+  }
+}
+
+/*
+ * Two columns only once both of them fit. This screen's left column is a fixed-size card, so
+ * splitting at the same 620px the home screen uses left the history and the spend ring with
+ * ~230px: merchant names truncated, "Spent this month" broke over three lines, and the card
+ * column held a tall void beside it. Below this width the phone layout — card above, sheet
+ * under it — uses the fold's inner screen far better.
+ */
+@media (min-width: 900px) {
   .screen {
     display: grid;
-    grid-template-columns: minmax(264px, 380px) minmax(0, 1fr);
+    grid-template-columns: minmax(264px, 360px) minmax(0, 1fr);
     grid-template-rows: auto auto minmax(0, 1fr);
     column-gap: var(--pane-gap);
     padding: 0 var(--pane-gap) var(--pane-gap);
@@ -301,25 +536,17 @@
     height: 100%;
     border-radius: 24px;
   }
+}
 
-  .sheetScroll {
-    padding: 22px 24px 28px;
-  }
+/* Rail-dependent: these only make sense once the rail has replaced the bottom bar. */
+@media (min-width: 760px) {
 
   /* The rail owns "back" on desktop. */
   .backBtn {
     display: none;
   }
-
-  .navTitle {
-    font-size: 17px;
-    letter-spacing: -0.02em;
-  }
-
-  .nav {
-    justify-content: space-between;
-  }
 }
+
 
 /* A finger cannot aim like a mouse; the round controls meet the 44px floor on touch. */
 @media (pointer: coarse) {

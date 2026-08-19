@@ -1,0 +1,245 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 80;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  border: 0;
+  width: 100%;
+  cursor: pointer;
+  animation: bwFade 0.24s both;
+}
+
+.panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--paper);
+  border-radius: 28px 28px 0 0;
+  max-height: 86%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: bwSheet 0.4s var(--ease-spring) both;
+}
+
+.grabberRow {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 4px;
+}
+
+.grabber {
+  width: 38px;
+  height: 4px;
+  border-radius: 100px;
+  background: #dcdbd5;
+}
+
+.head {
+  flex: none;
+  padding: 6px 20px 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  padding-right: 0.02em;
+}
+
+.close {
+  width: 32px;
+  height: 32px;
+  border-radius: 100px;
+  background: var(--sand-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+}
+
+.list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 10px 16px calc(18px + var(--screen-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Each card deals up in turn, so the list reads as a wallet opening. */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 9px 12px 9px 9px;
+  border-radius: 18px;
+  background: var(--sand-1);
+  cursor: pointer;
+  text-align: left;
+  border: 1.5px solid transparent;
+  animation: bwDealUp 0.42s cubic-bezier(0.2, 0.9, 0.22, 1) both;
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    transform 0.16s var(--ease-out);
+}
+
+.item:active {
+  transform: scale(0.98);
+}
+
+.item:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.selected {
+  border-color: var(--ink);
+  background: var(--sand-2);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:not(:disabled):hover {
+    background: var(--sand-3);
+  }
+}
+
+.art {
+  position: relative;
+  width: 74px;
+  height: 47px;
+  border-radius: 9px;
+  overflow: hidden;
+  flex: none;
+  display: block;
+}
+
+.artNick {
+  position: absolute;
+  left: 8px;
+  bottom: 5px;
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.nick {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sub {
+  display: block;
+  margin-top: 4px;
+  font-weight: 400;
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--muted-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.balance {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex: none;
+}
+
+.tick {
+  width: 22px;
+  height: 22px;
+  border-radius: 100px;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+@media (pointer: coarse) {
+  .close {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/*
+ * Declared here, not imported: CSS Modules scopes animation names, so a reference to a
+ * keyframe defined in globals.css is renamed to one that does not exist and the animation
+ * silently never runs. Keeping the keyframes beside their only user keeps them honest.
+ */
+@keyframes bwFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* Uses a variable for the horizontal part so the wide-screen centring survives the slide. */
+@keyframes bwSheet {
+  from {
+    transform: translateX(var(--sheet-x, 0)) translateY(102%);
+  }
+  to {
+    transform: translateX(var(--sheet-x, 0)) translateY(0);
+  }
+}
+@keyframes bwDealUp {
+  from {
+    transform: translateY(26px) scale(0.97);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* A bottom sheet stretched across a desktop pane stops reading as a sheet; cap it and
+   centre it so it keeps the same proportions it has on a phone. */
+@media (min-width: 620px) {
+  .panel {
+    left: 50%;
+    right: auto;
+    width: min(100%, 460px);
+    --sheet-x: -50%;
+    border-radius: 28px 28px 0 0;
+  }
+}
