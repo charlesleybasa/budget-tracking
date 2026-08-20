@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { Mark } from "@/components/Mark";
 import { Nav } from "@/components/Nav";
 import { Toast } from "@/components/Toast";
+import { EraseDialog } from "@/components/overlays/EraseDialog";
 import { SuccessOverlay } from "@/components/overlays/SuccessOverlay";
 import { TxSheet } from "@/components/overlays/TxSheet";
 import { CardDetail } from "@/components/screens/CardDetail";
@@ -99,6 +100,11 @@ export function AppShell() {
           </div>
         )}
       </div>
+
+      {/* Outside the surface on purpose. The surface is the column beside the rail, so a
+          backdrop anchored to it leaves the rail live and clickable underneath the modal.
+          Anchored to the app, this covers the rail too. */}
+      {state.hydrated ? <EraseDialog /> : null}
     </main>
   );
 }

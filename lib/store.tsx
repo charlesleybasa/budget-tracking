@@ -98,6 +98,12 @@ export interface WalletState {
   // overlays
   success: SuccessState | null;
   toast: string | null;
+  /**
+   * The erase confirmation. It lives here rather than in the settings screen because the
+   * dialog has to render above the navigation, and a screen's own transform traps anything
+   * inside it in a stacking context the nav sits above.
+   */
+  eraseOpen: boolean;
 }
 
 const DEFAULT_ART: CardArt = {
@@ -152,6 +158,7 @@ function initialState(): WalletState {
     edNew: false,
     success: null,
     toast: null,
+    eraseOpen: false,
   };
 }
 
@@ -187,6 +194,7 @@ type UiPatch = Partial<
     | "nudgeDailyLog"
     | "onboarded"
     | "deckStep"
+    | "eraseOpen"
   >
 >;
 

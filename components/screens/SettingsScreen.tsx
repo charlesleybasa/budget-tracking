@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
-import { buildBackup, downloadText } from "@/lib/backup";
+import { downloadText } from "@/lib/backup";
+import { useBackup } from "@/lib/useBackup";
 import { useRestore } from "@/lib/useRestore";
 import { transactionsToCsv } from "@/lib/csv";
 import { useWallet } from "@/lib/store";
@@ -29,8 +30,6 @@ interface Row {
 
 export function SettingsScreen() {
   const { state, actions } = useWallet();
-  // Erasing everything is irreversible, so it takes two deliberate taps.
-  const [confirmReset, setConfirmReset] = useState(false);
 
   const activeName = state.cards.find((c) => c.id === state.activeId)?.nick ?? "your card";
 
@@ -58,27 +57,7 @@ export function SettingsScreen() {
     actions.toast(`Exported ${state.tx.length} rows.`);
   };
 
-  const backup = () => {
-    if (state.cards.length === 0) {
-      actions.toast("Nothing to back up yet.");
-      return;
-    }
-    downloadText(
-      `pesolita-backup-${new Date().toISOString().slice(0, 10)}.json`,
-      buildBackup({
-        cards: state.cards,
-        tx: state.tx,
-        dismissedNotices: state.dismissedNotices,
-        userName: state.userName,
-        privacy: state.privacy,
-        homeLayout: state.homeLayout,
-        nudgeLowBalance: state.nudgeLowBalance,
-        nudgeDailyLog: state.nudgeDailyLog,
-      }),
-      "application/json",
-    );
-    actions.toast("Backup saved.");
-  };
+  const backup = useBackup();
 
 
   const groups: ReadonlyArray<{ title: string; rows: Row[] }> = [
@@ -186,10 +165,8 @@ export function SettingsScreen() {
           onClick: exportCsv,
         },
         {
-          label: confirmReset ? "Tap again to erase everything" : "Start over",
-          sub: confirmReset
-            ? "Every card and every entry, gone for good"
-            : "Erase all cards and history from this device",
+          label: "Start over",
+          sub: "Erase all cards and history from this device",
           bg: "#f0483e26",
           danger: true,
           icon: (
@@ -197,14 +174,7 @@ export function SettingsScreen() {
               <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13M10 11v6M14 11v6" />
             </svg>
           ),
-          onClick: () => {
-            if (!confirmReset) {
-              setConfirmReset(true);
-              window.setTimeout(() => setConfirmReset(false), 4000);
-              return;
-            }
-            actions.resetEverything();
-          },
+          onClick: () => actions.patch({ eraseOpen: true }),
         },
       ],
     },

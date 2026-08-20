@@ -1,0 +1,311 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  /* Heavier than the routine sheets': this dialog should read as an interruption, and the
+     screen behind it should stop competing for attention. */
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(4px);
+  border: 0;
+  width: 100%;
+  cursor: pointer;
+  animation: bwFade 0.2s both;
+}
+
+.panel {
+  position: relative;
+  width: min(100%, 384px);
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--paper);
+  border-radius: 26px;
+  padding: 22px 22px 18px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+  animation: bwAlertIn 0.34s cubic-bezier(0.2, 0.9, 0.22, 1) both;
+}
+
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 100px;
+  background: #f0483e1f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  margin-top: 14px;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  /* Negative tracking is applied after the last glyph too, so the box ends up narrower than
+     the text. This gives that tracking back as padding. */
+  padding-right: 0.025em;
+}
+
+.stakes {
+  margin-top: 8px;
+  font-weight: 400;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted-1);
+}
+
+.strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* The escape hatch sits above the acknowledgement, because reading the stakes is exactly
+   the moment someone decides they want a copy. */
+.backup {
+  margin-top: 16px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 13px;
+  border-radius: 16px;
+  background: var(--sand-1);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    transform 0.16s var(--ease-out);
+}
+
+.backup:active {
+  transform: scale(0.985);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .backup:hover {
+    background: var(--sand-3);
+  }
+}
+
+.backupDone {
+  background: var(--green-pale);
+  border-color: #0b8f6a3d;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .backupDone:hover {
+    background: var(--green-pale);
+  }
+}
+
+.backupIcon {
+  width: 30px;
+  height: 30px;
+  border-radius: 100px;
+  background: #ffffffcc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.backupText {
+  flex: 1;
+  min-width: 0;
+}
+
+.backupLabel {
+  display: block;
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.backupSub {
+  display: block;
+  margin-top: 3px;
+  font-weight: 400;
+  font-size: 11.5px;
+  line-height: 1.35;
+  /* --muted-2 lands at 3.1:1 on this sand, under the 4.5 body minimum. In a dialog about
+     deleting everything, every line has to be readable. */
+  color: var(--muted-1);
+}
+
+.ack {
+  margin-top: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  /* The whole row is the target, not just the 22px box, so it is held to the 44px minimum
+     explicitly rather than left to whatever the padding happens to add up to. */
+  min-height: 44px;
+  padding: 11px 4px;
+  cursor: pointer;
+  position: relative;
+}
+
+/* The real checkbox stays in the accessibility tree and keeps native keyboard behaviour;
+   only its painting is replaced. */
+.ackBox {
+  position: absolute;
+  opacity: 0;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.ackTick {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 1.8px solid #c9c8c1;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    transform 0.16s var(--ease-out);
+}
+
+.ackTick > svg {
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 0.16s,
+    transform 0.2s var(--ease-out);
+}
+
+.ackBox:checked ~ .ackTick {
+  background: var(--red-deep);
+  border-color: var(--red-deep);
+}
+
+.ackBox:checked ~ .ackTick > svg {
+  opacity: 1;
+  transform: none;
+}
+
+.ackBox:focus-visible ~ .ackTick {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ackText {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink);
+  padding-top: 3px;
+}
+
+.actions {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.keep,
+.erase {
+  height: 48px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    opacity 0.2s,
+    transform 0.16s var(--ease-out);
+}
+
+.keep:active,
+.erase:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Keeping the data is the primary button. The destructive one is available, never inviting. */
+.keep {
+  background: var(--ink);
+  color: #fff;
+}
+
+.erase {
+  background: transparent;
+  color: var(--red-deep);
+}
+
+.erase:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .erase:not(:disabled):hover {
+    background: #f0483e14;
+  }
+}
+
+.gate {
+  margin-top: 6px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.3;
+  /* Same reason as the backup sub: --muted-3 is 2.3:1 here, well under the minimum. */
+  color: var(--muted-1);
+}
+
+/*
+ * Declared here, not imported: CSS Modules scopes animation names, so a reference to a
+ * keyframe defined in globals.css is renamed to one that does not exist and the animation
+ * silently never runs. Keeping the keyframes beside their only user keeps them honest.
+ */
+@keyframes bwFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bwAlertIn {
+  from {
+    transform: translateY(14px) scale(0.94);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: bwFade 0.18s ease both;
+  }
+}
