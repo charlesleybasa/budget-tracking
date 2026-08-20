@@ -86,7 +86,11 @@ export function CardDetail() {
             <button
               type="button"
               className={`${styles.face} ${styles.front}`}
-              style={{ background: card.art.c1 }}
+              // `backface-visibility: hidden` hides the rotated-away face visually, but not
+              // every browser excludes it from hit-testing too — some still let it swallow
+              // taps meant for the face on top. Pointer events are turned off explicitly
+              // here rather than trusted to the 3D transform.
+              style={{ background: card.art.c1, pointerEvents: flipped ? "none" : "auto" }}
               onClick={() => setFlipped(true)}
               aria-label={`${card.nick}. Show receiving details`}
               tabIndex={flipped ? -1 : 0}
@@ -124,6 +128,9 @@ export function CardDetail() {
               role="button"
               tabIndex={flipped ? 0 : -1}
               aria-label={`${card.nick}. Show card front`}
+              // Same reasoning as the front face: don't trust backface-visibility alone to
+              // keep this face out of hit-testing while it's rotated away.
+              style={{ pointerEvents: flipped ? "auto" : "none" }}
               onClick={() => setFlipped(false)}
               onKeyDown={(e) => {
                 if (e.key !== "Enter" && e.key !== " ") return;
