@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { Mark } from "@/components/Mark";
+import { MascotMark } from "@/components/MascotMark";
 import { Nav } from "@/components/Nav";
 import { Toast } from "@/components/Toast";
 import { EraseDialog } from "@/components/overlays/EraseDialog";
@@ -99,7 +99,7 @@ export function AppShell() {
         ) : (
           <div className={styles.splash}>
             <div className={styles.splashMark}>
-              <Mark color="#ffca28" />
+              <MascotMark />
             </div>
           </div>
         )}

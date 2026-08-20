@@ -3,7 +3,7 @@
 import { useRef, type CSSProperties } from "react";
 
 import { CardArt } from "@/components/CardArt";
-import { Mark } from "@/components/Mark";
+import { MascotMark } from "@/components/MascotMark";
 import { CARD_KINDS, PALETTES } from "@/lib/constants";
 import { Mascot } from "@/components/Mascot";
 import { moneyInput, peso } from "@/lib/format";
@@ -112,7 +112,7 @@ export function Onboarding() {
       <div className={styles.topBar}>
         <div className={styles.brand}>
           <div className={styles.brandMark}>
-            <Mark color="#ffffff" />
+            <MascotMark />
           </div>
           <div className={styles.brandName}>Pesolita</div>
         </div>

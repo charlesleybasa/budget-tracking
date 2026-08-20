@@ -1,16 +1,21 @@
 "use client";
 
+import { useId } from "react";
+
 import styles from "./Mascot.module.css";
 
 /**
- * Kuya Ipis — the wallet's mascot.
+ * Kuya Ipis — the wallet's mascot, drawn to the character sheet.
  *
- * Drawn as inline SVG and animated with CSS rather than shipped as a Lottie: the moving
- * parts here are a bob, a couple of rotations and a blink, which CSS does in ~3KB. A Lottie
- * runtime is ~48KB gzipped, which is a poor trade on a phone-first app whose whole card-art
- * engine is already inline SVG.
+ * Inline SVG animated with CSS rather than a Lottie: the moving parts are a bob, three
+ * rotations and a blink, which CSS does in ~3KB against a ~48KB gzipped Lottie runtime.
  *
- * Everything is authored in a 120x140 viewBox, so `transform-origin` values in the
+ * Anatomy follows the reference sheet rather than a generic bug: the abdomen is a brown
+ * shell with a *inset* tan segmented underbelly, and the wing case is a separate darker
+ * leaf laid over its left side. Painting the whole abdomen tan — the obvious shortcut —
+ * loses the rim of shell that reads as the character's back.
+ *
+ * Everything is authored in a 200x240 viewBox, so `transform-origin` values in the
  * stylesheet are plain user units against that grid.
  */
 export type MascotMood = "idle" | "wave" | "cheer";
@@ -28,107 +33,173 @@ export function Mascot({
   label?: string;
   className?: string;
 }) {
+  // Gradients and clips are document-scoped, so two mascots on one screen would otherwise
+  // share (and fight over) the same ids.
+  const uid = useId().replace(/:/g, "");
+  const headGrad = `${uid}-head`;
+  const bodyGrad = `${uid}-body`;
+  const bellyGrad = `${uid}-belly`;
+  const wingGrad = `${uid}-wing`;
+  const bagGrad = `${uid}-bag`;
+  const bellyClip = `${uid}-bellyclip`;
+  const mouthClip = `${uid}-mouthclip`;
+
   const moodClass = mood === "wave" ? styles.wave : mood === "cheer" ? styles.cheer : styles.idle;
 
   return (
     <svg
       className={`${styles.svg} ${moodClass} ${className}`}
       style={{ width: size }}
-      viewBox="0 0 120 140"
+      viewBox="0 0 200 240"
       role={label ? "img" : undefined}
       aria-label={label}
       aria-hidden={label ? undefined : true}
     >
-      <ellipse className={styles.shadow} cx="60" cy="132" rx="25" ry="4.5" />
+      <defs>
+        <radialGradient id={headGrad} cx="36%" cy="28%" r="82%">
+          <stop offset="0%" stopColor="#B2764B" />
+          <stop offset="100%" stopColor="#985B33" />
+        </radialGradient>
+        <radialGradient id={bodyGrad} cx="40%" cy="26%" r="86%">
+          <stop offset="0%" stopColor="#A9683E" />
+          <stop offset="100%" stopColor="#8E5430" />
+        </radialGradient>
+        <radialGradient id={bellyGrad} cx="42%" cy="24%" r="88%">
+          <stop offset="0%" stopColor="#D6B18B" />
+          <stop offset="100%" stopColor="#BE9670" />
+        </radialGradient>
+        <linearGradient id={wingGrad} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#70441F" />
+          <stop offset="100%" stopColor="#54301A" />
+        </linearGradient>
+        <radialGradient id={bagGrad} cx="38%" cy="26%" r="84%">
+          <stop offset="0%" stopColor="#9BD8AC" />
+          <stop offset="100%" stopColor="#78BC8B" />
+        </radialGradient>
+
+        <clipPath id={bellyClip}>
+          <ellipse cx="94" cy="168" rx="41" ry="46" />
+        </clipPath>
+        <clipPath id={mouthClip}>
+          <path d="M88 122 Q100 118 112 122 Q112 140 100 140 Q88 140 88 122 Z" />
+        </clipPath>
+      </defs>
+
+      <ellipse className={styles.shadow} cx="100" cy="238" rx="46" ry="6" />
 
       {/* Coins and sparkles sit outside the bobbing group so they rise independently. */}
       <g className={styles.burst}>
         <g className={styles.coinA}>
-          <circle className={styles.coin} cx="99" cy="52" r="8.5" />
-          <text className={styles.coinMark} x="99" y="56" textAnchor="middle">
+          <circle className={styles.coin} cx="168" cy="86" r="15" />
+          <text className={styles.coinMark} x="168" y="93" textAnchor="middle">
             ₱
           </text>
         </g>
         <g className={styles.coinB}>
-          <circle className={styles.coin} cx="22" cy="60" r="7" />
-          <text className={styles.coinMarkSm} x="22" y="63.5" textAnchor="middle">
+          <circle className={styles.coin} cx="34" cy="102" r="12" />
+          <text className={styles.coinMarkSm} x="34" y="108" textAnchor="middle">
             ₱
           </text>
         </g>
         <g className={styles.coinC}>
-          <circle className={styles.coin} cx="104" cy="86" r="6" />
+          <circle className={styles.coin} cx="176" cy="148" r="10" />
         </g>
 
-        <path className={styles.sparkA} d="M14 34 Q15 38 19 39 Q15 40 14 44 Q13 40 9 39 Q13 38 14 34 Z" />
-        <path className={styles.sparkB} d="M108 30 Q109 34 113 35 Q109 36 108 40 Q107 36 103 35 Q107 34 108 30 Z" />
-        <path className={styles.sparkC} d="M88 20 Q89 23 92 24 Q89 25 88 28 Q87 25 84 24 Q87 23 88 20 Z" />
+        <path
+          className={styles.sparkA}
+          d="M26 50 C27 55 29 57 34 58 C29 59 27 61 26 66 C25 61 23 59 18 58 C23 57 25 55 26 50 Z"
+        />
+        <path
+          className={styles.sparkB}
+          d="M182 44 C183 49 184.6 50.6 189 52 C184.6 53.4 183 55 182 60 C181 55 179.4 53.4 175 52 C179.4 50.6 181 49 182 44 Z"
+        />
+        <path
+          className={styles.sparkC}
+          d="M148 28 C148.8 32 150 33.2 154 34 C150 34.8 148.8 36 148 40 C147.2 36 146 34.8 142 34 C146 33.2 147.2 32 148 28 Z"
+        />
       </g>
 
       <g className={styles.floater}>
         {/* antennae — drawn first so the head caps their base */}
-        <path className={styles.antL} d="M49 30 C 44 18, 38 11, 31 7" />
-        <path className={styles.antR} d="M71 30 C 76 18, 82 11, 89 8" />
+        <path className={styles.antL} d="M82 62 C 74 42, 64 26, 50 14" />
+        <path className={styles.antR} d="M118 62 C 126 42, 136 26, 150 15" />
 
         {/* legs */}
-        <path className={styles.limb} d="M50 114 L47 128" />
-        <path className={styles.limb} d="M70 114 L73 128" />
+        <path className={styles.limb} d="M84 210 L79 235" />
+        <path className={styles.limb} d="M116 210 L121 235" />
 
-        {/* abdomen */}
-        <ellipse className={styles.body} cx="60" cy="92" rx="30" ry="30" />
-        <path className={styles.seg} d="M40 80 Q60 86 80 80" />
-        <path className={styles.seg} d="M38 92 Q60 99 82 92" />
-        <path className={styles.seg} d="M42 105 Q60 111 78 105" />
+        {/* abdomen: shell first, then the inset underbelly it frames */}
+        <ellipse className={styles.body} cx="100" cy="166" rx="53" ry="56" fill={`url(#${bodyGrad})`} />
+        <ellipse className={styles.belly} cx="94" cy="168" rx="41" ry="46" fill={`url(#${bellyGrad})`} />
+        <g clipPath={`url(#${bellyClip})`}>
+          <path className={styles.seg} d="M52 142 Q94 153 136 142" />
+          <path className={styles.seg} d="M50 164 Q94 176 138 164" />
+          <path className={styles.seg} d="M52 186 Q94 198 136 186" />
+          <path className={styles.seg} d="M60 206 Q94 216 128 206" />
+        </g>
 
-        {/* wing case, overlapping the abdomen's left edge */}
-        <path className={styles.wing} d="M36 70 C 24 80, 24 106, 41 119 C 49 104, 50 82, 36 70 Z" />
+        {/* wing case over the abdomen's right side */}
+        <path
+          className={styles.wing}
+          d="M136 118 C 161 133, 165 184, 134 216 C 114 191, 110 140, 136 118 Z"
+          fill={`url(#${wingGrad})`}
+        />
+        <path className={styles.wingVein} d="M134 130 C 145 152, 143 188, 130 208" />
 
         {/* arms */}
         <g className={styles.armL}>
-          <path className={styles.limb} d="M33 92 L26 102" />
+          <path className={styles.limb} d="M54 160 L34 180" />
         </g>
         <g className={styles.armR}>
-          <path className={styles.limb} d="M87 92 L94 102" />
+          <path className={styles.limb} d="M146 160 L166 180" />
         </g>
 
-        {/* Strap first: it runs up to the shoulder and the head is what hides its top end. */}
-        <path className={styles.strap} d="M57 93 C 64 86, 72 80, 77 71" />
+        {/* Strap before the head, so the head is what hides where it ends. It lies over the
+            wing case because a bag is worn on top of the shell, not under it. */}
+        <path className={styles.strap} d="M84 178 C 100 164, 120 142, 132 120" />
 
-        {/* sling bag, on the pale belly rather than over the wing case */}
+        {/* drawstring bag, hanging on the pale belly opposite the wing */}
+        <path className={styles.bagTuft} d="M74 182 C 70 177, 73 171, 78 172 C 80 168, 88 168, 90 172 C 95 171, 98 177, 94 182 Z" />
         <path
           className={styles.bag}
-          d="M49 101 C 49 95, 53 92, 57 92 C 61 92, 65 95, 65 101 C 67 111, 62 117, 57 117 C 52 117, 47 111, 49 101 Z"
+          d="M70 192 C 70 182, 76 176, 84 176 C 92 176, 98 182, 98 192 C 100 206, 92 215, 84 215 C 76 215, 68 206, 70 192 Z"
+          fill={`url(#${bagGrad})`}
         />
-        <path className={styles.bagTie} d="M51 95.5 Q57 92.5 63 95.5" />
-        <text className={styles.bagMark} x="57" y="109" textAnchor="middle">
+        <path className={styles.bagTie} d="M72 185 Q84 180 96 185" />
+        <text className={styles.bagMark} x="84" y="203" textAnchor="middle">
           ₱
         </text>
 
         {/* head */}
-        <ellipse className={styles.head} cx="60" cy="52" rx="33" ry="31" />
+        <ellipse className={styles.head} cx="100" cy="100" rx="57" ry="49" fill={`url(#${headGrad})`} />
 
-        <path className={styles.brow} d="M41 39 Q48 35 55 39" />
-        <path className={styles.brow} d="M65 39 Q72 35 79 39" />
+        <path className={styles.brow} d="M66 78 Q79 70 92 78" />
+        <path className={styles.brow} d="M108 78 Q121 70 134 78" />
 
-        <ellipse className={styles.cheek} cx="33" cy="63" rx="6.5" ry="4.6" />
-        <ellipse className={styles.cheek} cx="87" cy="63" rx="6.5" ry="4.6" />
+        <ellipse className={styles.cheek} cx="52" cy="122" rx="12" ry="8" />
+        <ellipse className={styles.cheek} cx="148" cy="122" rx="12" ry="8" />
 
         <g className={styles.eyes}>
-          <ellipse className={styles.eyeWhite} cx="48" cy="54" rx="8.5" ry="9.5" />
-          <ellipse className={styles.eyeWhite} cx="72" cy="54" rx="8.5" ry="9.5" />
-          <circle className={styles.pupil} cx="48.5" cy="55.2" r="5.4" />
-          <circle className={styles.pupil} cx="72.5" cy="55.2" r="5.4" />
-          <circle className={styles.glint} cx="45.9" cy="51.2" r="2.1" />
-          <circle className={styles.glint} cx="69.9" cy="51.2" r="2.1" />
+          <ellipse className={styles.eyeWhite} cx="79" cy="104" rx="17" ry="19.5" />
+          <ellipse className={styles.eyeWhite} cx="121" cy="104" rx="17" ry="19.5" />
+          <circle className={styles.pupil} cx="80.5" cy="106.5" r="11.5" />
+          <circle className={styles.pupil} cx="122.5" cy="106.5" r="11.5" />
+          <circle className={styles.glint} cx="74.5" cy="99" r="5" />
+          <circle className={styles.glint} cx="116.5" cy="99" r="5" />
+          <circle className={styles.glintSm} cx="86" cy="113" r="2.4" />
+          <circle className={styles.glintSm} cx="128" cy="113" r="2.4" />
         </g>
 
         {/* the squinting smile the cheer pose swaps to */}
         <g className={styles.eyesHappy}>
-          <path d="M41 57 Q48 47.5 55 57" />
-          <path d="M65 57 Q72 47.5 79 57" />
+          <path d="M64 108 Q79 89 94 108" />
+          <path d="M106 108 Q121 89 136 108" />
         </g>
 
-        <path className={styles.mouth} d="M52 67 A 8.4 8.4 0 0 0 68 67 Z" />
-
+        <path className={styles.mouth} d="M88 122 Q100 118 112 122 Q112 140 100 140 Q88 140 88 122 Z" />
+        <g clipPath={`url(#${mouthClip})`}>
+          <ellipse className={styles.tongue} cx="100" cy="141" rx="8" ry="5.5" />
+        </g>
       </g>
     </svg>
   );
