@@ -31,60 +31,22 @@
 .art {
   animation: bwPop 0.55s var(--ease-spring) both;
   position: relative;
-  width: 150px;
-  height: 150px;
   flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.face {
+.spotlight {
   position: absolute;
-  left: 18px;
-  top: 26px;
-  width: 92px;
-  height: 106px;
-  border-radius: 46% 54% 44% 56%/40% 40% 60% 60%;
-  background: var(--cream);
-}
-
-.eye {
-  position: absolute;
-  top: 52px;
-  width: 13px;
-  height: 13px;
+  width: 172px;
+  height: 172px;
   border-radius: 100px;
-  background: var(--ink);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
 }
 
-.mouth {
-  position: absolute;
-  left: 40px;
-  top: 76px;
-  width: 30px;
-  height: 15px;
-  border-radius: 0 0 40px 40px;
-  background: var(--ink);
-}
-
-.coin {
-  position: absolute;
-  right: 6px;
-  top: 8px;
-  width: 62px;
-  height: 62px;
-  border-radius: 100px;
-  background: var(--accent);
-  animation: bwFloat 2.8s ease-in-out infinite;
-}
-
-.tile {
-  position: absolute;
-  right: 22px;
-  bottom: 6px;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: var(--pink);
-  transform: rotate(18deg);
+.mascot {
+  position: relative;
 }
 
 .copy {
@@ -161,14 +123,5 @@
   }
   100% {
     transform: scale(1);
-  }
-}
-@keyframes bwFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-7px);
   }
 }

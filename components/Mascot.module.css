@@ -1,0 +1,399 @@
+/*
+ * The mascot carries its own palette rather than the app's tokens: it is a character, and a
+ * character's colours are its identity, not a theme. Only the coin borrows --accent, because
+ * a peso coin should match the peso yellow the rest of the app already uses.
+ */
+.svg {
+  --m-outline: #5c3720;
+  --m-head: #ab6a3f;
+  --m-body: #cea076;
+  --m-body-line: #ae8258;
+  --m-wing: #75431f;
+  --m-limb: #96562f;
+  --m-antenna: #6b4028;
+  --m-cheek: #e08a78;
+  --m-eye: #3b2214;
+  --m-bag: #86cb9c;
+  --m-strap: #6bbb87;
+  --m-mouth: #8f3b32;
+
+  display: block;
+  height: auto;
+  overflow: visible;
+}
+
+.shadow {
+  fill: rgba(11, 11, 12, 0.13);
+}
+
+/* ── body parts ───────────────────────────────────────────────────────────── */
+
+.head {
+  fill: var(--m-head);
+  stroke: var(--m-outline);
+  stroke-width: 2.4;
+}
+
+.body {
+  fill: var(--m-body);
+  stroke: var(--m-outline);
+  stroke-width: 2.4;
+}
+
+.seg {
+  fill: none;
+  stroke: var(--m-body-line);
+  stroke-width: 1.9;
+  stroke-linecap: round;
+}
+
+.wing {
+  fill: var(--m-wing);
+  stroke: var(--m-outline);
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+}
+
+.limb {
+  fill: none;
+  stroke: var(--m-limb);
+  stroke-width: 7.5;
+  stroke-linecap: round;
+}
+
+.antL,
+.antR {
+  fill: none;
+  stroke: var(--m-antenna);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+}
+
+.brow {
+  fill: none;
+  stroke: var(--m-outline);
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  opacity: 0.65;
+}
+
+.cheek {
+  fill: var(--m-cheek);
+  opacity: 0.5;
+}
+
+.eyeWhite {
+  fill: #fff;
+  stroke: var(--m-outline);
+  stroke-width: 1.9;
+}
+
+.pupil {
+  fill: var(--m-eye);
+}
+
+.glint {
+  fill: #fff;
+}
+
+.eyesHappy {
+  fill: none;
+  stroke: var(--m-eye);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.mouth {
+  fill: var(--m-mouth);
+}
+
+.strap {
+  fill: none;
+  stroke: var(--m-strap);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+}
+
+.bag {
+  fill: var(--m-bag);
+  stroke: var(--m-outline);
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+}
+
+.bagTie {
+  fill: none;
+  stroke: var(--m-outline);
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  opacity: 0.45;
+}
+
+.bagMark {
+  fill: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ── coins and sparkles ───────────────────────────────────────────────────── */
+
+.burst {
+  opacity: 0;
+}
+
+.coin {
+  fill: var(--accent, #ffca28);
+  stroke: #c99a12;
+  stroke-width: 1.8;
+}
+
+.coinMark {
+  fill: #8a6a08;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.coinMarkSm {
+  fill: #8a6a08;
+  font-size: 8.5px;
+  font-weight: 700;
+}
+
+.sparkA,
+.sparkB,
+.sparkC {
+  fill: var(--m-bag);
+}
+
+.sparkB {
+  fill: var(--accent, #ffca28);
+}
+
+/* ── idle: always on ──────────────────────────────────────────────────────── */
+
+.floater {
+  animation: mascotBob 3s ease-in-out infinite;
+  transform-origin: 60px 122px;
+}
+
+/* Antennae lag the bob slightly, which is what stops it reading as one rigid block. */
+.antL {
+  animation: mascotAntL 3.4s ease-in-out infinite;
+  transform-origin: 49px 30px;
+}
+
+.antR {
+  animation: mascotAntR 3.4s ease-in-out infinite;
+  transform-origin: 71px 30px;
+}
+
+/* One shared origin flattens both eyes together, since they sit on the same baseline. */
+.eyes {
+  animation: mascotBlink 5.2s ease-in-out infinite;
+  transform-origin: 60px 55px;
+}
+
+/* ── wave ─────────────────────────────────────────────────────────────────── */
+
+.armL,
+.armR {
+  transform-origin: 33px 92px;
+}
+
+.armR {
+  transform-origin: 87px 92px;
+}
+
+.wave .armR {
+  animation: mascotWave 1.15s ease-in-out infinite;
+}
+
+/* ── cheer ────────────────────────────────────────────────────────────────── */
+
+.cheer .floater {
+  animation: mascotJump 1.5s cubic-bezier(0.3, 0.9, 0.35, 1) infinite;
+}
+
+.cheer .armL {
+  transform: rotate(96deg);
+}
+
+.cheer .armR {
+  transform: rotate(-96deg);
+}
+
+/* Eyes squeeze shut, so the open pair steps aside rather than blinking underneath. */
+.cheer .eyes {
+  animation: none;
+  opacity: 0;
+}
+
+.cheer .eyesHappy {
+  opacity: 1;
+}
+
+.cheer .burst {
+  opacity: 1;
+}
+
+.cheer .coinA {
+  animation: mascotCoin 1.9s ease-out infinite;
+  transform-origin: 99px 52px;
+}
+
+.cheer .coinB {
+  animation: mascotCoin 1.9s ease-out 0.35s infinite;
+  transform-origin: 22px 60px;
+}
+
+.cheer .coinC {
+  animation: mascotCoin 1.9s ease-out 0.7s infinite;
+  transform-origin: 104px 86px;
+}
+
+.cheer .sparkA {
+  animation: mascotSpark 1.6s ease-in-out infinite;
+  transform-origin: 14px 39px;
+}
+
+.cheer .sparkB {
+  animation: mascotSpark 1.6s ease-in-out 0.45s infinite;
+  transform-origin: 108px 35px;
+}
+
+.cheer .sparkC {
+  animation: mascotSpark 1.6s ease-in-out 0.85s infinite;
+  transform-origin: 88px 24px;
+}
+
+/*
+ * Declared here, not imported: CSS Modules scopes animation names, so a reference to a
+ * keyframe defined in globals.css is renamed to one that does not exist and the animation
+ * silently never runs. Keeping the keyframes beside their only user keeps them honest.
+ */
+@keyframes mascotBob {
+  0%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  50% {
+    transform: translateY(-3.5px) scale(0.995, 1.008);
+  }
+}
+
+@keyframes mascotAntL {
+  0%,
+  100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+
+@keyframes mascotAntR {
+  0%,
+  100% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(-4deg);
+  }
+}
+
+/* Open almost the whole cycle — a blink is an event, not a rhythm. */
+@keyframes mascotBlink {
+  0%,
+  91%,
+  100% {
+    transform: scaleY(1);
+  }
+  94%,
+  96% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes mascotWave {
+  0%,
+  100% {
+    transform: rotate(-96deg);
+  }
+  50% {
+    transform: rotate(-134deg);
+  }
+}
+
+/* Anticipation, launch, squash on landing — the squash is what sells the weight. */
+@keyframes mascotJump {
+  0% {
+    transform: translateY(0) scale(1, 1);
+  }
+  14% {
+    transform: translateY(2px) scale(1.05, 0.94);
+  }
+  38% {
+    transform: translateY(-15px) scale(0.96, 1.05);
+  }
+  60% {
+    transform: translateY(0) scale(1.06, 0.93);
+  }
+  76% {
+    transform: translateY(0) scale(0.99, 1.01);
+  }
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+}
+
+@keyframes mascotCoin {
+  0% {
+    transform: translateY(6px) scale(0.4);
+    opacity: 0;
+  }
+  22% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-34px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes mascotSpark {
+  0%,
+  100% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  45% {
+    transform: scale(1.15) rotate(70deg);
+    opacity: 1;
+  }
+}
+
+/*
+ * Reduced motion keeps the character, drops the movement. The cheer pose still reads as a
+ * celebration because the arms, squint and coins are static states, not animations.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .floater,
+  .antL,
+  .antR,
+  .eyes,
+  .wave .armR,
+  .cheer .floater,
+  .cheer .coinA,
+  .cheer .coinB,
+  .cheer .coinC,
+  .cheer .sparkA,
+  .cheer .sparkB,
+  .cheer .sparkC {
+    animation: none;
+  }
+
+  .wave .armR {
+    transform: rotate(-110deg);
+  }
+}

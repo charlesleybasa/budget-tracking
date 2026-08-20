@@ -2,6 +2,7 @@
 
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
+import { Mascot } from "@/components/Mascot";
 import { ReceiptViewer } from "@/components/ReceiptViewer";
 import { TxRow } from "@/components/TxRow";
 import { CATEGORIES } from "@/lib/constants";
@@ -270,6 +271,7 @@ export function ActivityPanel() {
 
         {state.tx.length === 0 ? (
           <div className={styles.empty}>
+            <Mascot mood="idle" size={92} className={styles.emptyMascot} />
             <div className={styles.emptyTitle}>Nothing logged yet.</div>
             <p className={styles.emptyBody}>
               Tap the blue button and put in what you just spent. Two taps, and this fills up.

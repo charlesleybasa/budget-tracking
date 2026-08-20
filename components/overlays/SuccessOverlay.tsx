@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 
+import { Mascot } from "@/components/Mascot";
 import { useWallet } from "@/lib/store";
 
 import styles from "./SuccessOverlay.module.css";
@@ -44,13 +45,11 @@ export function SuccessOverlay() {
     <div className={styles.screen} role="dialog" aria-modal="true" aria-label={state.success.head}>
       <Confetti />
 
-      <div className={styles.art} aria-hidden="true">
-        <div className={styles.face} />
-        <div className={styles.eye} style={{ left: 34 }} />
-        <div className={styles.eye} style={{ left: 62 }} />
-        <div className={styles.mouth} />
-        <div className={styles.coin} />
-        <div className={styles.tile} />
+      <div className={styles.art}>
+        {/* A warm disc behind the character: the mascot's browns are drawn against cream, and
+            they go muddy straight onto the blue. */}
+        <span className={styles.spotlight} aria-hidden="true" />
+        <Mascot mood="cheer" size={148} className={styles.mascot} />
       </div>
 
       <div className={styles.copy}>

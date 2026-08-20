@@ -141,6 +141,13 @@
 }
 
 /* ── steps 1–3 ── */
+
+/* Pulled left of the text block's optical edge so the character sits in the margin rather
+   than looking like a bullet on the headline. */
+.mascot {
+  margin: 0 0 12px -10px;
+}
+
 .head {
   font-weight: 800;
   font-size: 30px;

@@ -5,6 +5,7 @@ import { useRef, type CSSProperties } from "react";
 import { CardArt } from "@/components/CardArt";
 import { Mark } from "@/components/Mark";
 import { CARD_KINDS, PALETTES } from "@/lib/constants";
+import { Mascot } from "@/components/Mascot";
 import { moneyInput, peso } from "@/lib/format";
 import { useWallet } from "@/lib/store";
 import type { ArtStyle } from "@/lib/types";
@@ -152,6 +153,7 @@ export function Onboarding() {
 
       {obStep === 1 ? (
         <div key={obStep} className={`${styles.step} ${styles.stepPadded} bwEnterSide`}>
+          <Mascot mood="wave" size={104} className={styles.mascot} />
           <h1 className={styles.head}>
             First — what
             <br />
