@@ -116,7 +116,21 @@ export function CardDetail() {
               </span>
             </button>
 
-            <div className={`${styles.face} ${styles.back}`}>
+            {/* A div, not a button: it holds the account-number button below, and buttons
+                can't nest. Tapping anywhere on this face that isn't one of those controls
+                flips the card back, the same way tapping the front flipped it here. */}
+            <div
+              className={`${styles.face} ${styles.back}`}
+              role="button"
+              tabIndex={flipped ? 0 : -1}
+              aria-label={`${card.nick}. Show card front`}
+              onClick={() => setFlipped(false)}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter" && e.key !== " ") return;
+                e.preventDefault();
+                setFlipped(false);
+              }}
+            >
               <div className={styles.backHead}>
                 <div className={styles.backTitle}>Receive money</div>
                 <button
@@ -143,7 +157,10 @@ export function CardDetail() {
                     type="button"
                     className={styles.backAccount}
                     tabIndex={flipped ? 0 : -1}
-                    onClick={() => {
+                    onClick={(e) => {
+                      // Copying is the point of tapping this row — flipping the card away
+                      // right after would undercut it, so this stays on the back.
+                      e.stopPropagation();
                       navigator.clipboard
                         ?.writeText(card.accountNumber ?? "")
                         .then(() => {
@@ -163,13 +180,22 @@ export function CardDetail() {
                     type="button"
                     className={styles.backEmpty}
                     tabIndex={flipped ? 0 : -1}
-                    onClick={() => actions.openEditor(card.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      actions.openEditor(card.id);
+                    }}
                   >
                     <span className={styles.backEmptyTitle}>Nothing to show yet</span>
                     <span className={styles.backEmptySub}>Add your QR or account number so people can pay you</span>
                   </button>
                 ) : null}
               </div>
+
+              <span className={styles.flipHint} aria-hidden="true">
+                <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.55)" strokeWidth={2.2} strokeLinecap="round">
+                  <path d="M3 12a9 9 0 0114-7.5M21 12a9 9 0 01-14 7.5M17 4v4h-4M7 20v-4h4" />
+                </svg>
+              </span>
             </div>
           </div>
         </div>
@@ -233,7 +259,7 @@ export function CardDetail() {
                       tx={t}
                       cardNick={card.nick}
                       variant="detail"
-                      onClick={() => actions.go("search")}
+                      onClick={() => actions.openTxEdit(t.id)}
                       onViewReceipt={setReceipt}
                     />
                   ))}

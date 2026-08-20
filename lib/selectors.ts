@@ -132,27 +132,60 @@ export function guessCategory(note: string, current: CategoryName): CategoryName
   return null;
 }
 
+export type InsightPeriod = "week" | "month" | "all";
+
+/** Rolling window each period looks back over. "All time" has no window — and no "prior"
+ *  window to compare against, which is why it gets its own branch below rather than just a
+ *  very large number here. */
+const PERIOD_DAYS: Record<Exclude<InsightPeriod, "all">, number> = { week: 7, month: 30 };
+
+export function periodLabel(period: InsightPeriod): string {
+  return period === "week" ? "This week" : period === "month" ? "This month" : "All time";
+}
+
 export interface WeeklyInsight {
   head: string;
   body: string;
 }
 
-/** The week's dominant spending category, and how it moved against the week before. */
-export function weeklyInsight(tx: readonly Transaction[]): WeeklyInsight {
-  const thisWeek = categoryTotals(tx, 7);
-  if (thisWeek.length === 0) {
+/**
+ * The period's dominant spending category, and — for week/month — how it moved against the
+ * equivalent period before it. All time has nothing to compare against, so it just names
+ * the leader.
+ */
+export function periodInsight(tx: readonly Transaction[], period: InsightPeriod): WeeklyInsight {
+  if (period === "all") {
+    const totals = categoryTotals(tx);
+    if (totals.length === 0) {
+      return {
+        head: "Nothing yet",
+        body: "Once you log a spend, this shows where it's actually been going.",
+      };
+    }
+    const top = totals[0];
     return {
-      head: "A quiet week",
-      body: "Nothing logged in the last seven days. Either you spent nothing, or you owe your future self some typing.",
+      head: `${top.name} leads overall`,
+      body: `₱${peso0(top.amount)} on ${top.name.toLowerCase()} across everything you've logged — more than any other category.`,
     };
   }
 
-  const top = thisWeek[0];
-  const priorWeek = tx.filter((t) => {
-    const d = daysAgo(t.at);
-    return d >= 7 && d < 14 && t.amount < 0 && t.cat === top.name;
-  });
-  const prior = priorWeek.reduce((sum, t) => sum + Math.abs(t.amount), 0);
+  const days = PERIOD_DAYS[period];
+  const noun = period === "week" ? "week" : "month";
+  const current = categoryTotals(tx, days);
+  if (current.length === 0) {
+    return {
+      head: `A quiet ${noun}`,
+      body: `Nothing logged in the last ${days} days. Either you spent nothing, or you owe your future self some typing.`,
+    };
+  }
+
+  const top = current[0];
+  const prior = tx
+    .filter((t) => {
+      const d = daysAgo(t.at);
+      return d >= days && d < days * 2 && t.amount < 0 && t.cat === top.name;
+    })
+    .reduce((sum, t) => sum + Math.abs(t.amount), 0);
   const delta = top.amount - prior;
   const direction = delta > 0 ? "up" : "down";
 
@@ -160,8 +193,8 @@ export function weeklyInsight(tx: readonly Transaction[]): WeeklyInsight {
     head: `${top.name} is quietly winning`,
     body:
       prior > 0
-        ? `₱${peso0(top.amount)} on ${top.name.toLowerCase()} this week — ${direction} ₱${peso0(delta)} from last. Everything else you actually held steady.`
-        : `₱${peso0(top.amount)} on ${top.name.toLowerCase()} this week, and nothing there the week before. Worth watching.`,
+        ? `₱${peso0(top.amount)} on ${top.name.toLowerCase()} this ${noun} — ${direction} ₱${peso0(Math.abs(delta))} from the ${noun} before. Everything else you actually held steady.`
+        : `₱${peso0(top.amount)} on ${top.name.toLowerCase()} this ${noun}, and nothing there the ${noun} before. Worth watching.`,
   };
 }
 
@@ -170,8 +203,8 @@ export interface BiggestHit {
   sub: string;
 }
 
-export function biggestHit(tx: readonly Transaction[]): BiggestHit {
-  const out = tx.filter((t) => t.amount < 0);
+export function biggestHit(tx: readonly Transaction[], withinDays?: number): BiggestHit {
+  const out = tx.filter((t) => t.amount < 0 && (withinDays === undefined || daysAgo(t.at) < withinDays));
   if (out.length === 0) return { value: "₱0", sub: "nothing logged yet" };
   const worst = out.reduce((a, b) => (Math.abs(b.amount) > Math.abs(a.amount) ? b : a));
   return { value: `₱${peso0(Math.abs(worst.amount))}`, sub: `${worst.merchant} · ${worst.cat}` };

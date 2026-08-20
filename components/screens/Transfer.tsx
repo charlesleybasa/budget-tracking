@@ -2,7 +2,7 @@
 
 import { CardArtFor } from "@/components/CardArt";
 import { Keypad } from "@/components/Keypad";
-import { minusIfNegative, peso, peso0 } from "@/lib/format";
+import { amountDisplay, minusIfNegative, peso, peso0 } from "@/lib/format";
 import { findCard } from "@/lib/selectors";
 import { useWallet } from "@/lib/store";
 
@@ -122,7 +122,7 @@ export function Transfer() {
           <div className={styles.amountLabel}>Amount</div>
           <div className={styles.amountRow}>
             <span className={styles.amountPeso}>₱</span>
-            <span className={styles.amountValue}>{state.amt || "0"}</span>
+            <span className={styles.amountValue}>{amountDisplay(state.amt)}</span>
           </div>
           <div className={styles.quickRow}>
             {QUICK_AMOUNTS.map((value) => (

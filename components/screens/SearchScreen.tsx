@@ -84,10 +84,7 @@ export function SearchScreen() {
             cardNick={findCard(state.cards, t.cardId)?.nick ?? "Deleted card"}
             variant="search"
             index={i}
-            onClick={() => {
-              actions.patch({ activeId: t.cardId });
-              actions.go("detail");
-            }}
+            onClick={() => actions.openTxEdit(t.id)}
             onViewReceipt={setReceipt}
           />
         ))}

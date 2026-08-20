@@ -1,0 +1,53 @@
+/* Only what TxSheet.module.css doesn't already have — everything else (panel, amount,
+   category chips, note field, receipt row, the primary submit button) is imported from
+   there directly, so the two sheets can never drift apart in look and feel. */
+
+.footer {
+  flex: none;
+  display: flex;
+  gap: 8px;
+  padding: 6px 20px calc(20px + var(--screen-bottom));
+}
+
+.delete {
+  flex: none;
+  width: 128px;
+  height: 54px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  background: #f0483e14;
+  color: var(--red-deep);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.16s var(--ease-out);
+}
+
+.delete:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .delete:hover {
+    background: #f0483e22;
+  }
+}
+
+.deleteConfirm {
+  background: var(--red-deep);
+  color: #fff;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .deleteConfirm:hover {
+    background: var(--red-deep);
+  }
+}

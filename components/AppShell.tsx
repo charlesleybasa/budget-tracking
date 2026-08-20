@@ -7,6 +7,7 @@ import { Nav } from "@/components/Nav";
 import { Toast } from "@/components/Toast";
 import { EraseDialog } from "@/components/overlays/EraseDialog";
 import { SuccessOverlay } from "@/components/overlays/SuccessOverlay";
+import { TxEditSheet } from "@/components/overlays/TxEditSheet";
 import { TxSheet } from "@/components/overlays/TxSheet";
 import { CardDetail } from "@/components/screens/CardDetail";
 import { CardEditor } from "@/components/screens/CardEditor";
@@ -53,9 +54,10 @@ export function AppShell() {
   const { state, actions } = useWallet();
 
   // Hardware and browser back should walk back through the app, not out of it.
-  const away = state.screen !== "home" || !!state.sheet || !!state.success;
+  const away = state.screen !== "home" || !!state.sheet || !!state.success || !!state.editingTxId;
   useBackNavigation(!away, () => {
     if (state.success) actions.closeSuccess();
+    else if (state.editingTxId) actions.closeTxEdit();
     else if (state.sheet) actions.closeSheet();
     else actions.go("home");
   });
@@ -69,12 +71,13 @@ export function AppShell() {
       // because the app-level listener is registered first and can win the race.
       if (document.querySelector("[data-overlay-layer]")) return;
       if (state.success) actions.closeSuccess();
+      else if (state.editingTxId) actions.closeTxEdit();
       else if (state.sheet) actions.closeSheet();
       else if (DISMISSABLE.includes(state.screen)) actions.go("home");
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [state.success, state.sheet, state.screen, actions]);
+  }, [state.success, state.editingTxId, state.sheet, state.screen, actions]);
   // Onboarding owns the whole viewport; every other screen keeps the navigation beside it.
   const showNav = state.hydrated && state.screen !== "onboard";
 
@@ -89,6 +92,7 @@ export function AppShell() {
           <>
             <CurrentScreen />
             <TxSheet />
+            <TxEditSheet />
             <SuccessOverlay />
             <Toast />
           </>

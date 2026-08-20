@@ -96,7 +96,8 @@
   flex-direction: column;
   gap: 10px;
   padding: 14px 16px 16px;
-  cursor: default;
+  /* The whole face flips the card back on tap, same as the front does going the other way. */
+  cursor: pointer;
 }
 
 .backHead {

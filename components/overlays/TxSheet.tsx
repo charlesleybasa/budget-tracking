@@ -6,6 +6,7 @@ import { CardArtFor } from "@/components/CardArt";
 import { CardPicker } from "@/components/CardPicker";
 import { Keypad } from "@/components/Keypad";
 import { CATEGORIES } from "@/lib/constants";
+import { amountDisplay } from "@/lib/format";
 import { findCard, guessCategory } from "@/lib/selectors";
 import { ImageError, RECEIPT_OPTIONS, readImage } from "@/lib/image";
 import { useWallet } from "@/lib/store";
@@ -128,7 +129,7 @@ export function TxSheet() {
             <span className={styles.amountSign} style={{ color: ACCENTS[sheet] }}>
               {SIGNS[sheet]}₱
             </span>
-            <span className={styles.amountValue}>{state.amt || "0"}</span>
+            <span className={styles.amountValue}>{amountDisplay(state.amt)}</span>
           </div>
           <div className={styles.sub}>{SUBTITLES[sheet]}</div>
 

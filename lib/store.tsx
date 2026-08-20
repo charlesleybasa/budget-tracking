@@ -95,6 +95,9 @@ export interface WalletState {
   ed: CardDraft | null;
   edNew: boolean;
 
+  /** The transaction open in the edit sheet, or null when it is closed. */
+  editingTxId: string | null;
+
   // overlays
   success: SuccessState | null;
   toast: string | null;
@@ -156,6 +159,7 @@ function initialState(): WalletState {
     nudgeDailyLog: true,
     ed: null,
     edNew: false,
+    editingTxId: null,
     success: null,
     toast: null,
     eraseOpen: false,
@@ -212,6 +216,10 @@ type Action =
   | { type: "openSheet"; kind: SheetKind; cardId?: string }
   | { type: "saveTx" }
   | { type: "doTransfer" }
+  | { type: "openTxEdit"; id: string }
+  | { type: "closeTxEdit" }
+  | { type: "saveTxEdit" }
+  | { type: "deleteTx"; id: string }
   | { type: "toggleFreeze"; cardId: string }
   | { type: "openEditor"; cardId: string | null }
   | { type: "editCard"; patch: Partial<CardDraft> }
@@ -435,6 +443,81 @@ function reducer(state: WalletState, action: Action): WalletState {
       };
     }
 
+    // Reopens the amount/category/note keypad the create flow uses, seeded from the entry
+    // instead of blank. It shares those fields rather than a parallel set of edit-only ones,
+    // since only one of "creating" and "editing" is ever open at a time.
+    case "openTxEdit": {
+      const tx = state.tx.find((t) => t.id === action.id);
+      if (!tx) return state;
+      return {
+        ...state,
+        editingTxId: tx.id,
+        amt: String(Math.abs(tx.amount)),
+        cat: tx.cat,
+        note: tx.note || tx.merchant,
+        receipt: tx.receipt ?? null,
+      };
+    }
+
+    case "closeTxEdit":
+      return { ...state, editingTxId: null };
+
+    case "saveTxEdit": {
+      const id = state.editingTxId;
+      if (!id) return state;
+      const original = state.tx.find((t) => t.id === id);
+      if (!original) return { ...state, editingTxId: null };
+
+      const amount = parseFloat(state.amt);
+      if (!amount) return withToast(state, "Put a number in first.");
+
+      // The sign — money in or out — isn't something the edit sheet exposes; only the
+      // amount, category and label can change, not what kind of entry this is.
+      const sign = original.amount < 0 ? -1 : 1;
+      const newAmount = sign * amount;
+      const noteText = state.note.trim();
+      const updated: Transaction = {
+        ...original,
+        amount: newAmount,
+        cat: state.cat,
+        note: noteText,
+        merchant: noteText || original.merchant,
+        receipt: state.receipt ?? undefined,
+      };
+
+      const delta = newAmount - original.amount;
+      const nextCards = state.cards.map((c) => (c.id === original.cardId ? { ...c, bal: c.bal + delta } : c));
+
+      return withToast(
+        {
+          ...state,
+          cards: nextCards,
+          dismissedNotices: pruneDismissals(nextCards, state.dismissedNotices),
+          tx: state.tx.map((t) => (t.id === id ? updated : t)),
+          editingTxId: null,
+        },
+        "Updated.",
+      );
+    }
+
+    case "deleteTx": {
+      const tx = state.tx.find((t) => t.id === action.id);
+      if (!tx) return state;
+      // Reverses exactly what creating it did to its own card's balance — nothing else
+      // touched that entry, so nothing else needs undoing.
+      const nextCards = state.cards.map((c) => (c.id === tx.cardId ? { ...c, bal: c.bal - tx.amount } : c));
+      return withToast(
+        {
+          ...state,
+          cards: nextCards,
+          dismissedNotices: pruneDismissals(nextCards, state.dismissedNotices),
+          tx: state.tx.filter((t) => t.id !== action.id),
+          editingTxId: state.editingTxId === action.id ? null : state.editingTxId,
+        },
+        "Deleted. Balance adjusted.",
+      );
+    }
+
     case "toggleFreeze": {
       const card = findCard(state.cards, action.cardId);
       if (!card) return state;
@@ -656,6 +739,10 @@ export interface WalletActions {
   closeSheet: () => void;
   saveTx: () => void;
   doTransfer: () => void;
+  openTxEdit: (id: string) => void;
+  closeTxEdit: () => void;
+  saveTxEdit: () => void;
+  deleteTx: (id: string) => void;
   toggleFreeze: (cardId: string) => void;
   openEditor: (cardId: string | null) => void;
   editCard: (patch: Partial<CardDraft>) => void;
@@ -794,6 +881,10 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       closeSheet: () => dispatch({ type: "patch", patch: { sheet: null } }),
       saveTx: () => dispatch({ type: "saveTx" }),
       doTransfer: () => dispatch({ type: "doTransfer" }),
+      openTxEdit: (id) => dispatch({ type: "openTxEdit", id }),
+      closeTxEdit: () => dispatch({ type: "closeTxEdit" }),
+      saveTxEdit: () => dispatch({ type: "saveTxEdit" }),
+      deleteTx: (id) => dispatch({ type: "deleteTx", id }),
       toggleFreeze: (cardId) => dispatch({ type: "toggleFreeze", cardId }),
       openEditor: (cardId) => dispatch({ type: "openEditor", cardId }),
       editCard: (patch) => dispatch({ type: "editCard", patch }),

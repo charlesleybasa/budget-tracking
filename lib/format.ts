@@ -80,3 +80,15 @@ export function moneyInput(value: string): string {
   if (rest.length === 0) return whole.slice(0, 9);
   return `${whole.slice(0, 9)}.${rest.join("").slice(0, 2)}`;
 }
+
+/**
+ * `state.amt` as the keypad display, not as typed: thousands separators on the whole part,
+ * a trailing "." kept exactly where the user left it. Display only — the underlying digit
+ * string is what actually gets parsed, so this never touches it.
+ */
+export function amountDisplay(raw: string): string {
+  if (!raw) return "0";
+  const [whole, frac] = raw.split(".");
+  const grouped = (whole || "0").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return frac === undefined ? grouped : `${grouped}.${frac}`;
+}

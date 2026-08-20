@@ -50,6 +50,32 @@
   width: 36px;
 }
 
+.periodTrack {
+  margin-top: 14px;
+  height: 38px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 3px;
+  display: flex;
+  gap: 2px;
+}
+
+.periodTab {
+  flex: 1;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.22s,
+    color 0.22s;
+}
+
 .insight {
   margin-top: 18px;
   border-radius: 20px;
