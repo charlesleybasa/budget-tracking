@@ -1,14 +1,108 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <circle cx="24" cy="24" r="22.6" fill="#ffca28" stroke="#d8a318" stroke-width="2.8"/>
-  <circle cx="24" cy="24" r="18.4" fill="none" stroke="#d8a318" stroke-width="1.3" opacity="0.4"/>
-  <path d="M19.5 17.5 C 17.6 13.4, 15.4 10.8, 12.3 8.6" fill="none" stroke="#4f3020" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M28.5 17.5 C 30.4 13.4, 32.6 10.8, 35.7 8.6" fill="none" stroke="#4f3020" stroke-width="2.5" stroke-linecap="round"/>
-  <ellipse cx="24" cy="27.6" rx="13.6" ry="11.9" fill="#a2653c" stroke="#4f3020" stroke-width="2.2"/>
-  <ellipse cx="18.9" cy="26.4" rx="4.4" ry="5.1" fill="#fff" stroke="#4f3020" stroke-width="1.5"/>
-  <ellipse cx="29.1" cy="26.4" rx="4.4" ry="5.1" fill="#fff" stroke="#4f3020" stroke-width="1.5"/>
-  <circle cx="19.3" cy="27.1" r="2.9" fill="#33200f"/>
-  <circle cx="29.5" cy="27.1" r="2.9" fill="#33200f"/>
-  <circle cx="17.9" cy="25.4" r="1.25" fill="#fff"/>
-  <circle cx="28.1" cy="25.4" r="1.25" fill="#fff"/>
-  <path d="M21 33.4 A 3.4 3.4 0 0 0 27 33.4 Z" fill="#82322b"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="42%" cy="30%" r="82%">
+      <stop offset="0%" stop-color="#F9EDD6"/>
+      <stop offset="62%" stop-color="#EBD5AF"/>
+      <stop offset="100%" stop-color="#D6B88C"/>
+    </radialGradient>
+    <radialGradient id="hd" cx="35%" cy="24%" r="80%">
+      <stop offset="0%" stop-color="#BA7F52"/>
+      <stop offset="100%" stop-color="#935729"/>
+    </radialGradient>
+    <radialGradient id="bd" cx="38%" cy="22%" r="86%">
+      <stop offset="0%" stop-color="#AE6D42"/>
+      <stop offset="100%" stop-color="#88502E"/>
+    </radialGradient>
+    <radialGradient id="bl" cx="40%" cy="20%" r="88%">
+      <stop offset="0%" stop-color="#DDBA93"/>
+      <stop offset="100%" stop-color="#BE956E"/>
+    </radialGradient>
+    <linearGradient id="wg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#77491F"/>
+      <stop offset="100%" stop-color="#52301A"/>
+    </linearGradient>
+    <clipPath id="frame"><rect width="512" height="512" rx="115"/></clipPath>
+    <clipPath id="bellyclip"><ellipse cx="236" cy="476" rx="116" ry="112"/></clipPath>
+    <clipPath id="headclip"><ellipse cx="228" cy="238" rx="132" ry="118"/></clipPath>
+    <clipPath id="mouthclip"><path d="M196 292 Q228 282 260 292 Q260 339 228 339 Q196 339 196 292 Z"/></clipPath>
+  </defs>
+
+  <rect width="512" height="512" rx="115" fill="url(#bg)"/>
+
+  <g clip-path="url(#frame)">
+    <!-- sparkles sit behind the character so they never crowd the face -->
+    <g fill="#FFF9EC" opacity="0.92">
+      <path d="M0 -1 C0.12 -0.3 0.3 -0.12 1 0 C0.3 0.12 0.12 0.3 0 1 C-0.12 0.3 -0.3 0.12 -1 0 C-0.3 -0.12 -0.12 -0.3 0 -1 Z" transform="translate(64 212) scale(27)"/>
+      <path d="M0 -1 C0.12 -0.3 0.3 -0.12 1 0 C0.3 0.12 0.12 0.3 0 1 C-0.12 0.3 -0.3 0.12 -1 0 C-0.3 -0.12 -0.12 -0.3 0 -1 Z" transform="translate(458 226) scale(31)"/>
+      <path d="M0 -1 C0.12 -0.3 0.3 -0.12 1 0 C0.3 0.12 0.12 0.3 0 1 C-0.12 0.3 -0.3 0.12 -1 0 C-0.3 -0.12 -0.12 -0.3 0 -1 Z" transform="translate(444 340) scale(15)"/>
+    </g>
+
+    <!-- antennae, splayed wide; drawn before the head so it caps their base -->
+    <path d="M176 142 C 146 96, 106 60, 54 36" fill="none" stroke="#6b4226" stroke-width="14" stroke-linecap="round"/>
+    <path d="M280 140 C 310 92, 342 60, 372 32" fill="none" stroke="#6b4226" stroke-width="14" stroke-linecap="round"/>
+
+    <!-- abdomen: shell, then the inset underbelly it frames -->
+    <ellipse cx="222" cy="470" rx="152" ry="142" fill="url(#bd)" stroke="#4f3020" stroke-width="10"/>
+    <ellipse cx="236" cy="476" rx="116" ry="112" fill="url(#bl)"/>
+    <g clip-path="url(#bellyclip)">
+      <path d="M120 424 Q236 456 352 424" fill="none" stroke="#a8845e" stroke-width="7" stroke-linecap="round"/>
+      <path d="M114 476 Q236 510 358 476" fill="none" stroke="#a8845e" stroke-width="7" stroke-linecap="round"/>
+      <path d="M120 528 Q236 560 352 528" fill="none" stroke="#a8845e" stroke-width="7" stroke-linecap="round"/>
+    </g>
+
+    <!-- wing case down the left flank -->
+    <path d="M128 348 C 70 390, 66 496, 122 574 C 172 514, 180 398, 128 348 Z" fill="url(#wg)" stroke="#4f3020" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M130 372 C 100 410, 98 492, 130 542" fill="none" stroke="#4f3020" stroke-width="6" stroke-linecap="round" opacity="0.3"/>
+
+    <!-- Limbs are a stroke sandwich: a fat dark pass under a thinner light one. It is the
+         cheapest way to get an outlined round-capped limb without hand-building an outline. -->
+    <g stroke-linecap="round" fill="none">
+      <path d="M170 452 C 190 482, 214 496, 232 498" stroke="#4f3020" stroke-width="42"/>
+      <path d="M170 452 C 190 482, 214 496, 232 498" stroke="#8E5430" stroke-width="30"/>
+
+      <path d="M344 408 C 376 384, 400 354, 412 322" stroke="#4f3020" stroke-width="46"/>
+      <path d="M344 408 C 376 384, 400 354, 412 322" stroke="#8E5430" stroke-width="34"/>
+    </g>
+    <!-- the waving paw: a rounded mitt with a thumb, so the arm ends in a hand not a stick -->
+    <circle cx="236" cy="498" r="25" fill="#8E5430" stroke="#4f3020" stroke-width="8"/>
+    <circle cx="418" cy="310" r="34" fill="#8E5430" stroke="#4f3020" stroke-width="9"/>
+    <circle cx="386" cy="330" r="17" fill="#8E5430" stroke="#4f3020" stroke-width="8"/>
+
+    <!-- head -->
+    <ellipse cx="228" cy="238" rx="132" ry="118" fill="url(#hd)" stroke="#4f3020" stroke-width="10"/>
+
+    <path d="M140 168 Q178 146 216 168" fill="none" stroke="#4f3020" stroke-width="9" stroke-linecap="round" opacity="0.58"/>
+    <path d="M240 168 Q278 146 316 168" fill="none" stroke="#4f3020" stroke-width="9" stroke-linecap="round" opacity="0.58"/>
+
+    <g clip-path="url(#headclip)">
+      <ellipse cx="120" cy="290" rx="32" ry="22" fill="#e79a87" opacity="0.55"/>
+      <ellipse cx="336" cy="290" rx="32" ry="22" fill="#e79a87" opacity="0.55"/>
+    </g>
+
+    <ellipse cx="178" cy="232" rx="41" ry="46" fill="#fff" stroke="#4f3020" stroke-width="8"/>
+    <ellipse cx="278" cy="232" rx="41" ry="46" fill="#fff" stroke="#4f3020" stroke-width="8"/>
+    <circle cx="181" cy="238" r="27" fill="#33200f"/>
+    <circle cx="281" cy="238" r="27" fill="#33200f"/>
+    <circle cx="167" cy="221" r="12.5" fill="#fff"/>
+    <circle cx="267" cy="221" r="12.5" fill="#fff"/>
+    <circle cx="195" cy="253" r="5.5" fill="#fff" opacity="0.78"/>
+    <circle cx="295" cy="253" r="5.5" fill="#fff" opacity="0.78"/>
+
+    <path d="M196 292 Q228 282 260 292 Q260 339 228 339 Q196 339 196 292 Z" fill="#82322b"/>
+    <g clip-path="url(#mouthclip)"><ellipse cx="228" cy="341" rx="19" ry="13" fill="#c4585a"/></g>
+  </g>
+
+  <!-- ₱ speech bubble, bubble and tail as one shape so the join is seamless -->
+  <path d="M418 40 C 452 40 478 66 478 100 C 478 134 452 160 418 160 C 404 160 392 156 382 150 C 372 170 356 184 336 192 C 356 176 366 158 368 140 C 362 129 358 115 358 100 C 358 66 384 40 418 40 Z" fill="#FFFDF8"/>
+  <circle cx="418" cy="99" r="35" fill="#EFA733" stroke="#CF8A20" stroke-width="5"/>
+  <!-- ₱ drawn as geometry, not <text>: a logo must not depend on the renderer having
+       U+20B1, and this file is rasterised by sharp at build time as well as by browsers. -->
+  <g stroke="#FFFDF8" stroke-width="5" fill="none" stroke-linecap="square">
+    <path d="M409 82 L409 116"/>
+    <path d="M409 82 L417 82 C 425 82, 425 102, 417 102 L409 102"/>
+    <path d="M400 90 L430 90"/>
+    <path d="M400 98 L430 98"/>
+  </g>
+
+  <rect x="4" y="4" width="504" height="504" rx="111" fill="none" stroke="#FFFFFF" stroke-width="8" opacity="0.4"/>
 </svg>
