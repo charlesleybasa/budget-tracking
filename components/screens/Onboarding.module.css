@@ -36,15 +36,6 @@
   letter-spacing: -0.02em;
 }
 
-.skip {
-  font-weight: 500;
-  font-size: 12.5px;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.45);
-  cursor: pointer;
-  padding: 8px;
-}
-
 .step {
   flex: 1;
   display: flex;
@@ -400,15 +391,6 @@
   transition:
     width 0.3s var(--ease-out),
     background 0.3s;
-}
-
-@media (pointer: coarse) {
-  .skip {
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-  }
 }
 
 .restoreLink {

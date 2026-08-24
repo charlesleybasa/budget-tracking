@@ -72,11 +72,59 @@
   flex: none;
 }
 
+.profileBody {
+  flex: 1;
+  min-width: 0;
+}
+
+/* The whole name line is the target, not just the pencil — a 13px icon is not a tap target. */
+.nameBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.55);
+  /* Padded out to a 44px-tall target, then pulled back by the same amount so the name still
+     sits where it did before it became editable. */
+  padding: 14px 8px;
+  margin: -14px -8px;
+  border-radius: 10px;
+  transition: background 0.18s;
+}
+
+.nameBtn:active {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nameBtn:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+}
+
 .name {
   font-weight: 700;
   font-size: 17px;
   line-height: 1;
   letter-spacing: -0.02em;
+  color: #fff;
+  /* Negative tracking is applied after the last glyph too, so the box ends up narrower than
+     the text. This gives that tracking back as padding. */
+  padding-right: 0.02em;
+}
+
+.nameInput {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #fff;
+  padding: 0;
+  /* Matches .nameBtn's height so the block does not jump when it swaps in. */
+  min-height: 18px;
 }
 
 .meta {

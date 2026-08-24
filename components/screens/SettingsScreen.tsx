@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { downloadText } from "@/lib/backup";
 import { useBackup } from "@/lib/useBackup";
@@ -30,6 +30,28 @@ interface Row {
 
 export function SettingsScreen() {
   const { state, actions } = useWallet();
+
+  // The name is edited through a draft rather than straight into the store: typing commits on
+  // every keystroke would blank the greeting on the home screen the moment the field is
+  // cleared, and there would be nothing to revert to if the user backs out.
+  const [editingName, setEditingName] = useState(false);
+  const [draftName, setDraftName] = useState("");
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editingName) nameInputRef.current?.focus();
+  }, [editingName]);
+
+  const startRename = () => {
+    setDraftName(state.userName);
+    setEditingName(true);
+  };
+  const commitRename = () => {
+    const next = draftName.trim();
+    // An empty name would leave the app greeting a blank, so it falls back to what was there.
+    if (next) actions.patch({ userName: next });
+    setEditingName(false);
+  };
 
   const activeName = state.cards.find((c) => c.id === state.activeId)?.nick ?? "your card";
 
@@ -199,12 +221,36 @@ export function SettingsScreen() {
 
         <div className={styles.profile}>
           <div className={styles.avatar}>{initials}</div>
-          <div>
-            <div className={styles.name}>{firstName}</div>
+          <div className={styles.profileBody}>
+            {editingName ? (
+              <input
+                ref={nameInputRef}
+                className={styles.nameInput}
+                value={draftName}
+                onChange={(e) => setDraftName(e.target.value)}
+                onBlur={commitRename}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") commitRename();
+                  if (e.key === "Escape") setEditingName(false);
+                }}
+                aria-label="Your name"
+                autoComplete="given-name"
+                maxLength={40}
+              />
+            ) : (
+              <button type="button" className={styles.nameBtn} onClick={startRename}>
+                <span className={styles.name}>{firstName}</span>
+                <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.3} strokeLinecap="round">
+                  <path d="M4 20h4l10-10-4-4L4 16v4zM14 6l4 4" />
+                </svg>
+              </button>
+            )}
             <div className={styles.meta}>
-              {state.cards.length === 0
-                ? "No cards yet · nothing connected to a bank"
-                : `${state.cards.length} ${state.cards.length === 1 ? "card" : "cards"} · nothing connected to a bank`}
+              {editingName
+                ? "Enter to save · Esc to cancel"
+                : state.cards.length === 0
+                  ? "No cards yet · nothing connected to a bank"
+                  : `${state.cards.length} ${state.cards.length === 1 ? "card" : "cards"} · nothing connected to a bank`}
             </div>
           </div>
         </div>

@@ -101,10 +101,6 @@ export function Onboarding() {
   const previewH = Math.round(previewW * (164 / 268));
 
   const next = () => actions.patch({ obStep: Math.min(3, obStep + 1) });
-  const skip = () => {
-    actions.patch({ onboarded: true });
-    actions.go("home");
-  };
 
   const firstName = state.userName.trim().split(" ")[0];
 
@@ -117,6 +113,9 @@ export function Onboarding() {
 
       <div style={{ height: "var(--screen-top)", flex: "none" }} />
 
+      {/* No escape hatch here on purpose: the wallet is unusable without a first card, so
+          onboarding runs to the end. Restoring a backup on step 0 is the one way past it,
+          and that is a returning user rather than a skip. */}
       <div className={styles.topBar}>
         <div className={styles.brand}>
           <div className={styles.brandMark}>
@@ -124,9 +123,6 @@ export function Onboarding() {
           </div>
           <div className={styles.brandName}>Pesolita</div>
         </div>
-        <button type="button" className={styles.skip} onClick={skip}>
-          Skip
-        </button>
       </div>
 
       {obStep === 0 ? (
