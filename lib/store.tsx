@@ -378,6 +378,10 @@ function reducer(state: WalletState, action: Action): WalletState {
 
       const sign = state.sheet === "deposit" ? 1 : -1;
       if (sign < 0 && from.frozen) return withToast(state, `${from.nick} is frozen. Unfreeze it first.`);
+      // Backstop for the empty-card state the sheet already shows. Spending past a balance is
+      // still allowed — that is a real thing that happens — but spending out of a card with
+      // nothing in it is not.
+      if (sign < 0 && from.bal <= 0) return withToast(state, `${from.nick} is empty. Top it up first.`);
 
       const nextCards = state.cards.map((c) => (c.id === from.id ? { ...c, bal: c.bal + sign * amount } : c));
       return {

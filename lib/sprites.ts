@@ -33,3 +33,16 @@ export const PEEKABOO: SpriteSheet = {
   // Fully up, both arms out, hearts showing — the frame that reads as "hello".
   stillFrame: 30,
 };
+
+/** Kuya Ipis holding an empty bag; shown when a card has nothing left to spend. */
+export const SAD: SpriteSheet = {
+  src: "/sad.png",
+  cols: 10,
+  rows: 6,
+  frames: 60,
+  fps: 24,
+  cellW: 240,
+  cellH: 299,
+  // Eyes open, tear showing — reads as "empty" even held still.
+  stillFrame: 55,
+};

@@ -357,6 +357,61 @@
     color 0.2s;
 }
 
+/* ── empty card ── */
+.emptyCard {
+  padding: 6px 0 14px;
+  text-align: center;
+}
+
+.emptyArt {
+  margin: 0 auto 2px;
+}
+
+.emptyTitle {
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  padding-right: 0.02em;
+}
+
+.emptyBody {
+  margin: 8px auto 0;
+  max-width: 34ch;
+  font-weight: 400;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted-1);
+  text-wrap: pretty;
+}
+
+.emptyCta {
+  margin-top: 16px;
+  height: 46px;
+  padding: 0 20px;
+  border-radius: 100px;
+  background: var(--sand-1);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.16s var(--ease-out);
+}
+
+.emptyCta:active {
+  transform: scale(0.98);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .emptyCta:hover {
+    background: var(--sand-3);
+  }
+}
+
 .sourceRow {
   margin-top: 12px;
   display: flex;

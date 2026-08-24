@@ -34,6 +34,15 @@ const SOURCES = [
     colours: 128,
   },
   {
+    name: "sad",
+    dir: "/Users/rli/Desktop/Sad",
+    match: /^sad_blink_\d+\.png$/,
+    cols: 10,
+    rows: 6,
+    cellW: 240,
+    colours: 128,
+  },
+  {
     name: "peekaboo",
     dir: "/Users/rli/Desktop/Onboarding",
     match: /^peekaboo_\d+\.png$/,
@@ -152,6 +161,13 @@ async function build(spec) {
 }
 
 for (const spec of SOURCES) {
+  // The sequences live outside the repo, so one of them being moved or archived is normal.
+  // Skip it and leave the already-built atlas in public/ alone rather than failing the run
+  // and taking the other sheets down with it.
+  if (!fs.existsSync(spec.dir)) {
+    console.log(`${spec.name}: source ${spec.dir} not found — skipping, public/${spec.name}.png left as-is`);
+    continue;
+  }
   const r = await build(spec);
   console.log(`   -> lib/sprites.ts should read: cols ${r.cols}, rows ${r.rows}, frames ${r.frames}, cellW ${r.cellW}, cellH ${r.cellH}`);
 }

@@ -4,8 +4,8 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 
 import { CardArtFor } from "@/components/CardArt";
 import { CardPicker } from "@/components/CardPicker";
-import { preloadSprite } from "@/components/SpriteAnimation";
-import { CELEBRATE } from "@/lib/sprites";
+import { SpriteAnimation, preloadSprite } from "@/components/SpriteAnimation";
+import { CELEBRATE, SAD } from "@/lib/sprites";
 import { Keypad } from "@/components/Keypad";
 import { CATEGORIES } from "@/lib/constants";
 import { amountDisplay } from "@/lib/format";
@@ -63,12 +63,17 @@ export function TxSheet() {
   const source = findCard(state.cards, state.sheetCardId);
   const moveTo = findCard(state.cards, state.moveToId);
   const isMove = sheet === "move";
-  const ready = parseFloat(state.amt) > 0;
   const guess = guessCategory(state.note, state.cat);
 
   // Guarded rather than rendered empty: the sheet is only reachable with a card, but a
   // stale open sheet after deleting the last one would otherwise crash.
   if (!source) return null;
+
+  // Money can go out of a card past its balance — overdrawing is a real thing — but not out
+  // of one with nothing in it. Caught here rather than on submit so the keypad is never a
+  // dead end the user only discovers after typing an amount.
+  const emptyCard = sheet === "withdraw" && source.bal <= 0;
+  const ready = parseFloat(state.amt) > 0 && !emptyCard;
 
   const onReceiptFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -133,15 +138,37 @@ export function TxSheet() {
         </div>
 
         <div className={styles.body}>
-          <div className={styles.amount}>
-            <span className={styles.amountSign} style={{ color: ACCENTS[sheet] }}>
-              {SIGNS[sheet]}₱
-            </span>
-            <span className={styles.amountValue}>{amountDisplay(state.amt)}</span>
-          </div>
-          <div className={styles.sub}>{SUBTITLES[sheet]}</div>
+          {emptyCard ? (
+            <div className={styles.emptyCard}>
+              <SpriteAnimation sheet={SAD} size={132} className={styles.emptyArt} />
+              <div className={styles.emptyTitle}>{source.nick} is empty</div>
+              <p className={styles.emptyBody}>
+                There is nothing in this card to spend. Top it up, or pick one that has money in
+                it.
+              </p>
+              <button
+                type="button"
+                className={styles.emptyCta}
+                onClick={() => actions.patch({ sheet: "deposit", amt: "" })}
+              >
+                Top up {source.nick} instead
+              </button>
+            </div>
+          ) : null}
 
-          {isMove ? (
+          {emptyCard ? null : (
+            <>
+              <div className={styles.amount}>
+                <span className={styles.amountSign} style={{ color: ACCENTS[sheet] }}>
+                  {SIGNS[sheet]}₱
+                </span>
+                <span className={styles.amountValue}>{amountDisplay(state.amt)}</span>
+              </div>
+              <div className={styles.sub}>{SUBTITLES[sheet]}</div>
+            </>
+          )}
+
+          {emptyCard ? null : isMove ? (
             <>
               <button type="button" className={styles.intoRow} onClick={() => setPicking("destination")}>
                 <div className={styles.thumb} style={{ background: moveTo?.art.c1 ?? "#16161a" }}>
@@ -280,21 +307,23 @@ export function TxSheet() {
           </div>
         </div>
 
-        <Keypad tone="light" />
+        {emptyCard ? null : <Keypad tone="light" />}
 
-        <div className={styles.submitWrap}>
-          <button
-            type="button"
-            className={styles.submit}
-            onClick={actions.saveTx}
-            style={{
-              background: ready ? "#0b0b0c" : "#eceae4",
-              color: ready ? "#fff" : "#a9a9ae",
-            }}
-          >
-            {SUBMIT_LABELS[sheet]}
-          </button>
-        </div>
+        {emptyCard ? null : (
+          <div className={styles.submitWrap}>
+            <button
+              type="button"
+              className={styles.submit}
+              onClick={actions.saveTx}
+              style={{
+                background: ready ? "#0b0b0c" : "#eceae4",
+                color: ready ? "#fff" : "#a9a9ae",
+              }}
+            >
+              {SUBMIT_LABELS[sheet]}
+            </button>
+          </div>
+        )}
       </div>
 
       {picking ? (
