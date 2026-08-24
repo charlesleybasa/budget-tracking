@@ -2,7 +2,9 @@
 
 import type { CSSProperties } from "react";
 
-import { CelebrateSprite } from "@/components/CelebrateSprite";
+import { Mascot } from "@/components/Mascot";
+import { SpriteAnimation } from "@/components/SpriteAnimation";
+import { CELEBRATE } from "@/lib/sprites";
 import { useWallet } from "@/lib/store";
 
 import styles from "./SuccessOverlay.module.css";
@@ -49,7 +51,12 @@ export function SuccessOverlay() {
         {/* A warm disc behind the character: the mascot's browns are drawn against cream, and
             they go muddy straight onto the blue. */}
         <span className={styles.spotlight} aria-hidden="true" />
-        <CelebrateSprite size={168} className={styles.mascot} />
+        <SpriteAnimation
+          sheet={CELEBRATE}
+          size={168}
+          className={styles.mascot}
+          fallback={<Mascot mood="cheer" size={168} />}
+        />
       </div>
 
       <div className={styles.copy}>

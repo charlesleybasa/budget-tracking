@@ -4,7 +4,8 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 
 import { CardArtFor } from "@/components/CardArt";
 import { CardPicker } from "@/components/CardPicker";
-import { preloadCelebrate } from "@/components/CelebrateSprite";
+import { preloadSprite } from "@/components/SpriteAnimation";
+import { CELEBRATE } from "@/lib/sprites";
 import { Keypad } from "@/components/Keypad";
 import { CATEGORIES } from "@/lib/constants";
 import { amountDisplay } from "@/lib/format";
@@ -53,7 +54,7 @@ export function TxSheet() {
   // Fetch the celebration atlas while the amount is still being typed, so the success screen
   // it feeds has it in cache by the time it renders.
   useEffect(() => {
-    preloadCelebrate();
+    preloadSprite(CELEBRATE);
   }, []);
 
   const sheet = state.sheet;

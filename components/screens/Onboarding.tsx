@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef, type CSSProperties } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 
 import { CardArt } from "@/components/CardArt";
 import { MascotMark } from "@/components/MascotMark";
 import { CARD_KINDS, PALETTES } from "@/lib/constants";
 import { Mascot } from "@/components/Mascot";
+import { SpriteAnimation, preloadSprite } from "@/components/SpriteAnimation";
+import { PEEKABOO } from "@/lib/sprites";
 import { moneyInput, peso } from "@/lib/format";
 import { useWallet } from "@/lib/store";
 import type { ArtStyle } from "@/lib/types";
@@ -87,6 +89,12 @@ export function Onboarding() {
   const { obStep } = state;
   const restore = useRestore();
 
+  // Step 0 is a full screen of reading before the sprite appears on step 1, which is exactly
+  // the window to spend on fetching its atlas.
+  useEffect(() => {
+    preloadSprite(PEEKABOO);
+  }, []);
+
   const previewRef = useRef<HTMLDivElement>(null);
   const previewWrapWidth = useElementWidth(previewRef);
   const previewW = Math.min(268, Math.max(220, (previewWrapWidth ?? 320) - 8));
@@ -153,7 +161,12 @@ export function Onboarding() {
 
       {obStep === 1 ? (
         <div key={obStep} className={`${styles.step} ${styles.stepPadded} bwEnterSide`}>
-          <Mascot mood="wave" size={104} className={styles.mascot} />
+          <SpriteAnimation
+            sheet={PEEKABOO}
+            size={150}
+            className={styles.mascot}
+            fallback={<Mascot mood="wave" size={104} />}
+          />
           <h1 className={styles.head}>
             First — what
             <br />

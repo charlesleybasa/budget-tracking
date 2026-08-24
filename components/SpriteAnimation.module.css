@@ -1,0 +1,71 @@
+/*
+ * Frame-by-frame playback of a sprite atlas. Every dimension comes in as a custom property
+ * so one stylesheet drives every sequence in the app.
+ *
+ * Sheets are laid out as grids rather than single strips on purpose: a 54-frame strip at a
+ * usable cell size runs past the 4096px texture limit older mobile GPUs enforce, where it
+ * fails to draw or is silently downscaled. A grid keeps both dimensions well inside it.
+ */
+.sprite {
+  width: 100%;
+  aspect-ratio: var(--cell-w) / var(--cell-h);
+  background-image: var(--sheet);
+  background-repeat: no-repeat;
+  /* One cell fills the box: the sheet is scaled to cols x rows of it. */
+  background-size: calc(var(--cols) * 100%) calc(var(--rows) * 100%);
+  background-position: 0% 0%;
+
+  animation:
+    spriteCol calc(var(--cols) / var(--fps) * 1s) steps(var(--cols), jump-none) infinite,
+    spriteRow calc(var(--frames) / var(--fps) * 1s) steps(var(--rows), jump-none) infinite,
+    spriteFade 0.28s ease-out both;
+}
+
+/*
+ * `jump-none` is the whole trick. Over 0%->100% it yields exactly n values *including both
+ * endpoints* — 0, 1/(n-1), ... 1 — which is what lands each step on a cell boundary. Plain
+ * `steps(n)` yields 0, 1/n, ... (n-1)/n, so every frame drifts by a fraction of a cell and
+ * the sheet visibly shears.
+ *
+ * background-position-x and -y are separate longhands, so the column and row animations run
+ * on one element without fighting over a single property.
+ */
+@keyframes spriteCol {
+  from {
+    background-position-x: 0%;
+  }
+  to {
+    background-position-x: 100%;
+  }
+}
+
+@keyframes spriteRow {
+  from {
+    background-position-y: 0%;
+  }
+  to {
+    background-position-y: 100%;
+  }
+}
+
+/* Cross-fades in once the atlas has decoded, so whatever is underneath is not yanked away
+   mid-frame on a slow connection. */
+@keyframes spriteFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*
+ * Reduced motion holds one representative frame rather than dropping the artwork: the pose
+ * still carries the meaning, it just does not cycle. Callers pick the frame.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .sprite {
+    animation: none;
+    background-position: var(--still-x) var(--still-y);
+  }
+}
