@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 
 import { CardArtFor } from "@/components/CardArt";
 import { CardPicker } from "@/components/CardPicker";
+import { preloadCelebrate } from "@/components/CelebrateSprite";
 import { Keypad } from "@/components/Keypad";
 import { CATEGORIES } from "@/lib/constants";
 import { amountDisplay } from "@/lib/format";
@@ -48,6 +49,12 @@ export function TxSheet() {
   const receiptRef = useRef<HTMLInputElement>(null);
   // Which end of the transaction the picker is choosing for, if it is open.
   const [picking, setPicking] = useState<"source" | "destination" | null>(null);
+
+  // Fetch the celebration atlas while the amount is still being typed, so the success screen
+  // it feeds has it in cache by the time it renders.
+  useEffect(() => {
+    preloadCelebrate();
+  }, []);
 
   const sheet = state.sheet;
   if (!sheet) return null;

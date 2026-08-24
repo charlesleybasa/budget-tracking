@@ -1,0 +1,84 @@
+/*
+ * Frame-by-frame playback of public/celebrate.png, an 8x4 atlas of 32 rendered frames.
+ *
+ * Laid out as a grid rather than one long strip on purpose: a 32-wide strip at this cell size
+ * would be 9600px across, past the 4096px texture limit older mobile GPUs enforce, where it
+ * would fail to draw or get silently downscaled. 2400x1488 is safely inside it.
+ */
+.sprite {
+  --cols: 8;
+  --rows: 4;
+  --frames: 32;
+  --fps: 24;
+
+  width: 100%;
+  aspect-ratio: 300 / 372;
+  background-image: url("/celebrate.png");
+  background-repeat: no-repeat;
+  /* One cell fills the box: the sheet is scaled to cols x rows of it. */
+  background-size: calc(var(--cols) * 100%) calc(var(--rows) * 100%);
+  background-position: 0% 0%;
+}
+
+/*
+ * `jump-none` is the whole trick. Over 0%->100% it yields exactly n values *including both
+ * endpoints* — 0, 1/(n-1), ... 1 — which is what lands each step on a cell boundary. Plain
+ * `steps(n)` yields 0, 1/n, ... (n-1)/n, so every frame drifts by a fraction of a cell and
+ * the sheet visibly shears.
+ *
+ * X and Y are separate longhands, so both animate on one element without fighting.
+ */
+@keyframes spriteCol {
+  from {
+    background-position-x: 0%;
+  }
+  to {
+    background-position-x: 100%;
+  }
+}
+
+@keyframes spriteRow {
+  from {
+    background-position-y: 0%;
+  }
+  to {
+    background-position-y: 100%;
+  }
+}
+
+/* Cross-fade in once the atlas has decoded, so the vector mascot underneath is not yanked
+   away mid-frame on a slow connection. */
+.fadeIn {
+  animation-name: spriteCol, spriteRow, celebrateFade;
+  animation-duration:
+    calc(var(--cols) / var(--fps) * 1s),
+    calc(var(--frames) / var(--fps) * 1s),
+    0.28s;
+  animation-timing-function:
+    steps(var(--cols), jump-none),
+    steps(var(--rows), jump-none),
+    ease-out;
+  animation-iteration-count: infinite, infinite, 1;
+  animation-fill-mode: none, none, both;
+}
+
+@keyframes celebrateFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*
+ * Reduced motion holds a single frame rather than dropping the artwork: the pose still reads
+ * as a celebration, it just does not cycle.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .fadeIn {
+    animation: none;
+    /* Row 2, column 3 — the peak of the jump, arms up with the coins out. */
+    background-position: 28.57% 66.67%;
+  }
+}
