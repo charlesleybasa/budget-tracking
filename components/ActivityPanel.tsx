@@ -4,6 +4,7 @@ import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react"
 
 import { Mascot } from "@/components/Mascot";
 import { ReceiptViewer } from "@/components/ReceiptViewer";
+import { SpriteAnimation } from "@/components/SpriteAnimation";
 import { TxRow } from "@/components/TxRow";
 import { CATEGORIES } from "@/lib/constants";
 import { daysLeftInMonth, monthName, peso } from "@/lib/format";
@@ -15,6 +16,7 @@ import {
   progressColor,
   safeToSpend,
 } from "@/lib/selectors";
+import { FLYING_IDLE } from "@/lib/sprites";
 import { useWallet } from "@/lib/store";
 import { useAnimatedNumber } from "@/lib/useAnimatedNumber";
 import type { CategoryName, Notice, Transaction } from "@/lib/types";
@@ -271,7 +273,12 @@ export function ActivityPanel() {
 
         {state.tx.length === 0 ? (
           <div className={styles.empty}>
-            <Mascot mood="idle" size={92} className={styles.emptyMascot} />
+            <SpriteAnimation
+              sheet={FLYING_IDLE}
+              size={118}
+              className={styles.emptyMascot}
+              fallback={<Mascot mood="idle" size={92} className={styles.emptyMascotFallback} />}
+            />
             <div className={styles.emptyTitle}>Nothing logged yet.</div>
             <p className={styles.emptyBody}>
               Tap the blue button and put in what you just spent. Two taps, and this fills up.

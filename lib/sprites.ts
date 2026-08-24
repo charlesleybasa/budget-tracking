@@ -3,7 +3,7 @@ import type { SpriteSheet } from "@/components/SpriteAnimation";
 /**
  * The rendered animation atlases, built from PNG sequences by scripts/build-sprites.mjs.
  *
- * Both grids are exact — cols * rows === frames — because the stepping math assumes no blank
+ * Every grid is exact — cols * rows === frames — because the stepping math assumes no blank
  * trailing cells. If you rebuild a sheet with a different frame count, the grid has to change
  * with it.
  */
@@ -45,4 +45,17 @@ export const SAD: SpriteSheet = {
   cellH: 299,
   // Eyes open, tear showing — reads as "empty" even held still.
   stillFrame: 55,
+};
+
+/** Kuya Ipis hovering happily; shown before the wallet has any recent activity. */
+export const FLYING_IDLE: SpriteSheet = {
+  src: "/flying-idle.png",
+  cols: 10,
+  rows: 6,
+  frames: 60,
+  fps: 24,
+  cellW: 240,
+  cellH: 233,
+  // Wings lifted and eyes open, so the held pose still reads as flying.
+  stillFrame: 7,
 };

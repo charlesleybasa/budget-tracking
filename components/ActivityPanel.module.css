@@ -424,6 +424,10 @@
   margin: 0 auto 4px;
 }
 
+.emptyMascotFallback {
+  margin: 0 auto;
+}
+
 .empty {
   margin-top: 10px;
   padding: 22px 18px 28px;

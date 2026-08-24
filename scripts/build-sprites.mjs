@@ -51,6 +51,15 @@ const SOURCES = [
     cellW: 280,
     colours: 128,
   },
+  {
+    name: "flying-idle",
+    dir: "/Users/rli/Documents/Codex/2026-08-24/cn/outputs/Flying_Idle",
+    match: /^flying_blink_\d+\.png$/,
+    cols: 10,
+    rows: 6,
+    cellW: 240,
+    colours: 128,
+  },
 ];
 
 const OUT_DIR = path.join(process.cwd(), "public");
