@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type AnimationEvent,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 
 import styles from "./SpriteAnimation.module.css";
 
@@ -47,6 +54,8 @@ export function SpriteAnimation({
   fallback = null,
   className = "",
   label,
+  loop = true,
+  replayDelayMs,
 }: {
   sheet: SpriteSheet;
   /** Rendered width in px; height follows the cell's aspect ratio. */
@@ -55,8 +64,14 @@ export function SpriteAnimation({
   className?: string;
   /** Supply only when the animation carries meaning no nearby text already carries. */
   label?: string;
+  /** Set false to play one complete cycle and hold the final frame. */
+  loop?: boolean;
+  /** When supplied for a one-shot animation, restart it after this delay. */
+  replayDelayMs?: number;
 }) {
   const [ready, setReady] = useState(false);
+  const [playback, setPlayback] = useState(0);
+  const replayTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     const img = new window.Image();
@@ -72,6 +87,20 @@ export function SpriteAnimation({
     };
   }, [sheet.src]);
 
+  useEffect(
+    () => () => {
+      if (replayTimerRef.current !== null) window.clearTimeout(replayTimerRef.current);
+    },
+    [],
+  );
+
+  const onAnimationEnd = (event: AnimationEvent<HTMLDivElement>) => {
+    // The row animation spans the complete sheet. The column and fade animations finish
+    // sooner, so listening to either would restart before every frame has played.
+    if (loop || replayDelayMs === undefined || !event.animationName.includes("spriteRow")) return;
+    replayTimerRef.current = window.setTimeout(() => setPlayback((value) => value + 1), replayDelayMs);
+  };
+
   const style = {
     "--sheet": `url("${sheet.src}")`,
     "--cols": sheet.cols,
@@ -80,6 +109,9 @@ export function SpriteAnimation({
     "--fps": sheet.fps,
     "--cell-w": sheet.cellW,
     "--cell-h": sheet.cellH,
+    // One complete sheet needs one column pass per row, but only one row pass.
+    "--col-iterations": loop ? "infinite" : sheet.rows,
+    "--row-iterations": loop ? "infinite" : 1,
     // Percentages that land the still frame on its exact cell: n/(count-1) of the range.
     "--still-x": `${((sheet.stillFrame % sheet.cols) / (sheet.cols - 1)) * 100}%`,
     "--still-y": `${(Math.floor(sheet.stillFrame / sheet.cols) / (sheet.rows - 1)) * 100}%`,
@@ -93,7 +125,11 @@ export function SpriteAnimation({
       aria-label={label}
       aria-hidden={label ? undefined : true}
     >
-      {ready ? <div className={styles.sprite} style={style} /> : fallback}
+      {ready ? (
+        <div key={playback} className={styles.sprite} style={style} onAnimationEnd={onAnimationEnd} />
+      ) : (
+        fallback
+      )}
     </div>
   );
 }

@@ -16,8 +16,8 @@
   background-position: 0% 0%;
 
   animation:
-    spriteCol calc(var(--cols) / var(--fps) * 1s) steps(var(--cols), jump-none) infinite,
-    spriteRow calc(var(--frames) / var(--fps) * 1s) steps(var(--rows), jump-none) infinite,
+    spriteCol calc(var(--cols) / var(--fps) * 1s) steps(var(--cols), jump-none) var(--col-iterations) forwards,
+    spriteRow calc(var(--frames) / var(--fps) * 1s) steps(var(--rows), jump-none) var(--row-iterations) forwards,
     spriteFade 0.28s ease-out both;
 }
 

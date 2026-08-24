@@ -162,6 +162,8 @@ export function Onboarding() {
             size={150}
             className={styles.mascot}
             fallback={<Mascot mood="wave" size={104} />}
+            loop={false}
+            replayDelayMs={3000}
           />
           <h1 className={styles.head}>
             First — what
