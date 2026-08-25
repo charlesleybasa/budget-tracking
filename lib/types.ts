@@ -145,6 +145,7 @@ export type HomeLayout = "deck" | "stack";
 export type SearchFilter = "All" | "Money in" | "Money out" | CategoryName;
 
 export interface SuccessState {
+  kind: "funded" | "logged" | "moved";
   head: string;
   body: string;
 }

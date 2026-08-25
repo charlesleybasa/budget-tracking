@@ -102,6 +102,8 @@ export interface WalletState {
   // overlays
   success: SuccessState | null;
   toast: string | null;
+  /** Confirmation shown before the card currently open in the editor is deleted. */
+  cardDeleteOpen: boolean;
   /**
    * The erase confirmation. It lives here rather than in the settings screen because the
    * dialog has to render above the navigation, and a screen's own transform traps anything
@@ -169,6 +171,7 @@ function initialState(): WalletState {
     editingTxId: null,
     success: null,
     toast: null,
+    cardDeleteOpen: false,
     eraseOpen: false,
     qrCardId: null,
   };
@@ -206,6 +209,7 @@ type UiPatch = Partial<
     | "nudgeDailyLog"
     | "onboarded"
     | "deckStep"
+    | "cardDeleteOpen"
     | "eraseOpen"
     | "qrCardId"
   >
@@ -379,6 +383,7 @@ function reducer(state: WalletState, action: Action): WalletState {
           ],
           sheet: null,
           success: {
+            kind: "moved",
             head: "Moved.",
             body: `₱${peso(amount)} from ${from.nick} to ${to.nick}. No fees, because no bank was involved.`,
           },
@@ -416,6 +421,7 @@ function reducer(state: WalletState, action: Action): WalletState {
         ],
         sheet: null,
         success: {
+          kind: sign > 0 ? "funded" : "logged",
           head: sign > 0 ? "Funded." : "Logged it.",
           body:
             sign > 0
@@ -454,6 +460,7 @@ function reducer(state: WalletState, action: Action): WalletState {
         ],
         amt: "",
         success: {
+          kind: "moved",
           head: "Moved.",
           body: `₱${peso(amount)} from ${from.nick} to ${to.nick}. No fees, because no bank was involved.`,
         },
@@ -661,6 +668,7 @@ function reducer(state: WalletState, action: Action): WalletState {
           ...reducer({ ...state, cards, tx }, { type: "snapTo", index: 0 }),
           screen: "home",
           ed: null,
+          cardDeleteOpen: false,
           activeId: keep(state.activeId),
           stackOpenId: state.stackOpenId === ed.id ? fallback || null : state.stackOpenId,
           sheetCardId: keep(state.sheetCardId),

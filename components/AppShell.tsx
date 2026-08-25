@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { MascotMark } from "@/components/MascotMark";
 import { Nav } from "@/components/Nav";
 import { Toast } from "@/components/Toast";
+import { CardDeleteDialog } from "@/components/overlays/CardDeleteDialog";
 import { EraseDialog } from "@/components/overlays/EraseDialog";
 import { QrViewer } from "@/components/overlays/QrViewer";
 import { SuccessOverlay } from "@/components/overlays/SuccessOverlay";
@@ -56,11 +57,17 @@ export function AppShell() {
 
   // Hardware and browser back should walk back through the app, not out of it.
   const away =
-    state.screen !== "home" || !!state.sheet || !!state.success || !!state.editingTxId || !!state.qrCardId;
+    state.screen !== "home" ||
+    !!state.sheet ||
+    !!state.success ||
+    !!state.editingTxId ||
+    state.cardDeleteOpen ||
+    !!state.qrCardId;
   useBackNavigation(!away, () => {
     // Unwound top layer first: the QR sits above everything, so back closes it before it
     // touches the screen underneath.
     if (state.qrCardId) actions.patch({ qrCardId: null });
+    else if (state.cardDeleteOpen) actions.patch({ cardDeleteOpen: false });
     else if (state.success) actions.closeSuccess();
     else if (state.editingTxId) actions.closeTxEdit();
     else if (state.sheet) actions.closeSheet();
@@ -114,6 +121,7 @@ export function AppShell() {
           backdrop anchored to it leaves the rail live and clickable underneath the modal.
           Anchored to the app, this covers the rail too. */}
       {state.hydrated ? <EraseDialog /> : null}
+      {state.hydrated ? <CardDeleteDialog /> : null}
       {state.hydrated ? <QrViewer /> : null}
     </main>
   );

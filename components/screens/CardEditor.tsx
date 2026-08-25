@@ -708,7 +708,11 @@ export function CardEditor() {
           {/* Deleting the last card is allowed — the wallet has a real empty state, and a
               mistyped first card should not be permanent. */}
           {state.edNew ? null : (
-            <button type="button" className={styles.delete} onClick={actions.deleteCard}>
+            <button
+              type="button"
+              className={styles.delete}
+              onClick={() => actions.patch({ cardDeleteOpen: true })}
+            >
               Delete this card
             </button>
           )}

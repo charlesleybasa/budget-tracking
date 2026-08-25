@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 
 import { CardArtFor } from "@/components/CardArt";
 import { CardPicker } from "@/components/CardPicker";
-import { SpriteAnimation } from "@/components/SpriteAnimation";
-import { NO_NO_NO, SAD } from "@/lib/sprites";
+import { SpriteAnimation, preloadSprite } from "@/components/SpriteAnimation";
+import { CELEBRATE, NO_NO_NO, SAD } from "@/lib/sprites";
 import { Keypad } from "@/components/Keypad";
 import { CATEGORIES } from "@/lib/constants";
 import { amountDisplay, peso } from "@/lib/format";
@@ -50,6 +50,11 @@ export function TxSheet() {
   const receiptRef = useRef<HTMLInputElement>(null);
   // Which end of the transaction the picker is choosing for, if it is open.
   const [picking, setPicking] = useState<"source" | "destination" | null>(null);
+
+  // Spend confirmations stay static; funding and move flows preload their shared celebration.
+  useEffect(() => {
+    if (state.sheet === "deposit" || state.sheet === "move") preloadSprite(CELEBRATE);
+  }, [state.sheet]);
 
   const sheet = state.sheet;
   if (!sheet) return null;
