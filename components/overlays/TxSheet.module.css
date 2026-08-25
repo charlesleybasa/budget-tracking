@@ -152,65 +152,95 @@
   text-wrap: pretty;
 }
 
-.intoRow {
+.moveSelector {
   margin-top: 14px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 36px minmax(0, 1fr);
   align-items: center;
-  gap: 10px;
-  width: 100%;
+  gap: 7px;
+}
+
+.moveEndpoint {
+  min-width: 0;
   border-radius: 16px;
-  background: var(--blue-pale);
-  border: 1px solid var(--blue-line);
-  padding: 10px 13px;
+  background: var(--sand-1);
+  border: 1.5px solid transparent;
+  padding: 10px;
   cursor: pointer;
   text-align: left;
   transition:
     background 0.18s,
+    border-color 0.18s,
     transform 0.16s var(--ease-out);
 }
 
-.intoRow:active {
-  transform: scale(0.99);
-}
-
-.intoChevron {
-  flex: none;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .intoRow:hover {
-    background: #e3edff;
-  }
-}
-
-/* Secondary way into the same picker, for when the row above reads as a label. */
-.pickTrigger {
-  margin-top: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-  height: 40px;
-  border-radius: 100px;
-  background: var(--sand-1);
-  color: var(--ink);
-  font-weight: 600;
-  font-size: 12.5px;
-  line-height: 1;
-  cursor: pointer;
-  transition:
-    background 0.18s,
-    transform 0.16s var(--ease-out);
-}
-
-.pickTrigger:active {
+.moveEndpoint:active {
   transform: scale(0.98);
 }
 
+.moveEndpointLabel {
+  display: block;
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.moveEndpointCard {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.moveEndpointMeta {
+  min-width: 0;
+  display: block;
+}
+
+.moveEndpointNick,
+.moveEndpointBalance {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.moveEndpointNick {
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.moveEndpointBalance {
+  margin-top: 3px;
+  font-weight: 500;
+  font-size: 9.5px;
+  line-height: 1.2;
+  color: var(--muted-2);
+}
+
+.moveSwap {
+  width: 36px;
+  height: 36px;
+  border-radius: 100px;
+  background: var(--accent);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-out);
+}
+
 @media (hover: hover) and (pointer: fine) {
-  .pickTrigger:hover {
+  .moveEndpoint:hover {
     background: var(--sand-3);
+    border-color: var(--blue-line);
   }
 }
 
@@ -221,26 +251,6 @@
   overflow: hidden;
   position: relative;
   flex: none;
-}
-
-.intoLabel {
-  font-weight: 500;
-  font-size: 10px;
-  line-height: 1;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #6b8fd0;
-}
-
-.intoNick {
-  margin-top: 3px;
-  font-weight: 600;
-  font-size: 13px;
-  line-height: 1;
-  color: var(--blue-deep);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .catRow {

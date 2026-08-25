@@ -266,7 +266,20 @@ export function CardDetail() {
               className={`${styles.actionBtn} ${styles.actionInk}`}
               onClick={() => actions.openSheet("withdraw", card.id)}
             >
+              <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 4v12m0 0-4-4m4 4 4-4M5 20h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
               Log spend
+            </button>
+            <button
+              type="button"
+              className={`${styles.actionBtn} ${styles.actionTopup}`}
+              onClick={() => actions.openSheet("deposit", card.id)}
+            >
+              <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 20V8m0 0-4 4m4-4 4 4M5 4h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Top up
             </button>
             <button
               type="button"
@@ -276,6 +289,9 @@ export function CardDetail() {
                 actions.go("transfer");
               }}
             >
+              <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M7 7h12m0 0-3-3m3 3-3 3M17 17H5m0 0 3 3m-3-3 3-3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
               Move money
             </button>
           </div>

@@ -50,12 +50,32 @@
 }
 
 .endpoint {
+  width: 100%;
   border-radius: 20px;
   background: var(--dark-2);
+  border: 1.5px solid transparent;
   padding: 14px 16px;
   display: flex;
   align-items: center;
   gap: 13px;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    transform 0.16s var(--ease-out);
+}
+
+.endpoint:active {
+  transform: scale(0.99);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .endpoint:hover {
+    background: var(--dark-3);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
 }
 
 .thumb {
@@ -92,6 +112,11 @@
   flex: none;
 }
 
+.endpointChevron {
+  flex: none;
+  color: rgba(255, 255, 255, 0.38);
+}
+
 .swapRow {
   display: flex;
   justify-content: center;
@@ -112,27 +137,13 @@
   transition: transform 0.3s var(--ease-out);
 }
 
-.toPicker {
-  margin-top: 12px;
-  display: flex;
-  gap: 7px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-
-.toChip {
-  flex: none;
-  height: 30px;
-  padding: 0 13px;
-  border-radius: 100px;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  font-weight: 600;
+.pickerHint {
+  margin: 11px 4px 0;
+  text-align: center;
+  font-weight: 400;
   font-size: 11.5px;
-  line-height: 1;
-  cursor: pointer;
-  transition: background 0.2s;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.42);
 }
 
 .body {
@@ -204,8 +215,30 @@
   transition: background 0.2s;
 }
 
+.quick:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+
 .quick:hover {
   background: rgba(255, 255, 255, 0.18);
+}
+
+.quick:disabled:hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.amountHelp {
+  margin-top: 8px;
+  min-height: 16px;
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.46);
+}
+
+.amountHelpOver {
+  color: #ff8a82;
 }
 
 .submitWrap {
@@ -231,6 +264,10 @@
 
 .submit:active {
   transform: scale(0.97);
+}
+
+.submit:disabled {
+  cursor: not-allowed;
 }
 
 @media (min-width: 620px) {
@@ -265,8 +302,7 @@
     height: 44px;
   }
 
-  .quick,
-  .toChip {
+  .quick {
     min-height: 40px;
   }
 }

@@ -42,27 +42,21 @@ function Confetti() {
 export function SuccessOverlay() {
   const { state, actions } = useWallet();
   if (!state.success) return null;
-  const celebrate = state.success.kind === "funded" || state.success.kind === "moved";
 
   return (
     <div className={styles.screen} role="dialog" aria-modal="true" aria-label={state.success.head}>
-      {celebrate ? (
-        <>
-          <Confetti />
-          <div className={styles.art}>
-            <span className={styles.spotlight} aria-hidden="true" />
-            <SpriteAnimation
-              sheet={CELEBRATE}
-              size={168}
-              className={styles.mascot}
-              fallback={<Mascot mood="cheer" size={168} />}
-              loop={false}
-            />
-          </div>
-        </>
-      ) : null}
+      <Confetti />
+      <div className={styles.art}>
+        <span className={styles.spotlight} aria-hidden="true" />
+        <SpriteAnimation
+          sheet={CELEBRATE}
+          size={168}
+          className={styles.mascot}
+          fallback={<Mascot mood="cheer" size={168} />}
+        />
+      </div>
 
-      <div className={`${styles.copy} ${celebrate ? styles.copyWithArt : ""}`}>
+      <div className={`${styles.copy} ${styles.copyWithArt}`}>
         <h2 className={styles.head}>{state.success.head}</h2>
         <p className={styles.body}>{state.success.body}</p>
       </div>
