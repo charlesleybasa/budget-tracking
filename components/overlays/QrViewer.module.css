@@ -1,0 +1,198 @@
+/*
+ * Deliberately the only white screen in the app. This is not a style choice: a camera reads a
+ * QR off a bright, high-contrast field, and a white full screen also pushes the panel
+ * backlight up on its own, which is what makes the code survive being scanned outdoors.
+ */
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 96;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: calc(var(--screen-top) + 8px) 24px calc(24px + var(--screen-bottom));
+  animation: qrIn 0.26s var(--ease-out) both;
+}
+
+.head {
+  position: absolute;
+  top: calc(var(--screen-top) + 6px);
+  left: 20px;
+  right: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.who {
+  min-width: 0;
+}
+
+.kicker {
+  display: block;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--muted-1);
+}
+
+.nick {
+  display: block;
+  margin-top: 6px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* Negative tracking is applied after the last glyph too, so the box ends up narrower than
+     the text and `overflow: hidden` shaves the final character. */
+  padding-right: 0.02em;
+}
+
+.close {
+  width: 44px;
+  height: 44px;
+  border-radius: 100px;
+  background: var(--sand-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+  transition:
+    background 0.18s,
+    transform 0.16s var(--ease-out);
+}
+
+.close:active {
+  transform: scale(0.94);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .close:hover {
+    background: var(--sand-3);
+  }
+}
+
+/*
+ * The plate's padding is the QR's quiet zone — the margin the spec requires around a code for
+ * a reader to lock onto it. Sizing is capped on both axes so the code stays square and whole
+ * on a short landscape screen instead of overflowing.
+ */
+.plate {
+  flex: none;
+  background: #fff;
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: 0 10px 40px rgba(11, 11, 12, 0.1);
+  border: 1px solid var(--line-1, #eceae4);
+}
+
+.qr {
+  display: block;
+  width: min(72vw, 46vh, 380px);
+  height: min(72vw, 46vh, 380px);
+  object-fit: contain;
+  /* Codes are square blocks; smoothing them on upscale is what makes a marginal one fail. */
+  image-rendering: pixelated;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.account {
+  max-width: 100%;
+  border-radius: 16px;
+  background: var(--sand-1);
+  padding: 12px 18px;
+  cursor: pointer;
+  text-align: center;
+  transition:
+    background 0.18s,
+    transform 0.16s var(--ease-out);
+}
+
+.account:active {
+  transform: scale(0.98);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .account:hover {
+    background: var(--sand-3);
+  }
+}
+
+.accountLabel {
+  display: block;
+  font-weight: 500;
+  font-size: 10.5px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-1);
+}
+
+.accountNumber {
+  display: block;
+  margin-top: 7px;
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1.1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.hint {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: calc(18px + var(--screen-bottom));
+  text-align: center;
+  font-weight: 400;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--muted-1);
+}
+
+/* Short landscape: the header would collide with a QR sized off viewport height, so the
+   chrome tucks in and the code takes what is left. */
+@media (max-height: 520px) {
+  .hint {
+    display: none;
+  }
+
+  .layer {
+    gap: 12px;
+  }
+
+  .plate {
+    padding: 12px;
+    border-radius: 16px;
+  }
+}
+
+@keyframes qrIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer {
+    animation: none;
+  }
+}

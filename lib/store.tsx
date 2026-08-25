@@ -107,6 +107,12 @@ export interface WalletState {
    * inside it in a stacking context the nav sits above.
    */
   eraseOpen: boolean;
+  /**
+   * Card whose receiving QR is open full screen, or null. Here rather than in the detail
+   * screen for the same reason as `eraseOpen`: it has to paint over the navigation rail,
+   * and a screen's own transform traps anything inside it below that.
+   */
+  qrCardId: string | null;
 }
 
 const DEFAULT_ART: CardArt = {
@@ -163,6 +169,7 @@ function initialState(): WalletState {
     success: null,
     toast: null,
     eraseOpen: false,
+    qrCardId: null,
   };
 }
 
@@ -199,6 +206,7 @@ type UiPatch = Partial<
     | "onboarded"
     | "deckStep"
     | "eraseOpen"
+    | "qrCardId"
   >
 >;
 

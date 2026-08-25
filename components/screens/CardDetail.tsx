@@ -11,6 +11,7 @@ import { dayLabel, minusIfNegative, peso, peso0 } from "@/lib/format";
 import { useWallet } from "@/lib/store";
 import { cardProgress, findCard, groupByDay, limitCopy, maskFor, spentOnCard } from "@/lib/selectors";
 import { useElementWidth } from "@/lib/useElementWidth";
+import { useLongPress } from "@/lib/useLongPress";
 
 import type { CardArt, Transaction } from "@/lib/types";
 
@@ -38,6 +39,11 @@ export function CardDetail() {
   const wrapWidth = useElementWidth(wrapRef);
   const cardW = Math.min(320, Math.max(240, (wrapWidth ?? 360) - 40));
   const cardH = Math.round(cardW * (196 / 320));
+
+  // The card is captured before the early return, so the callback never reads a stale id.
+  const qrCardId = card?.id ?? null;
+  const openQr = () => actions.patch({ qrCardId });
+  const longPress = useLongPress(openQr);
 
   if (!card) return null;
 
@@ -154,8 +160,34 @@ export function CardDetail() {
               </div>
 
               {card.qr ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img className={styles.backQr} src={card.qr} alt={`Receiving QR for ${card.nick}`} />
+                <button
+                  type="button"
+                  className={styles.qrTrigger}
+                  tabIndex={flipped ? 0 : -1}
+                  aria-label={`Show ${card.nick}'s QR full screen`}
+                  onClick={(e) => {
+                    // Without this the tap bubbles to the face and flips the card away —
+                    // the opposite of what someone reaching for the code wants.
+                    e.stopPropagation();
+                    openQr();
+                  }}
+                  {...longPress}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    className={styles.backQr}
+                    src={card.qr}
+                    alt=""
+                    draggable={false}
+                    aria-hidden="true"
+                  />
+                  <span className={styles.qrHint}>
+                    <svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6" />
+                    </svg>
+                    Hold to enlarge
+                  </span>
+                </button>
               ) : null}
 
               <div className={styles.backDetails}>
