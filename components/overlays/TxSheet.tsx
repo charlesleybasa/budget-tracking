@@ -51,9 +51,9 @@ export function TxSheet() {
   // Which end of the transaction the picker is choosing for, if it is open.
   const [picking, setPicking] = useState<"source" | "destination" | null>(null);
 
-  // Spend confirmations stay static; funding and move flows preload their shared celebration.
+  // Every completed transaction celebrates, so fetch the atlas while the sheet is open.
   useEffect(() => {
-    if (state.sheet === "deposit" || state.sheet === "move") preloadSprite(CELEBRATE);
+    if (state.sheet) preloadSprite(CELEBRATE);
   }, [state.sheet]);
 
   const sheet = state.sheet;
@@ -219,27 +219,61 @@ export function TxSheet() {
           )}
 
           {emptyCard ? null : isMove ? (
-            <>
-              <button type="button" className={styles.intoRow} onClick={() => setPicking("destination")}>
-                <div className={styles.thumb} style={{ background: moveTo?.art.c1 ?? "#16161a" }}>
-                  {moveTo ? <CardArtFor card={moveTo} w={44} h={29} r={7} /> : null}
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div className={styles.intoLabel}>Into</div>
-                  <div className={styles.intoNick}>{moveTo?.nick ?? "Pick a card"}</div>
-                </div>
-                <svg className={styles.intoChevron} width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#6b8fd0" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 9l6 6 6-6" />
+            <div className={styles.moveSelector} aria-label="Cards for this move">
+              <button
+                type="button"
+                className={styles.moveEndpoint}
+                onClick={() => setPicking("source")}
+                aria-label={`Move from ${source.nick}. Change card`}
+              >
+                <span className={styles.moveEndpointLabel}>From</span>
+                <span className={styles.moveEndpointCard}>
+                  <span className={styles.thumb} style={{ background: source.art.c1 }}>
+                    <CardArtFor card={source} w={44} h={29} r={7} />
+                  </span>
+                  <span className={styles.moveEndpointMeta}>
+                    <span className={styles.moveEndpointNick}>{source.nick}</span>
+                    <span className={styles.moveEndpointBalance}>₱{peso(source.bal)} available</span>
+                  </span>
+                </span>
+              </button>
+
+              <button
+                type="button"
+                className={styles.moveSwap}
+                aria-label="Swap from and to cards"
+                onClick={() =>
+                  actions.patch({
+                    sheetCardId: state.moveToId,
+                    moveToId: state.sheetCardId,
+                    swapRot: state.swapRot + 180,
+                  })
+                }
+                style={{ transform: `rotate(${state.swapRot}deg)` }}
+              >
+                <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round">
+                  <path d="M8 4v16M8 20l-4-4M16 20V4M16 4l4 4" />
                 </svg>
               </button>
 
-              <button type="button" className={styles.pickTrigger} onClick={() => setPicking("destination")}>
-                Choose a different card
-                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
+              <button
+                type="button"
+                className={styles.moveEndpoint}
+                onClick={() => setPicking("destination")}
+                aria-label={`Move to ${moveTo?.nick ?? "unselected card"}. Change card`}
+              >
+                <span className={styles.moveEndpointLabel}>To</span>
+                <span className={styles.moveEndpointCard}>
+                  <span className={styles.thumb} style={{ background: moveTo?.art.c1 ?? "#16161a" }}>
+                    {moveTo ? <CardArtFor card={moveTo} w={44} h={29} r={7} /> : null}
+                  </span>
+                  <span className={styles.moveEndpointMeta}>
+                    <span className={styles.moveEndpointNick}>{moveTo?.nick ?? "Pick a card"}</span>
+                    <span className={styles.moveEndpointBalance}>Destination</span>
+                  </span>
+                </span>
               </button>
-            </>
+            </div>
           ) : (
             <>
               <div className={styles.catRow}>
@@ -340,21 +374,23 @@ export function TxSheet() {
             </>
           )}
 
-          <div className={styles.sourceRow}>
-            <div className={styles.thumb} style={{ background: source.art.c1 }}>
-              <CardArtFor card={source} w={44} h={29} r={7} />
+          {isMove ? null : (
+            <div className={styles.sourceRow}>
+              <div className={styles.thumb} style={{ background: source.art.c1 }}>
+                <CardArtFor card={source} w={44} h={29} r={7} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div className={styles.sourceLabel}>{SOURCE_LABELS[sheet]}</div>
+                <div className={styles.sourceNick}>{source.nick}</div>
+              </div>
+              <button type="button" className={styles.change} onClick={() => setPicking("source")}>
+                Change
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div className={styles.sourceLabel}>{SOURCE_LABELS[sheet]}</div>
-              <div className={styles.sourceNick}>{source.nick}</div>
-            </div>
-            <button type="button" className={styles.change} onClick={() => setPicking("source")}>
-              Change
-              <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 9l6 6 6-6" />
-              </svg>
-            </button>
-          </div>
+          )}
         </div>
 
         {emptyCard ? null : <Keypad tone="light" />}
