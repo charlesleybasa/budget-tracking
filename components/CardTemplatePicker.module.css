@@ -1,0 +1,272 @@
+.picker {
+  margin-top: 14px;
+  min-width: 0;
+}
+
+.categoryBar {
+  position: sticky;
+  top: -1px;
+  z-index: 20;
+  display: flex;
+  gap: 7px;
+  margin: 0 -20px;
+  padding: 2px 20px 10px;
+  background: var(--paper);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+}
+
+.categoryBar::-webkit-scrollbar {
+  display: none;
+}
+
+.categoryChip {
+  flex: none;
+  min-height: 38px;
+  padding: 0 10px 0 13px;
+  border-radius: 100px;
+  background: var(--sand-1);
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  scroll-snap-align: start;
+  font-size: 11.5px;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.16s var(--ease-out);
+}
+
+.categoryChip[aria-pressed="true"] {
+  background: var(--ink);
+  color: #fff;
+}
+
+.categoryChip:active {
+  transform: scale(0.96);
+}
+
+.categoryCount {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 100px;
+  background: rgba(11, 11, 12, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.categoryChip[aria-pressed="true"] .categoryCount {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.stage {
+  position: relative;
+  height: 198px;
+  margin: 0 -20px;
+  overflow: hidden;
+  perspective: 760px;
+  perspective-origin: 50% 42%;
+  touch-action: pan-y;
+  outline: none;
+  cursor: grab;
+}
+
+.stage:active {
+  cursor: grabbing;
+}
+
+.stage:focus-visible {
+  border-radius: 18px;
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+.ambient {
+  position: absolute;
+  left: 50%;
+  bottom: 11px;
+  width: min(62%, 250px);
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(52, 44, 28, 0.18);
+  filter: blur(18px);
+  transform: translateX(-50%);
+}
+
+.templateCard {
+  position: absolute;
+  left: 50%;
+  top: 17px;
+  width: min(72vw, 276px);
+  aspect-ratio: 320 / 196;
+  padding: 0;
+  border: 0;
+  border-radius: 19px;
+  overflow: hidden;
+  background: #ddd8ce;
+  box-shadow: 0 17px 30px rgba(28, 22, 12, 0.23), 0 3px 8px rgba(28, 22, 12, 0.16);
+  transform-style: preserve-3d;
+  transform: translate3d(calc(-50% + var(--card-x) + var(--drag-x)), var(--card-y), var(--card-z))
+    rotateY(var(--card-turn)) rotateZ(var(--card-roll)) scale(var(--card-scale));
+  transform-origin: 50% 70%;
+  cursor: pointer;
+  transition: transform 0.42s var(--ease-out), opacity 0.3s, box-shadow 0.3s;
+  will-change: transform;
+}
+
+.templateCard[aria-pressed="true"] {
+  box-shadow: 0 22px 38px rgba(28, 22, 12, 0.28), 0 3px 8px rgba(28, 22, 12, 0.14), 0 0 0 2px #fff,
+    0 0 0 4px var(--ink);
+}
+
+.dragging .templateCard {
+  transition: opacity 0.3s, box-shadow 0.3s;
+}
+
+.templateCard img {
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+.cardSheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(112deg, rgba(255, 255, 255, 0.2), transparent 28%, transparent 68%, rgba(255, 255, 255, 0.08));
+  pointer-events: none;
+}
+
+.selectedMark {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.templateMeta {
+  min-height: 42px;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.templateName {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.templateCategory {
+  margin-top: 4px;
+  color: var(--muted-3);
+  font-size: 10.5px;
+  font-weight: 550;
+  line-height: 1;
+}
+
+.position {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.position span {
+  color: var(--muted-4);
+  font-weight: 500;
+}
+
+.hint {
+  margin: 4px 0 0;
+  color: var(--muted-4);
+  font-size: 10px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+@media (min-width: 620px) {
+  .categoryBar {
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .stage {
+    height: 225px;
+    margin: 0 -24px;
+    perspective: 980px;
+  }
+
+  .templateCard {
+    top: 20px;
+    width: min(46vw, 320px);
+    transform: translate3d(calc(-50% + var(--card-x-wide) + var(--drag-x)), var(--card-y), var(--card-z-wide))
+      rotateY(var(--card-turn-wide)) rotateZ(var(--card-roll)) scale(var(--card-scale));
+  }
+}
+
+@media (min-width: 1180px) {
+  .categoryBar {
+    margin-left: -28px;
+    margin-right: -28px;
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+
+  .stage {
+    margin-left: -28px;
+    margin-right: -28px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .categoryChip:hover:not([aria-pressed="true"]) {
+    background: var(--sand-3);
+  }
+
+  .templateCard:hover {
+    filter: saturate(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage {
+    perspective: none;
+  }
+
+  .templateCard,
+  .dragging .templateCard {
+    transition: opacity 0.12s;
+    transform: translate3d(calc(-50% + var(--card-x) + var(--drag-x)), 0, 0) scale(var(--card-scale));
+  }
+
+  .cardSheen,
+  .ambient {
+    display: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .categoryChip {
+    min-height: 44px;
+  }
+}

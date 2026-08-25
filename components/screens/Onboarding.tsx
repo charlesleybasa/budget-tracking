@@ -4,18 +4,26 @@ import { useEffect, useRef, type CSSProperties } from "react";
 import { flushSync } from "react-dom";
 
 import { CardArt } from "@/components/CardArt";
+import { CardTemplatePicker } from "@/components/CardTemplatePicker";
 import { MascotMark } from "@/components/MascotMark";
-import { CARD_KINDS, PALETTES } from "@/lib/constants";
 import { Mascot } from "@/components/Mascot";
 import { SpriteAnimation, preloadSprite } from "@/components/SpriteAnimation";
-import { PEEKABOO } from "@/lib/sprites";
+import { cardTheme } from "@/components/cardTheme";
+import {
+  CARD_TEMPLATES,
+  templateForSource,
+  templateToArt,
+  type CardTemplate,
+  type TemplateGroup,
+} from "@/lib/cardTemplates";
+import { CARD_KINDS, PALETTES } from "@/lib/constants";
 import { peso } from "@/lib/format";
+import { PEEKABOO } from "@/lib/sprites";
 import { useWallet } from "@/lib/store";
-import type { ArtStyle } from "@/lib/types";
-import { useRestore } from "@/lib/useRestore";
 import { useElementWidth } from "@/lib/useElementWidth";
 import { useMoneyField } from "@/lib/useMoneyField";
-import type { CardKind } from "@/lib/types";
+import { useRestore } from "@/lib/useRestore";
+import type { ArtStyle, CardArt as CardArtModel, CardKind } from "@/lib/types";
 
 import styles from "./Onboarding.module.css";
 
@@ -32,6 +40,16 @@ const FAN: ReadonlyArray<readonly [number, number, ArtStyle, number]> = [
   [0, 0, "arc", 0],
   [15, 6.5, "grid", 1],
 ];
+
+const CASH_ART: CardArtModel = {
+  style: "blob",
+  c1: "#ffca28",
+  c2: "#0b0b0c",
+  tex: "grain",
+  layout: "standard",
+  chip: false,
+  photo: null,
+};
 
 function FanStack() {
   return (
@@ -103,25 +121,44 @@ export function Onboarding() {
   const previewW = Math.min(268, Math.max(220, (previewWrapWidth ?? 320) - 8));
   const previewH = Math.round(previewW * (164 / 268));
 
-  const next = () => actions.patch({ obStep: Math.min(3, obStep + 1) });
+  const next = () => actions.patch({ obStep: Math.min(4, obStep + 1) });
 
   const balField = useMoneyField(state.obBal, (raw) => actions.patch({ obBal: raw }));
 
-  // Picking a pocket type goes straight to the amount, not to a second "Continue" tap on the
-  // same information. The state update and the step-3 render are forced synchronous with
-  // flushSync so the focus() call below lands inside the same user-gesture call stack as the
-  // tap — outside that stack (a plain setTimeout, say) iOS Safari will move the caret but
-  // will not raise the keyboard, which would make the whole point of "straight to the
-  // amount" silently fail on the platform most people are on.
-  const selectKind = (label: CardKind) => {
-    flushSync(() => {
-      actions.patch({
-        obKind: label,
-        obName: label === "Cash on hand" ? "Cash on Hand" : "",
-        obStep: 3,
-      });
-    });
+  const selectedKind = CARD_KINDS.find(([kind]) => kind === state.obKind);
+  const selectedKindLabel = selectedKind?.[1] ?? state.obKind ?? "Your card";
+  const selectedCategory = selectedKind?.[3] ?? null;
+  const activeTemplate = templateForSource(state.obArt.photo?.src);
+  const previewTheme = cardTheme(state.obArt);
+
+  const openFunding = (patch: { obKind?: CardKind; obName?: string; obArt?: CardArtModel } = {}) => {
+    // Keep the focus in the category/template tap's user-gesture call stack so iOS raises
+    // the amount keyboard as soon as the funding step appears.
+    flushSync(() => actions.patch({ ...patch, obStep: 4 }));
     balField.ref.current?.focus();
+  };
+
+  const selectKind = (kind: CardKind, category: TemplateGroup | null) => {
+    if (category === null) {
+      openFunding({ obKind: kind, obName: "Cash on Hand", obArt: { ...CASH_ART } });
+      return;
+    }
+
+    const firstTemplate = CARD_TEMPLATES.find((template) => template.category === category);
+    if (!firstTemplate) return;
+    actions.patch({
+      obKind: kind,
+      obName: firstTemplate.name,
+      obArt: templateToArt(firstTemplate, state.obArt),
+      obStep: 3,
+    });
+  };
+
+  const selectTemplate = (template: CardTemplate) => {
+    actions.patch({
+      obName: template.name,
+      obArt: templateToArt(template, state.obArt),
+    });
   };
 
   const firstName = state.userName.trim().split(" ")[0];
@@ -225,7 +262,7 @@ export function Onboarding() {
       ) : null}
 
       {obStep === 2 ? (
-        <div key={obStep} className={`${styles.step} ${styles.stepPadded} bwEnterSide`}>
+        <div key={obStep} className={`${styles.step} ${styles.stepPadded} ${styles.kindStep} bwEnterSide`}>
           <h1 className={styles.head}>
             What kind of
             <br />
@@ -234,12 +271,12 @@ export function Onboarding() {
           <p className={styles.sub}>You can add the rest later. No judgement if it&apos;s all cash.</p>
 
           <div className={styles.kindGrid}>
-            {CARD_KINDS.map(([label, hint]) => (
+            {CARD_KINDS.map(([kind, label, hint, category]) => (
               <button
-                key={label}
+                key={kind}
                 type="button"
                 className={styles.kind}
-                onClick={() => selectKind(label)}
+                onClick={() => selectKind(kind, category)}
                 style={{ background: "#141418", borderColor: "transparent" }}
               >
                 <div className={styles.kindDot} style={{ background: "rgba(255,255,255,.1)" }}>
@@ -255,9 +292,51 @@ export function Onboarding() {
         </div>
       ) : null}
 
-      {obStep === 3 ? (
+      {obStep === 3 && selectedCategory ? (
+        <div key={obStep} className={`${styles.step} ${styles.stepPaddedTight} ${styles.templateStep} bwEnterSide`}>
+          <div className={styles.stepHeadRow}>
+            <div>
+              <h1 className={styles.headTight}>Choose your card.</h1>
+              <p className={styles.sub}>Pick a look from this category. You can fine-tune it later.</p>
+            </div>
+            <button type="button" className={styles.changeLink} onClick={() => actions.patch({ obStep: 2 })}>
+              Change category
+            </button>
+          </div>
+
+          <div className={styles.templatePanel}>
+            <CardTemplatePicker
+              activeTemplateId={activeTemplate?.id ?? null}
+              className={styles.onboardingPicker}
+              fixedCategory={selectedCategory}
+              onSelect={selectTemplate}
+            />
+          </div>
+
+          <div className={styles.spacer} />
+          <button
+            type="button"
+            className={styles.continueBtn}
+            style={{ background: "#ffca28" }}
+            onClick={() => openFunding()}
+          >
+            Use this template
+          </button>
+        </div>
+      ) : null}
+
+      {obStep === 4 || (obStep === 3 && !selectedCategory) ? (
         <div key={obStep} className={`${styles.step} ${styles.stepPaddedTight} bwEnterSide`}>
-          <h1 className={styles.headTight}>Name it, fund it.</h1>
+          <div className={styles.stepHeadRow}>
+            <h1 className={styles.headTight}>Name it, fund it.</h1>
+            <button
+              type="button"
+              className={styles.changeLink}
+              onClick={() => actions.patch({ obStep: selectedCategory ? 3 : 2 })}
+            >
+              {selectedCategory ? "Change template" : "Change category"}
+            </button>
+          </div>
 
           <div className={styles.previewWrap} ref={previewRef}>
             <div className={styles.preview} style={{ width: previewW, height: previewH }}>
@@ -268,13 +347,17 @@ export function Onboarding() {
                 r={20}
               />
               <div className={styles.previewInner}>
-                <div className={styles.previewKind}>{state.obKind ?? "Your card"}</div>
+                <div className={styles.previewKind} style={{ color: previewTheme.fgDim }}>
+                  {selectedKindLabel}
+                </div>
                 <div>
-                  <div className={styles.previewAmount}>
+                  <div className={styles.previewAmount} style={{ color: previewTheme.fg }}>
                     <span className={styles.previewPeso}>₱</span>
                     <span className={styles.previewValue}>{peso(parseFloat(state.obBal) || 0)}</span>
                   </div>
-                  <div className={styles.previewNick}>{state.obName || "Untitled card"}</div>
+                  <div className={styles.previewNick} style={{ color: previewTheme.fg }}>
+                    {state.obName || "Untitled card"}
+                  </div>
                 </div>
               </div>
             </div>
@@ -331,7 +414,7 @@ export function Onboarding() {
       ) : null}
 
       <div className={styles.dots}>
-        {[0, 1, 2, 3].map((i) => (
+        {[0, 1, 2, 3, 4].map((i) => (
           <div
             key={i}
             className={styles.dot}

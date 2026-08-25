@@ -7,6 +7,7 @@ import type {
   Texture,
   Tier,
 } from "@/lib/types";
+import type { TemplateGroup } from "@/lib/cardTemplates";
 
 /** Card palettes offered in the editor, as [base, accent] pairs. */
 export const PALETTES: ReadonlyArray<readonly [string, string]> = [
@@ -124,14 +125,19 @@ export const CATEGORY_GUESSES: ReadonlyArray<readonly [readonly string[], Catego
   [["netflix", "spotify", "movie", "cinema", "concert", "game"], "Fun"],
 ];
 
-/** The pocket types offered during onboarding. */
-export const CARD_KINDS: ReadonlyArray<readonly [CardKind, string]> = [
-  ["ATM / Debit", "Bank card you tap"],
-  ["Credit card", "Borrowed money"],
-  ["Cash on hand", "Actual paper"],
-  ["E-wallet", "GCash, Maya"],
-  ["Savings goal", "Money with a job"],
-  ["Emergency fund", "Do not touch"],
+/**
+ * Onboarding mirrors the template folders. The stored card kind stays singular and useful
+ * in the wallet; the user-facing label names the template category they are choosing from.
+ * Cash is the one intentionally image-free route and keeps the DIY art engine.
+ */
+export const CARD_KINDS: ReadonlyArray<readonly [CardKind, string, string, TemplateGroup | null]> = [
+  ["ATM / Debit", "Banks", "Traditional bank cards", "banks"],
+  ["Credit card", "Credit Cards", "Borrowed spending", "credit-cards"],
+  ["Digital bank", "Digital Banks", "App-first bank accounts", "digital-banks"],
+  ["E-wallet", "E-wallets", "GCash, Maya and more", "e-wallets"],
+  ["Membership card", "Membership Cards", "Rewards and loyalty", "membership"],
+  ["Prepaid card", "Prepaid Cards", "Load it before spending", "prepaid"],
+  ["Cash on hand", "Cash on hand", "DIY card for physical pesos", null],
 ];
 
 export const SEARCH_FILTERS = [

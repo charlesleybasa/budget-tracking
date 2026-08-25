@@ -3,8 +3,15 @@
 import { useRef, useState, type ChangeEvent, type PointerEvent as ReactPointerEvent } from "react";
 
 import { CardArt } from "@/components/CardArt";
+import { CardTemplatePicker } from "@/components/CardTemplatePicker";
 import { cardTheme } from "@/components/cardTheme";
-import { BANK_PRESETS } from "@/lib/bankPresets";
+import {
+  CARD_TEMPLATES,
+  DEFAULT_CARD_TEMPLATE,
+  templateForSource,
+  templateToArt,
+  type CardTemplate,
+} from "@/lib/cardTemplates";
 import { CARD_STYLES, PALETTES, SCRIM_NAMES, SCRIM_ORDER, TEXTURES, TIERS } from "@/lib/constants";
 import { minusIfNegative, peso } from "@/lib/format";
 import { ImageError, QR_OPTIONS, readImage } from "@/lib/image";
@@ -12,7 +19,7 @@ import { autoTuneScrim, measure } from "@/lib/legibility";
 import { useWallet } from "@/lib/store";
 import { useElementWidth } from "@/lib/useElementWidth";
 import { useMoneyField } from "@/lib/useMoneyField";
-import type { PhotoArt, Sample, TextMode } from "@/lib/types";
+import type { CardArt as CardArtModel, PhotoArt, Sample, TextMode } from "@/lib/types";
 
 import styles from "./CardEditor.module.css";
 
@@ -23,6 +30,21 @@ const TEXT_MODES: ReadonlyArray<readonly [TextMode, string]> = [
 ];
 
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+
+type EditorMode = "templates" | "diy";
+
+const DIY_DEFAULT_ART: CardArtModel = {
+  style: "blob",
+  c1: "#ffca28",
+  c2: "#0b0b0c",
+  tex: "grain",
+  layout: "standard",
+  photo: null,
+};
+
+function copyArt(art: CardArtModel): CardArtModel {
+  return { ...art, photo: art.photo ? { ...art.photo, sample: [...art.photo.sample] } : null };
+}
 
 /**
  * Average the zone the balance actually sits in — bottom-left — rather than the whole frame,
@@ -80,6 +102,15 @@ export function CardEditor() {
     actions.editCard({ limit: parseFloat(text) || 0 });
   });
 
+  const initialTemplate = templateForSource(ed?.art.photo?.src);
+  const [mode, setMode] = useState<EditorMode>(() => (initialTemplate ? "templates" : "diy"));
+  const [templateDraft, setTemplateDraft] = useState<CardArtModel>(() =>
+    copyArt(initialTemplate && ed ? ed.art : templateToArt(DEFAULT_CARD_TEMPLATE, ed?.art)),
+  );
+  const [diyDraft, setDiyDraft] = useState<CardArtModel>(() =>
+    copyArt(initialTemplate ? DIY_DEFAULT_ART : (ed?.art ?? DIY_DEFAULT_ART)),
+  );
+
   if (!ed) return null;
 
   const previewW = Math.min(320, Math.max(240, (wrapWidth ?? 360) - 40));
@@ -90,6 +121,38 @@ export function CardEditor() {
   const photo = art.photo ?? null;
   const hasPhoto = art.style === "photo" && !!photo?.src;
   const metrics = photo?.src ? measure(photo) : null;
+  const activeTemplate = templateForSource(photo?.src);
+
+  const selectTemplate = (template: CardTemplate) => {
+    const next = templateToArt(template, art);
+    setTemplateDraft(copyArt(next));
+    actions.editArt(next);
+    actions.editCard({ nick: template.name });
+  };
+
+  const switchMode = (nextMode: EditorMode) => {
+    if (nextMode === mode) return;
+    if (mode === "templates") setTemplateDraft(copyArt(art));
+    else setDiyDraft(copyArt(art));
+
+    const nextArt = nextMode === "templates" ? templateDraft : diyDraft;
+    actions.editArt(copyArt(nextArt));
+    if (nextMode === "templates") {
+      const restoredTemplate = templateForSource(nextArt.photo?.src);
+      if (restoredTemplate) actions.editCard({ nick: restoredTemplate.name });
+    }
+    setMode(nextMode);
+  };
+
+  const randomize = () => {
+    if (mode === "diy") {
+      actions.randomizeArt();
+      return;
+    }
+    const currentIndex = activeTemplate ? CARD_TEMPLATES.findIndex(({ id }) => id === activeTemplate.id) : -1;
+    const offset = 1 + Math.floor(Math.random() * Math.max(1, CARD_TEMPLATES.length - 1));
+    selectTemplate(CARD_TEMPLATES[(Math.max(0, currentIndex) + offset) % CARD_TEMPLATES.length]);
+  };
 
   const onFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -182,7 +245,7 @@ export function CardEditor() {
           </svg>
         </button>
         <div className={styles.navTitle}>{state.edNew ? "New card" : "Redesign card"}</div>
-        <button type="button" className={styles.roundBtn} onClick={actions.randomizeArt} aria-label="Randomise the art">
+        <button type="button" className={styles.roundBtn} onClick={randomize} aria-label="Try another design">
           <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.2} strokeLinecap="round">
             <path d="M20 5h-5M20 5l-3-3M20 5l-3 3M4 19h5M4 19l3-3M4 19l3 3M4 5l16 14" />
           </svg>
@@ -218,66 +281,75 @@ export function CardEditor() {
 
       <div className={styles.sheet}>
         <div className={styles.scroll}>
-          {/* ── start from the bank you actually carry ── */}
-          <div className={styles.labelRow}>
-            <div className={styles.label} style={{ whiteSpace: "nowrap" }}>
-              Start from
-            </div>
-            <div className={styles.labelHint}>Colours only — edit anything after</div>
-          </div>
-          <div className={styles.bankRow}>
-            {BANK_PRESETS.map((preset) => (
-              <button
-                key={preset.name}
-                type="button"
-                className={styles.bankChip}
-                onClick={() => {
-                  actions.editArt({ c1: preset.c1, c2: preset.c2, style: preset.style, chip: preset.chip, photo: null });
-                  if (!ed.nick.trim()) actions.editCard({ nick: preset.name });
-                }}
-              >
-                <span className={styles.bankSwatch} aria-hidden="true">
-                  <span style={{ background: preset.c1 }} />
-                  <span style={{ background: preset.c2 }} />
-                </span>
-                {preset.name}
-              </button>
-            ))}
+          <div className={styles.modeSwitch} role="group" aria-label="Card design source">
+            <button
+              type="button"
+              className={styles.modeButton}
+              aria-pressed={mode === "templates"}
+              onClick={() => switchMode("templates")}
+            >
+              Templates
+              <span>70 ready-made looks</span>
+            </button>
+            <button
+              type="button"
+              className={styles.modeButton}
+              aria-pressed={mode === "diy"}
+              onClick={() => switchMode("diy")}
+            >
+              DIY
+              <span>Build your own</span>
+            </button>
           </div>
 
-          {/* ── style: pattern only, so picking a look never changes the colours ── */}
-          <div className={styles.spaced} />
-          <div className={styles.label}>Style</div>
-          <div className={styles.grid3}>
-            {CARD_STYLES.map(([style, name]) => (
-              <button
-                key={style}
-                type="button"
-                className={styles.tile}
-                aria-pressed={art.style === style}
-                style={{ borderColor: art.style === style ? "#0b0b0c" : "transparent" }}
-                onClick={() => {
-                  actions.editArt({ style });
-                  if (style === "photo" && !photo?.src) {
-                    window.setTimeout(() => fileRef.current?.click(), 120);
-                  }
-                }}
-              >
-                <div className={styles.thumbSmall} style={{ background: art.c1 }}>
-                  <CardArt art={{ ...art, style, chip: false }} w={100} h={52} r={0} />
+          {mode === "templates" ? (
+            <section className={styles.designSection} aria-labelledby="template-heading">
+              <div className={styles.sectionHead}>
+                <div>
+                  <div id="template-heading" className={styles.sectionTitle}>Choose a background</div>
+                  <div className={styles.sectionCopy}>Browse by category, then tune the crop and readability.</div>
                 </div>
-                <div className={styles.tileCaption}>{name}</div>
-              </button>
-            ))}
-          </div>
+                <div className={styles.sectionBadge}>3D preview</div>
+              </div>
+              <CardTemplatePicker activeTemplateId={activeTemplate?.id ?? null} onSelect={selectTemplate} />
+            </section>
+          ) : (
+            <section className={styles.designSection} aria-labelledby="artwork-heading">
+              <div className={styles.sectionHead}>
+                <div>
+                  <div id="artwork-heading" className={styles.sectionTitle}>Artwork</div>
+                  <div className={styles.sectionCopy}>Pick a generated pattern or start with your own photo.</div>
+                </div>
+              </div>
+              <div className={styles.grid3}>
+                {CARD_STYLES.map(([style, name]) => (
+                  <button
+                    key={style}
+                    type="button"
+                    className={styles.tile}
+                    aria-pressed={art.style === style}
+                    style={{ borderColor: art.style === style ? "#0b0b0c" : "transparent" }}
+                    onClick={() => {
+                      actions.editArt({ style });
+                      if (style === "photo" && !photo?.src) window.setTimeout(() => fileRef.current?.click(), 120);
+                    }}
+                  >
+                    <div className={styles.thumbSmall} style={{ background: art.c1 }}>
+                      <CardArt art={{ ...art, style, chip: false }} w={100} h={52} r={0} />
+                    </div>
+                    <div className={styles.tileCaption}>{name}</div>
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
 
           <input ref={fileRef} type="file" accept="image/*" onChange={onFile} style={{ display: "none" }} />
 
-          {/* ── photo panel ── */}
           {art.style === "photo" ? (
-            <div className={styles.photoPanel}>
+            <section className={styles.photoPanel} aria-label={mode === "templates" ? "Adjust template" : "Photo controls"}>
               <div className={styles.photoHead}>
-                <div className={styles.photoTitle}>Your photo</div>
+                <div className={styles.photoTitle}>{mode === "templates" ? "Adjust template" : "Your photo"}</div>
                 <div
                   className={styles.ratio}
                   style={{
@@ -293,41 +365,45 @@ export function CardEditor() {
                 {!metrics
                   ? "Upload a photo and I check the balance against it."
                   : metrics.ratio >= 4.5
-                    ? "Balance is readable over this photo. Ship it."
-                    : "The balance gets lost here. Add scrim, blur it, or pick a calmer photo."}
+                    ? "The balance is clear against this artwork."
+                    : "The balance gets lost here. Increase the overlay or soften the image."}
               </p>
 
               <div className={styles.photoActions}>
-                <button type="button" className={styles.uploadBtn} onClick={() => fileRef.current?.click()}>
-                  <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.2} strokeLinecap="round">
-                    <path d="M12 16V4M7 9l5-5 5 5M4 20h16" />
-                  </svg>
-                  {hasPhoto ? "Replace photo" : "Upload a photo"}
-                </button>
+                {mode === "diy" ? (
+                  <button type="button" className={styles.uploadBtn} onClick={() => fileRef.current?.click()}>
+                    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.2} strokeLinecap="round">
+                      <path d="M12 16V4M7 9l5-5 5 5M4 20h16" />
+                    </svg>
+                    {hasPhoto ? "Replace photo" : "Upload a photo"}
+                  </button>
+                ) : null}
 
                 {hasPhoto ? (
                   <>
                     <button
                       type="button"
-                      className={styles.autoFix}
+                      className={`${styles.autoFix} ${mode === "templates" ? styles.autoFixWide : ""}`}
                       onClick={() => {
                         if (!photo) return;
                         actions.editPhoto({ scrim: autoTuneScrim(photo) });
-                        actions.toast("Tuned to the lightest scrim that still passes.");
+                        actions.toast("Tuned to the lightest overlay that still passes.");
                       }}
                     >
-                      Auto-fix
+                      Auto-fix contrast
                     </button>
-                    <button
-                      type="button"
-                      className={styles.dropPhoto}
-                      onClick={() => actions.editArt({ photo: null })}
-                      aria-label="Remove photo"
-                    >
-                      <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="#c62f26" strokeWidth={2.2} strokeLinecap="round">
-                        <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
-                      </svg>
-                    </button>
+                    {mode === "diy" ? (
+                      <button
+                        type="button"
+                        className={styles.dropPhoto}
+                        onClick={() => actions.editArt({ photo: null })}
+                        aria-label="Remove photo"
+                      >
+                        <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="#c62f26" strokeWidth={2.2} strokeLinecap="round">
+                          <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                        </svg>
+                      </button>
+                    ) : null}
                   </>
                 ) : null}
               </div>
@@ -335,13 +411,19 @@ export function CardEditor() {
               {hasPhoto && photo ? (
                 <div className={styles.photoControls}>
                   <div className={styles.controlHead}>
-                    <div className={styles.controlLabel}>Zoom · drag the card to reframe</div>
+                    <div className={styles.controlLabel}>Zoom · drag the card above to reframe</div>
                     <button
                       type="button"
                       className={styles.recentre}
-                      onClick={() => actions.editPhoto({ px: 0, py: 0, zoom: 1 })}
+                      onClick={() =>
+                        actions.editPhoto({
+                          px: activeTemplate?.focal[0] ?? 0,
+                          py: activeTemplate?.focal[1] ?? 0,
+                          zoom: 1,
+                        })
+                      }
                     >
-                      Recentre
+                      Reset crop
                     </button>
                   </div>
                   <input
@@ -352,11 +434,11 @@ export function CardEditor() {
                     step={0.02}
                     value={photo.zoom}
                     onChange={(e) => actions.editPhoto({ zoom: parseFloat(e.target.value) })}
-                    aria-label="Photo zoom"
+                    aria-label="Image zoom"
                   />
 
                   <div className={styles.controlLabel} style={{ marginTop: 10 }}>
-                    Scrim behind the numbers
+                    Readability overlay
                   </div>
                   <div className={styles.segRow}>
                     {SCRIM_ORDER.map((key) => (
@@ -407,45 +489,54 @@ export function CardEditor() {
               ) : null}
 
               <p className={styles.photoNote}>
-                840px or wider, under 10MB. Photos with a calm bottom-left corner work best — that&apos;s where your
-                balance lives. Don&apos;t upload a picture that already has text in it.
+                {mode === "templates"
+                  ? "The background stays intact. Switch to DIY if you want to replace the artwork."
+                  : "840px or wider, under 10MB. A calm bottom-left corner keeps the balance easy to read."}
               </p>
-            </div>
+            </section>
           ) : null}
 
-          {/* ── palette ── */}
-          <div className={`${styles.label} ${styles.spaced}`}>Colour</div>
-          <div className={styles.swatches}>
-            {PALETTES.map(([c1, c2]) => (
-              <button
-                key={`${c1}${c2}`}
-                type="button"
-                className={styles.swatch}
-                style={{ borderColor: art.c1 === c1 && art.c2 === c2 ? "#0b0b0c" : "transparent" }}
-                onClick={() => actions.editArt({ c1, c2 })}
-                aria-label={`Palette ${c1} and ${c2}`}
-              >
-                <span className={styles.swatchHalf} style={{ background: c1 }} />
-                <span className={styles.swatchHalf} style={{ background: c2 }} />
-              </button>
-            ))}
-          </div>
+          {mode === "diy" ? (
+            <section className={styles.designSection} aria-labelledby="finish-heading">
+              <div className={styles.sectionHead}>
+                <div>
+                  <div id="finish-heading" className={styles.sectionTitle}>Colors &amp; finish</div>
+                  <div className={styles.sectionCopy}>Set the palette, then add as much texture as you want.</div>
+                </div>
+              </div>
+              <div className={styles.label}>Colour</div>
+              <div className={styles.swatches}>
+                {PALETTES.map(([c1, c2]) => (
+                  <button
+                    key={`${c1}${c2}`}
+                    type="button"
+                    className={styles.swatch}
+                    style={{ borderColor: art.c1 === c1 && art.c2 === c2 ? "#0b0b0c" : "transparent" }}
+                    onClick={() => actions.editArt({ c1, c2 })}
+                    aria-label={`Palette ${c1} and ${c2}`}
+                  >
+                    <span className={styles.swatchHalf} style={{ background: c1 }} />
+                    <span className={styles.swatchHalf} style={{ background: c2 }} />
+                  </button>
+                ))}
+              </div>
 
-          {/* ── texture ── */}
-          <div className={`${styles.label} ${styles.spaced}`}>Finish</div>
-          <div className={styles.optionRow}>
-            {TEXTURES.map((tex) => (
-              <button
-                key={tex}
-                type="button"
-                className={styles.option}
-                style={activeStyle(art.tex === tex)}
-                onClick={() => actions.editArt({ tex })}
-              >
-                {tex === "none" ? "Flat" : tex.charAt(0).toUpperCase() + tex.slice(1)}
-              </button>
-            ))}
-          </div>
+              <div className={`${styles.label} ${styles.spacedCompact}`}>Finish</div>
+              <div className={styles.optionRow}>
+                {TEXTURES.map((tex) => (
+                  <button
+                    key={tex}
+                    type="button"
+                    className={styles.option}
+                    style={activeStyle(art.tex === tex)}
+                    onClick={() => actions.editArt({ tex })}
+                  >
+                    {tex === "none" ? "Flat" : tex.charAt(0).toUpperCase() + tex.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </section>
+          ) : null}
 
           {/* ── details ── */}
           <div className={`${styles.label} ${styles.spaced}`}>Details</div>
@@ -557,6 +648,10 @@ export function CardEditor() {
           </div>
 
           {/* ── fields ── */}
+          <div className={`${styles.labelRow} ${styles.spaced}`}>
+            <div className={styles.label}>Card information</div>
+            <div className={styles.labelHint}>Shown in your wallet</div>
+          </div>
           <div className={styles.fields}>
             <div className={styles.field}>
               <label className={styles.fieldLabel} htmlFor="ed-nick">

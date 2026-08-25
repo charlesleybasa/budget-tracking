@@ -57,8 +57,11 @@ export interface CardArt {
 export type CardKind =
   | "ATM / Debit"
   | "Credit card"
+  | "Digital bank"
   | "Cash on hand"
   | "E-wallet"
+  | "Membership card"
+  | "Prepaid card"
   | "Savings goal"
   | "Emergency fund"
   | "Shared";

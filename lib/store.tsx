@@ -13,6 +13,7 @@ import {
 import { flushSync } from "react-dom";
 
 import { ART_STYLES, DECK_ORIGIN, DECK_STEP, PALETTES, TEXTURES } from "@/lib/constants";
+import { DEFAULT_CARD_TEMPLATE, templateToArt } from "@/lib/cardTemplates";
 import { peso } from "@/lib/format";
 import { autoTuneScrim } from "@/lib/legibility";
 import { newId } from "@/lib/ids";
@@ -569,7 +570,7 @@ function reducer(state: WalletState, action: Action): WalletState {
             bal: 0,
             limit: 0,
             frozen: false,
-            art: { ...DEFAULT_ART },
+            art: templateToArt(DEFAULT_CARD_TEMPLATE, DEFAULT_ART),
           },
         };
       }
@@ -672,9 +673,9 @@ function reducer(state: WalletState, action: Action): WalletState {
     }
 
     case "finishOnboarding": {
-      // Picking a kind now jumps straight to the amount, so leaving the nickname blank is
-      // the expected path, not an oversight — the kind itself ("E-wallet", "Credit card")
-      // is a far more useful name for an unnamed card than a generic "My card" would be.
+      // Templates normally provide the first nickname; Cash on hand supplies its own. Keep
+      // the kind as a final fallback so interrupted or older onboarding drafts still finish
+      // with a useful label rather than a generic "My card".
       const kind = state.obKind ?? "ATM / Debit";
       const card: Card = {
         id: newId("card"),
