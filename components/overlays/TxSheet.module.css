@@ -412,6 +412,121 @@
   }
 }
 
+/* ── over the card's balance ─────────────────────────────────────────────────
+ * Sits under the amount rather than replacing the body: the keypad below is what fixes the
+ * problem, so hiding it would trap the user in the error.
+ */
+.amountOver {
+  color: var(--red-deep);
+}
+
+.overCard {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 16px;
+  background: #f0483e14;
+  border: 1px solid #f0483e2e;
+  padding: 10px 14px 10px 10px;
+  text-align: left;
+  animation: bwOverIn 0.26s var(--ease-out) both;
+}
+
+/* The aspect ratio is reserved up front so the row does not jump when the atlas decodes —
+   this appears mid-keystroke, and a shift under the user's thumb is worse than a blank. */
+.overArt {
+  flex: none;
+  aspect-ratio: 240 / 397;
+}
+
+.overText {
+  flex: 1;
+  min-width: 0;
+}
+
+.overTitle {
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--red-deep);
+  text-wrap: pretty;
+}
+
+.overBody {
+  margin-top: 4px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-1);
+  text-wrap: pretty;
+}
+
+.overActions {
+  margin-top: 9px;
+  display: flex;
+  gap: 8px;
+}
+
+/* The likely fix leads. Someone who typed too much usually meant "all of it". */
+.overFix,
+.overAlt {
+  flex: 1;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.16s var(--ease-out);
+}
+
+.overFix {
+  background: var(--ink);
+  color: #fff;
+}
+
+.overAlt {
+  background: var(--sand-1);
+  color: var(--ink);
+}
+
+.overFix:active,
+.overAlt:active {
+  transform: scale(0.98);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .overAlt:hover {
+    background: var(--sand-3);
+  }
+}
+
+@keyframes bwOverIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overCard {
+    animation: none;
+  }
+}
+
 .sourceRow {
   margin-top: 12px;
   display: flex;

@@ -5,10 +5,10 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { CardArtFor } from "@/components/CardArt";
 import { CardPicker } from "@/components/CardPicker";
 import { SpriteAnimation, preloadSprite } from "@/components/SpriteAnimation";
-import { CELEBRATE, SAD } from "@/lib/sprites";
+import { CELEBRATE, NO_NO_NO, SAD } from "@/lib/sprites";
 import { Keypad } from "@/components/Keypad";
 import { CATEGORIES } from "@/lib/constants";
-import { amountDisplay } from "@/lib/format";
+import { amountDisplay, peso } from "@/lib/format";
 import { findCard, guessCategory } from "@/lib/selectors";
 import { ImageError, RECEIPT_OPTIONS, readImage } from "@/lib/image";
 import { useWallet } from "@/lib/store";
@@ -73,7 +73,13 @@ export function TxSheet() {
   // of one with nothing in it. Caught here rather than on submit so the keypad is never a
   // dead end the user only discovers after typing an amount.
   const emptyCard = sheet === "withdraw" && source.bal <= 0;
-  const ready = parseFloat(state.amt) > 0 && !emptyCard;
+  // Over-balance is a live state, not a submit-time error: it is checked on every keystroke
+  // so the sheet answers while the amount is still being typed. Unlike the empty-card case
+  // it must not replace the body — the keypad is exactly what the user needs to fix it.
+  const typed = parseFloat(state.amt) || 0;
+  const overBy = sheet === "withdraw" && !emptyCard ? typed - source.bal : 0;
+  const over = overBy > 0;
+  const ready = typed > 0 && !emptyCard && !over;
 
   const onReceiptFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -159,12 +165,57 @@ export function TxSheet() {
           {emptyCard ? null : (
             <>
               <div className={styles.amount}>
-                <span className={styles.amountSign} style={{ color: ACCENTS[sheet] }}>
+                <span
+                  className={styles.amountSign}
+                  style={{ color: over ? "var(--red-deep)" : ACCENTS[sheet] }}
+                >
                   {SIGNS[sheet]}₱
                 </span>
-                <span className={styles.amountValue}>{amountDisplay(state.amt)}</span>
+                <span className={`${styles.amountValue} ${over ? styles.amountOver : ""}`}>
+                  {amountDisplay(state.amt)}
+                </span>
               </div>
-              <div className={styles.sub}>{SUBTITLES[sheet]}</div>
+
+              {over ? (
+                <div className={styles.overCard} role="alert">
+                  {/* One shake, a pause, then another — a permanent loop beside a number the
+                      user is still typing reads as a glitch rather than as a reaction. */}
+                  <SpriteAnimation
+                    sheet={NO_NO_NO}
+                    size={58}
+                    loop={false}
+                    replayDelayMs={2400}
+                    className={styles.overArt}
+                  />
+                  <div className={styles.overText}>
+                    <div className={styles.overTitle}>That is more than {source.nick} has</div>
+                    <p className={styles.overBody}>
+                      Short by ₱{peso(overBy)}. There is ₱{peso(source.bal)} on this card.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.sub}>{SUBTITLES[sheet]}</div>
+              )}
+
+              {over ? (
+                <div className={styles.overActions}>
+                  <button
+                    type="button"
+                    className={styles.overFix}
+                    onClick={() => actions.patch({ amt: String(source.bal) })}
+                  >
+                    Spend all ₱{peso(source.bal)}
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.overAlt}
+                    onClick={() => actions.patch({ sheet: "deposit", amt: "" })}
+                  >
+                    Top up first
+                  </button>
+                </div>
+              ) : null}
             </>
           )}
 

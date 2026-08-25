@@ -60,6 +60,15 @@ const SOURCES = [
     cellW: 240,
     colours: 128,
   },
+  {
+    name: "nonono",
+    dir: "/Users/rli/Desktop/NoNoNo",
+    match: /^no_no_no_integrated_fast_\d+\.png$/,
+    cols: 10,
+    rows: 6,
+    cellW: 240,
+    colours: 128,
+  },
 ];
 
 const OUT_DIR = path.join(process.cwd(), "public");

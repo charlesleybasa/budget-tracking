@@ -386,10 +386,14 @@ function reducer(state: WalletState, action: Action): WalletState {
 
       const sign = state.sheet === "deposit" ? 1 : -1;
       if (sign < 0 && from.frozen) return withToast(state, `${from.nick} is frozen. Unfreeze it first.`);
-      // Backstop for the empty-card state the sheet already shows. Spending past a balance is
-      // still allowed — that is a real thing that happens — but spending out of a card with
-      // nothing in it is not.
+      // Backstop for the two states the sheet already shows inline. A card cannot go negative:
+      // an empty one has nothing to spend, and a spend larger than the balance would overdraw
+      // it. Both are caught in the sheet before the user can submit; this is the guard for
+      // anything that reaches the reducer another way.
       if (sign < 0 && from.bal <= 0) return withToast(state, `${from.nick} is empty. Top it up first.`);
+      if (sign < 0 && amount > from.bal) {
+        return withToast(state, `That's ₱${peso(amount - from.bal)} more than ${from.nick} has.`);
+      }
 
       const nextCards = state.cards.map((c) => (c.id === from.id ? { ...c, bal: c.bal + sign * amount } : c));
       return {
@@ -498,6 +502,14 @@ function reducer(state: WalletState, action: Action): WalletState {
       };
 
       const delta = newAmount - original.amount;
+      // Same rule as logging a spend, applied to the change rather than the whole amount:
+      // this entry's original value is already reflected in the balance, so only the delta
+      // can push the card under. Without this the sheet's rule would have an obvious hole —
+      // block a ₱5,000 spend, then edit a ₱10 one up to ₱5,000 instead.
+      const editedCard = findCard(state.cards, original.cardId);
+      if (editedCard && delta < 0 && editedCard.bal + delta < 0) {
+        return withToast(state, `That's ₱${peso(Math.abs(editedCard.bal + delta))} more than ${editedCard.nick} has.`);
+      }
       const nextCards = state.cards.map((c) => (c.id === original.cardId ? { ...c, bal: c.bal + delta } : c));
 
       return withToast(

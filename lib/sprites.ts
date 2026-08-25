@@ -59,3 +59,19 @@ export const FLYING_IDLE: SpriteSheet = {
   // Wings lifted and eyes open, so the held pose still reads as flying.
   stillFrame: 7,
 };
+
+/**
+ * Kuya Ipis waving both palms out — "no, not that much". Shown while the typed amount is
+ * over the card's balance.
+ */
+export const NO_NO_NO: SpriteSheet = {
+  src: "/nonono.png",
+  cols: 10,
+  rows: 6,
+  frames: 60,
+  fps: 24,
+  cellW: 240,
+  cellH: 397,
+  // Both palms up and out, eyes shut — reads as a refusal even held still.
+  stillFrame: 36,
+};
