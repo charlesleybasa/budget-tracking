@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type CSSProperties } from "react";
+import { flushSync } from "react-dom";
 
 import { CardArt } from "@/components/CardArt";
 import { MascotMark } from "@/components/MascotMark";
@@ -8,11 +9,13 @@ import { CARD_KINDS, PALETTES } from "@/lib/constants";
 import { Mascot } from "@/components/Mascot";
 import { SpriteAnimation, preloadSprite } from "@/components/SpriteAnimation";
 import { PEEKABOO } from "@/lib/sprites";
-import { moneyInput, peso } from "@/lib/format";
+import { peso } from "@/lib/format";
 import { useWallet } from "@/lib/store";
 import type { ArtStyle } from "@/lib/types";
 import { useRestore } from "@/lib/useRestore";
 import { useElementWidth } from "@/lib/useElementWidth";
+import { useMoneyField } from "@/lib/useMoneyField";
+import type { CardKind } from "@/lib/types";
 
 import styles from "./Onboarding.module.css";
 
@@ -101,6 +104,25 @@ export function Onboarding() {
   const previewH = Math.round(previewW * (164 / 268));
 
   const next = () => actions.patch({ obStep: Math.min(3, obStep + 1) });
+
+  const balField = useMoneyField(state.obBal, (raw) => actions.patch({ obBal: raw }));
+
+  // Picking a pocket type goes straight to the amount, not to a second "Continue" tap on the
+  // same information. The state update and the step-3 render are forced synchronous with
+  // flushSync so the focus() call below lands inside the same user-gesture call stack as the
+  // tap — outside that stack (a plain setTimeout, say) iOS Safari will move the caret but
+  // will not raise the keyboard, which would make the whole point of "straight to the
+  // amount" silently fail on the platform most people are on.
+  const selectKind = (label: CardKind) => {
+    flushSync(() => {
+      actions.patch({
+        obKind: label,
+        obName: label === "Cash on hand" ? "Cash on Hand" : "",
+        obStep: 3,
+      });
+    });
+    balField.ref.current?.focus();
+  };
 
   const firstName = state.userName.trim().split(" ")[0];
 
@@ -212,41 +234,24 @@ export function Onboarding() {
           <p className={styles.sub}>You can add the rest later. No judgement if it&apos;s all cash.</p>
 
           <div className={styles.kindGrid}>
-            {CARD_KINDS.map(([label, hint]) => {
-              const active = state.obKind === label;
-              return (
-                <button
-                  key={label}
-                  type="button"
-                  className={styles.kind}
-                  onClick={() =>
-                    actions.patch({ obKind: label, obName: label === "Cash on hand" ? "Cash on Hand" : "" })
-                  }
-                  style={{
-                    background: active ? "rgba(255,202,40,.14)" : "#141418",
-                    borderColor: active ? "#ffca28" : "transparent",
-                  }}
-                  aria-pressed={active}
-                >
-                  <div className={styles.kindDot} style={{ background: active ? "#ffca28" : "rgba(255,255,255,.1)" }}>
-                    <KindIcon active={active} />
-                  </div>
-                  <div className={styles.kindLabel}>{label}</div>
-                  <div className={styles.kindHint}>{hint}</div>
-                </button>
-              );
-            })}
+            {CARD_KINDS.map(([label, hint]) => (
+              <button
+                key={label}
+                type="button"
+                className={styles.kind}
+                onClick={() => selectKind(label)}
+                style={{ background: "#141418", borderColor: "transparent" }}
+              >
+                <div className={styles.kindDot} style={{ background: "rgba(255,255,255,.1)" }}>
+                  <KindIcon active={false} />
+                </div>
+                <div className={styles.kindLabel}>{label}</div>
+                <div className={styles.kindHint}>{hint}</div>
+              </button>
+            ))}
           </div>
 
           <div className={styles.spacer} />
-          <button
-            type="button"
-            className={styles.continueBtn}
-            onClick={next}
-            style={{ background: state.obKind ? "#ffca28" : "rgba(255,255,255,.16)" }}
-          >
-            Continue
-          </button>
         </div>
       ) : null}
 
@@ -298,10 +303,11 @@ export function Onboarding() {
                 <span className={styles.amountPeso}>₱</span>
                 <input
                   id="ob-bal"
+                  ref={balField.ref}
                   className={styles.amountInput}
                   inputMode="decimal"
-                  value={state.obBal}
-                  onChange={(e) => actions.patch({ obBal: moneyInput(e.target.value) })}
+                  value={balField.display}
+                  onChange={balField.onChange}
                   placeholder="0.00"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") actions.finishOnboarding();

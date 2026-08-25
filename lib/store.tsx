@@ -672,10 +672,14 @@ function reducer(state: WalletState, action: Action): WalletState {
     }
 
     case "finishOnboarding": {
+      // Picking a kind now jumps straight to the amount, so leaving the nickname blank is
+      // the expected path, not an oversight — the kind itself ("E-wallet", "Credit card")
+      // is a far more useful name for an unnamed card than a generic "My card" would be.
+      const kind = state.obKind ?? "ATM / Debit";
       const card: Card = {
         id: newId("card"),
-        kind: state.obKind ?? "ATM / Debit",
-        nick: state.obName.trim() || "My card",
+        kind,
+        nick: state.obName.trim() || kind,
         last4: "",
         exp: "—",
         bal: parseFloat(state.obBal) || 0,

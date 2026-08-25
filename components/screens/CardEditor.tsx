@@ -6,11 +6,12 @@ import { CardArt } from "@/components/CardArt";
 import { cardTheme } from "@/components/cardTheme";
 import { BANK_PRESETS } from "@/lib/bankPresets";
 import { CARD_STYLES, PALETTES, SCRIM_NAMES, SCRIM_ORDER, TEXTURES, TIERS } from "@/lib/constants";
-import { minusIfNegative, moneyInput, peso } from "@/lib/format";
+import { minusIfNegative, peso } from "@/lib/format";
 import { ImageError, QR_OPTIONS, readImage } from "@/lib/image";
 import { autoTuneScrim, measure } from "@/lib/legibility";
 import { useWallet } from "@/lib/store";
 import { useElementWidth } from "@/lib/useElementWidth";
+import { useMoneyField } from "@/lib/useMoneyField";
 import type { PhotoArt, Sample, TextMode } from "@/lib/types";
 
 import styles from "./CardEditor.module.css";
@@ -65,6 +66,20 @@ export function CardEditor() {
   const [limitText, setLimitText] = useState<string | null>(null);
 
   const ed = state.ed;
+
+  // A genuine 0 renders as an untouched, empty field rather than a literal "0" the user
+  // would have to delete before typing — same reasoning as the onboarding amount field.
+  // `ed?.bal ? ... : ""` rather than `?? ""` on purpose: 0 is falsy, and 0 is exactly the
+  // value that should read as empty here.
+  const balField = useMoneyField(balText ?? (ed?.bal ? String(ed.bal) : ""), (text) => {
+    setBalText(text);
+    actions.editCard({ bal: parseFloat(text) || 0 });
+  });
+  const limitField = useMoneyField(limitText ?? (ed?.limit ? String(ed.limit) : ""), (text) => {
+    setLimitText(text);
+    actions.editCard({ limit: parseFloat(text) || 0 });
+  });
+
   if (!ed) return null;
 
   const previewW = Math.min(320, Math.max(240, (wrapWidth ?? 360) - 40));
@@ -563,15 +578,13 @@ export function CardEditor() {
                 </label>
                 <input
                   id="ed-bal"
+                  ref={balField.ref}
                   className={styles.fieldInput}
                   inputMode="decimal"
-                  value={balText ?? String(ed.bal)}
-                  onChange={(e) => {
-                    const text = moneyInput(e.target.value);
-                    setBalText(text);
-                    actions.editCard({ bal: parseFloat(text) || 0 });
-                  }}
+                  value={balField.display}
+                  onChange={balField.onChange}
                   onBlur={() => setBalText(null)}
+                  placeholder="0.00"
                 />
               </div>
 
@@ -581,15 +594,13 @@ export function CardEditor() {
                 </label>
                 <input
                   id="ed-limit"
+                  ref={limitField.ref}
                   className={styles.fieldInput}
                   inputMode="decimal"
-                  value={limitText ?? String(ed.limit)}
-                  onChange={(e) => {
-                    const text = moneyInput(e.target.value);
-                    setLimitText(text);
-                    actions.editCard({ limit: parseFloat(text) || 0 });
-                  }}
+                  value={limitField.display}
+                  onChange={limitField.onChange}
                   onBlur={() => setLimitText(null)}
+                  placeholder="No limit set"
                 />
               </div>
             </div>
