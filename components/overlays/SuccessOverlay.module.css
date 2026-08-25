@@ -12,45 +12,8 @@
   color: #fff;
 }
 
-.confetti {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.piece {
-  position: absolute;
-  left: 50%;
-  top: 42%;
-  width: 8px;
-  height: 8px;
-  animation: bwConfetti 1.5s cubic-bezier(0.15, 0.75, 0.3, 1) both;
-}
-
-.art {
-  animation: bwPop 0.55s var(--ease-spring) both;
-  position: relative;
-  flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.spotlight {
-  position: absolute;
-  width: 172px;
-  height: 172px;
-  border-radius: 100px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
-}
-
-.mascot {
-  position: relative;
-}
-
 .copy {
-  margin-top: 26px;
+  max-width: 360px;
   text-align: center;
   position: relative;
 }
@@ -97,31 +60,4 @@
 
 .button:active {
   transform: scale(0.97);
-}
-
-/*
- * Declared here, not imported: CSS Modules scopes animation names, so a reference to a
- * keyframe defined in globals.css is renamed to one that does not exist and the animation
- * silently never runs. Keeping the keyframes beside their only user keeps them honest.
- */
-@keyframes bwConfetti {
-  0% {
-    transform: translate(0, 0) rotate(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(var(--bwX), var(--bwY)) rotate(var(--bwR));
-    opacity: 0;
-  }
-}
-@keyframes bwPop {
-  0% {
-    transform: scale(0.72);
-  }
-  55% {
-    transform: scale(1.06);
-  }
-  100% {
-    transform: scale(1);
-  }
 }

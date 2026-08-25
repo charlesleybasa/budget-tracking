@@ -3,13 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 
 import { CardArtFor } from "@/components/CardArt";
+import { Mascot } from "@/components/Mascot";
 import { ProgressRing } from "@/components/ProgressRing";
 import { ReceiptViewer } from "@/components/ReceiptViewer";
+import { SpriteAnimation } from "@/components/SpriteAnimation";
 import { TxRow } from "@/components/TxRow";
 import { cardTheme } from "@/components/cardTheme";
 import { dayLabel, minusIfNegative, peso, peso0 } from "@/lib/format";
 import { useWallet } from "@/lib/store";
 import { cardProgress, findCard, groupByDay, limitCopy, maskFor, spentOnCard } from "@/lib/selectors";
+import { FLYING_IDLE } from "@/lib/sprites";
 import { useElementWidth } from "@/lib/useElementWidth";
 import { useLongPress } from "@/lib/useLongPress";
 
@@ -281,6 +284,12 @@ export function CardDetail() {
 
           {groups.length === 0 ? (
             <div className={styles.empty}>
+              <SpriteAnimation
+                sheet={FLYING_IDLE}
+                size={118}
+                className={styles.emptyMascot}
+                fallback={<Mascot mood="idle" size={92} className={styles.emptyMascotFallback} />}
+              />
               <div className={styles.emptyTitle}>Nothing on this card yet.</div>
               <div className={styles.emptyBody}>Log a spend or a top up and it shows up here immediately.</div>
             </div>

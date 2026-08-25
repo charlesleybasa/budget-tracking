@@ -496,10 +496,18 @@
 
 .empty {
   margin-top: 26px;
-  padding: 34px 12px;
+  padding: 22px 12px 30px;
   text-align: center;
   border-radius: 18px;
   background: var(--sand-1);
+}
+
+.emptyMascot {
+  margin: 0 auto 4px;
+}
+
+.emptyMascotFallback {
+  margin: 0 auto;
 }
 
 .emptyTitle {

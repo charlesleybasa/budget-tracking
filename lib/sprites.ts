@@ -8,19 +8,6 @@ import type { SpriteSheet } from "@/components/SpriteAnimation";
  * with it.
  */
 
-/** Kuya Ipis celebrating; plays on the log-spend success screen. */
-export const CELEBRATE: SpriteSheet = {
-  src: "/celebrate.png",
-  cols: 8,
-  rows: 4,
-  frames: 32,
-  fps: 24,
-  cellW: 300,
-  cellH: 372,
-  // Peak of the jump, arms up with the coins out.
-  stillFrame: 19,
-};
-
 /** Kuya Ipis peeking over a ledge and waving hello; plays during onboarding. */
 export const PEEKABOO: SpriteSheet = {
   src: "/peekaboo.png",
