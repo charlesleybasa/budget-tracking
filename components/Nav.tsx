@@ -26,11 +26,11 @@ const DESTINATIONS: readonly Destination[] = [
 ];
 
 /**
- * On a phone the bar belongs to the three primary destinations; search, the editor and
- * transfer are focused tasks with their own dismiss affordance. The desktop rail persists
- * everywhere, because losing your navigation mid-task is a phone compromise, not a virtue.
+ * Search is a primary destination, so the phone bar stays available there. Card detail,
+ * the editor and transfer remain focused tasks with their own dismiss affordances. The
+ * desktop rail persists everywhere.
  */
-const PHONE_BAR_SCREENS: readonly Screen[] = ["home", "insights", "settings"];
+const PHONE_BAR_SCREENS: readonly Screen[] = ["home", "insights", "search", "settings"];
 
 interface Box {
   x: number;

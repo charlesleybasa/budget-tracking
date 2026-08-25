@@ -121,7 +121,7 @@
   }
 }
 
-/* Search is a focused, dismissable screen on a phone — it keeps its own Done affordance. */
+/* Focused task screens step away from the phone bar. Search is a destination and keeps it. */
 .hiddenOnPhone {
   display: none;
 }
