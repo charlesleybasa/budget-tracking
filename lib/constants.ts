@@ -147,7 +147,11 @@ export const SEARCH_FILTERS = [
   "Food",
   "Transport",
   "Bills",
+  "Groceries",
   "Shopping",
+  "Load",
+  "Health",
+  "Fun",
 ] as const;
 
 /** Card geometry the art engine is authored against; every size scales off this width. */
