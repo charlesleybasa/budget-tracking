@@ -2,8 +2,11 @@
 
 import { useState, type CSSProperties } from "react";
 
+import { Mascot } from "@/components/Mascot";
+import { SpriteAnimation } from "@/components/SpriteAnimation";
 import { daysAgo, peso0 } from "@/lib/format";
 import { biggestHit, categoryTotals, periodInsight, periodLabel, type InsightPeriod } from "@/lib/selectors";
+import { IDLE_STEADY } from "@/lib/sprites";
 import { useWallet } from "@/lib/store";
 
 import styles from "./Insights.module.css";
@@ -98,12 +101,23 @@ export function Insights() {
         <section>
         <h2 className={styles.sectionTitle}>Where it went</h2>
         {cats.length === 0 ? (
-          <div className={styles.empty}>
-            {!hasData
-              ? "Nothing logged yet. Once you start logging, this shows where it actually goes."
-              : loggedInPeriod === 0
-                ? `Nothing logged ${periodLabel(period).toLowerCase()}. Try a wider period, or log a spend.`
-                : "Only money coming in so far. Log a spend and this fills in."}
+          <div className={`${styles.empty} ${!hasData ? styles.emptyWithMascot : ""}`}>
+            {!hasData ? (
+              <>
+                <SpriteAnimation
+                  sheet={IDLE_STEADY}
+                  size={88}
+                  className={styles.emptyMascot}
+                  fallback={<Mascot mood="idle" size={88} className={styles.emptyMascotFallback} />}
+                />
+                <div className={styles.emptyTitle}>Nothing logged yet.</div>
+                <div className={styles.emptyCopy}>Once you start logging, this shows where it actually goes.</div>
+              </>
+            ) : loggedInPeriod === 0 ? (
+              `Nothing logged ${periodLabel(period).toLowerCase()}. Try a wider period, or log a spend.`
+            ) : (
+              "Only money coming in so far. Log a spend and this fills in."
+            )}
           </div>
         ) : (
           <div className={styles.catList}>

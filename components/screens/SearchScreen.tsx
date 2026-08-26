@@ -2,11 +2,14 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 
+import { Mascot } from "@/components/Mascot";
 import { ReceiptViewer } from "@/components/ReceiptViewer";
+import { SpriteAnimation } from "@/components/SpriteAnimation";
 import { TxRow } from "@/components/TxRow";
 import { SEARCH_FILTERS } from "@/lib/constants";
 import { dayLabel, peso0 } from "@/lib/format";
 import { findCard, searchTransactions } from "@/lib/selectors";
+import { IDLE_STEADY } from "@/lib/sprites";
 import { useWallet } from "@/lib/store";
 import type { SearchFilter, Transaction } from "@/lib/types";
 
@@ -160,13 +163,22 @@ export function SearchScreen() {
           ))}
 
           {results.length === 0 ? (
-            <div className={styles.empty}>
-              <div className={styles.emptyIcon} aria-hidden="true">
-                <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
-                  <circle cx={10.5} cy={10.5} r={6.5} />
-                  <path d="M15.5 15.5 20 20" />
-                </svg>
-              </div>
+            <div className={`${styles.empty} ${state.tx.length === 0 ? styles.emptyWithMascot : ""}`}>
+              {state.tx.length === 0 ? (
+                <SpriteAnimation
+                  sheet={IDLE_STEADY}
+                  size={96}
+                  className={styles.emptyMascot}
+                  fallback={<Mascot mood="idle" size={96} className={styles.emptyMascotFallback} />}
+                />
+              ) : (
+                <div className={styles.emptyIcon} aria-hidden="true">
+                  <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                    <circle cx={10.5} cy={10.5} r={6.5} />
+                    <path d="M15.5 15.5 20 20" />
+                  </svg>
+                </div>
+              )}
               <div className={styles.emptyTitle}>
                 {state.tx.length === 0
                   ? "Your activity will show up here"

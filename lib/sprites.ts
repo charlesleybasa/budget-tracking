@@ -60,6 +60,19 @@ export const FLYING_IDLE: SpriteSheet = {
   stillFrame: 7,
 };
 
+/** Kuya Ipis standing calmly with a gentle wing flutter; used for true empty-history states. */
+export const IDLE_STEADY: SpriteSheet = {
+  src: "/bee-idle-steady-30fps-v2-spritesheet.png",
+  cols: 10,
+  rows: 3,
+  frames: 30,
+  fps: 30,
+  cellW: 288,
+  cellH: 448,
+  // Eyes open with the wing lifted, so the reduced-motion pose still feels alert.
+  stillFrame: 15,
+};
+
 /**
  * Kuya Ipis waving both palms out — "no, not that much". Shown while the typed amount is
  * over the card's balance.

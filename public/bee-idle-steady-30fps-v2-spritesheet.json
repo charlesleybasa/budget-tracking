@@ -1,0 +1,776 @@
+{
+  "meta": {
+    "app": "sprite-animator",
+    "version": "1.0.0",
+    "image": "bee-idle-steady-30fps-v2-spritesheet.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 2880,
+      "h": 1344
+    },
+    "scale": "1",
+    "loop": true,
+    "duration": 1000,
+    "averageFps": 30.0
+  },
+  "grid": {
+    "columns": 10,
+    "rows": 3,
+    "frameWidth": 288,
+    "frameHeight": 448,
+    "padding": 0,
+    "spacing": 0
+  },
+  "frames": [
+    {
+      "index": 0,
+      "filename": "bee-idle-steady-v2-01",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 1,
+      "filename": "bee-idle-steady-v2-02",
+      "frame": {
+        "x": 288,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 2,
+      "filename": "bee-idle-steady-v2-03",
+      "frame": {
+        "x": 576,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 34,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 3,
+      "filename": "bee-idle-steady-v2-04",
+      "frame": {
+        "x": 864,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 4,
+      "filename": "bee-idle-steady-v2-05",
+      "frame": {
+        "x": 1152,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 5,
+      "filename": "bee-idle-steady-v2-06",
+      "frame": {
+        "x": 1440,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 34,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 6,
+      "filename": "bee-idle-steady-v2-07",
+      "frame": {
+        "x": 1728,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 7,
+      "filename": "bee-idle-steady-v2-08",
+      "frame": {
+        "x": 2016,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 8,
+      "filename": "bee-idle-steady-v2-09",
+      "frame": {
+        "x": 2304,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 34,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 9,
+      "filename": "bee-idle-steady-v2-10",
+      "frame": {
+        "x": 2592,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 10,
+      "filename": "bee-idle-steady-v2-11",
+      "frame": {
+        "x": 0,
+        "y": 448,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 11,
+      "filename": "bee-idle-steady-v2-12",
+      "frame": {
+        "x": 288,
+        "y": 448,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 34,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 12,
+      "filename": "bee-idle-steady-v2-13",
+      "frame": {
+        "x": 576,
+        "y": 448,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 13,
+      "filename": "bee-idle-steady-v2-14",
+      "frame": {
+        "x": 864,
+        "y": 448,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 14,
+      "filename": "bee-idle-steady-v2-15",
+      "frame": {
+        "x": 1152,
+        "y": 448,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 34,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 15,
+      "filename": "bee-idle-steady-v2-16",
+      "frame": {
+        "x": 1440,
+        "y": 448,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 16,
+      "filename": "bee-idle-steady-v2-17",
+      "frame": {
+        "x": 1728,
+        "y": 448,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 17,
+      "filename": "bee-idle-steady-v2-18",
+      "frame": {
+        "x": 2016,
+        "y": 448,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 34,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 18,
+      "filename": "bee-idle-steady-v2-19",
+      "frame": {
+        "x": 2304,
+        "y": 448,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 19,
+      "filename": "bee-idle-steady-v2-20",
+      "frame": {
+        "x": 2592,
+        "y": 448,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 20,
+      "filename": "bee-idle-steady-v2-21",
+      "frame": {
+        "x": 0,
+        "y": 896,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 34,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 21,
+      "filename": "bee-idle-steady-v2-22",
+      "frame": {
+        "x": 288,
+        "y": 896,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 22,
+      "filename": "bee-idle-steady-v2-23",
+      "frame": {
+        "x": 576,
+        "y": 896,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 23,
+      "filename": "bee-idle-steady-v2-24",
+      "frame": {
+        "x": 864,
+        "y": 896,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 34,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 24,
+      "filename": "bee-idle-steady-v2-25",
+      "frame": {
+        "x": 1152,
+        "y": 896,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 25,
+      "filename": "bee-idle-steady-v2-26",
+      "frame": {
+        "x": 1440,
+        "y": 896,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 26,
+      "filename": "bee-idle-steady-v2-27",
+      "frame": {
+        "x": 1728,
+        "y": 896,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 34,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 27,
+      "filename": "bee-idle-steady-v2-28",
+      "frame": {
+        "x": 2016,
+        "y": 896,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 28,
+      "filename": "bee-idle-steady-v2-29",
+      "frame": {
+        "x": 2304,
+        "y": 896,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 33,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    },
+    {
+      "index": 29,
+      "filename": "bee-idle-steady-v2-30",
+      "frame": {
+        "x": 2592,
+        "y": 896,
+        "w": 288,
+        "h": 448
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 448
+      },
+      "duration": 34,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.98
+      }
+    }
+  ]
+}
