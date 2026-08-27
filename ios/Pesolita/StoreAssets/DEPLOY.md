@@ -136,14 +136,19 @@ budget,expense,tracker,wallet,money,peso,spending,cash,finance,savings,manual,of
 
 ## Step 7 — Screenshots
 
-Scroll to **App Previews and Screenshots** → **iPhone 6.9" Display**.
+Scroll to **App Previews and Screenshots**. App Store Connect will show one or more display
+slots, and each accepts only its own pixel sizes. Both are generated:
 
-Drag in all five files from `StoreAssets/AppStore/iphone-6.9/`, in numbered order. They are
-already the exact size Apple requires.
+| Slot in App Store Connect | Folder to drag from | Size |
+|---|---|---|
+| iPhone **6.5"** Display | `StoreAssets/AppStore/iphone-6.5/` | 1284 × 2778 |
+| iPhone **6.9"** Display | `StoreAssets/AppStore/iphone-6.9/` | 1320 × 2868 |
+
+Drag all five files from the matching folder, in numbered order. If you see the red
+*"The dimensions of one or more screenshots are wrong"* banner, you dragged the wrong
+folder into that slot — delete them and use the size the banner asks for.
 
 Since the app is iPhone-only, there is no iPad tab to fill in.
-
----
 
 ## Step 8 — App Privacy (this is the one people get wrong)
 

@@ -108,8 +108,9 @@ All 28 pass — 16 unit tests, 6 formatting tests, 6 persistence tests and 5 UI 
 
 ## Store assets
 
-Generated into `StoreAssets/AppStore/iphone-6.9/` at **1320 × 2868**, the exact 6.9" size
-App Store Connect expects, in the app's own Outfit typeface and palette:
+Generated in the app's own Outfit typeface and palette, at both sizes App Store Connect
+accepts — `StoreAssets/AppStore/iphone-6.9/` at **1320 × 2868** and
+`StoreAssets/AppStore/iphone-6.5/` at **1284 × 2778**. Each slot only takes its own size:
 
 | # | Screen | Headline |
 |---|---|---|
@@ -119,8 +120,8 @@ App Store Connect expects, in the app's own Outfit typeface and palette:
 | 4 | Logged confirmation | Logged in four seconds. |
 | 5 | Onboarding | No bank login. Ever. |
 
-Regenerate any time with `swift render.swift` from `StoreAssets/`. Edit the `panels` array
-to change copy or swap screens.
+Regenerate both sizes with `swift render.swift` from `StoreAssets/`. Edit the `panels` array
+to change copy or swap screens, or the `canvases` array to add another display size.
 
 **Still to write by hand:** app name and subtitle (30 chars each), keywords (100 chars),
 description, support URL, and a privacy policy URL. The policy is easy — the honest version

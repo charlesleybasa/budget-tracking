@@ -8,8 +8,17 @@ import CoreText
 
 let root = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
 let build = root.appendingPathComponent("build")
-let out = root.appendingPathComponent("AppStore/iphone-6.9")
-try? FileManager.default.createDirectory(at: out, withIntermediateDirectories: true)
+/// App Store Connect asks for a different pixel size depending on which display slot you
+/// upload into, so the same layout is emitted at each. Everything scales off `k` rather than
+/// being re-tuned per size.
+struct Canvas {
+    let name: String, width: CGFloat, height: CGFloat
+}
+
+let canvases = [
+    Canvas(name: "iphone-6.9", width: 1320, height: 2868),
+    Canvas(name: "iphone-6.5", width: 1284, height: 2778),
+]
 
 let fontURL = build.appendingPathComponent("Outfit.ttf")
 CTFontManagerRegisterFontsForURL(fontURL as CFURL, .process, nil)
@@ -49,9 +58,10 @@ let panels: [Panel] = [
           style: "ink"),
 ]
 
-let W: CGFloat = 1320, H: CGFloat = 2868
-
-func draw(_ panel: Panel, index: Int) throws {
+func draw(_ panel: Panel, index: Int, canvas: Canvas, out: URL) throws {
+    let W = canvas.width, H = canvas.height
+    // Layout was authored against the 6.9" canvas; every measurement scales off its width.
+    let k = W / 1320
     guard let shot = NSImage(contentsOf: build.appendingPathComponent("\(panel.file).png")),
           let shotRef = shot.cgImage(forProposedRect: nil, context: nil, hints: nil)
     else { throw NSError(domain: "missing \(panel.file)", code: 1) }
@@ -95,34 +105,34 @@ func draw(_ panel: Panel, index: Int) throws {
     centered.lineHeightMultiple = 0.98
 
     let head = NSAttributedString(string: panel.headline, attributes: [
-        .font: outfit(104, .heavy), .foregroundColor: headColor,
-        .kern: -104 * 0.045, .paragraphStyle: centered,
+        .font: outfit(104 * k, .heavy), .foregroundColor: headColor,
+        .kern: -104 * k * 0.045, .paragraphStyle: centered,
     ])
-    let headHeight = head.boundingRect(with: CGSize(width: W - 192, height: .greatestFiniteMagnitude),
+    let headHeight = head.boundingRect(with: CGSize(width: W - 192 * k, height: .greatestFiniteMagnitude),
                                        options: .usesLineFragmentOrigin).height
-    head.draw(with: CGRect(x: 96, y: H - 150 - headHeight, width: W - 192, height: headHeight),
+    head.draw(with: CGRect(x: 96 * k, y: H - 150 * k - headHeight, width: W - 192 * k, height: headHeight),
               options: .usesLineFragmentOrigin)
 
     let bodyStyle = NSMutableParagraphStyle()
     bodyStyle.alignment = .center
     bodyStyle.lineHeightMultiple = 1.28
     let body = NSAttributedString(string: panel.body, attributes: [
-        .font: outfit(40, .regular), .foregroundColor: bodyColor, .paragraphStyle: bodyStyle,
+        .font: outfit(40 * k, .regular), .foregroundColor: bodyColor, .paragraphStyle: bodyStyle,
     ])
-    let bodyHeight = body.boundingRect(with: CGSize(width: W - 260, height: .greatestFiniteMagnitude),
+    let bodyHeight = body.boundingRect(with: CGSize(width: W - 260 * k, height: .greatestFiniteMagnitude),
                                        options: .usesLineFragmentOrigin).height
-    body.draw(with: CGRect(x: 130, y: H - 150 - headHeight - 34 - bodyHeight,
-                           width: W - 260, height: bodyHeight), options: .usesLineFragmentOrigin)
+    body.draw(with: CGRect(x: 130 * k, y: H - 150 * k - headHeight - 34 * k - bodyHeight,
+                           width: W - 260 * k, height: bodyHeight), options: .usesLineFragmentOrigin)
     NSGraphicsContext.restoreGraphicsState()
 
     // Device shot, bled off the bottom edge so the panel reads as a continuing screen.
-    let deviceW: CGFloat = 1044
+    let deviceW: CGFloat = 1044 * k
     let deviceH = deviceW * (CGFloat(shotRef.height) / CGFloat(shotRef.width))
     let rect = CGRect(x: (W - deviceW) / 2, y: -deviceH * 0.055, width: deviceW, height: deviceH)
-    let path = CGPath(roundedRect: rect, cornerWidth: 74, cornerHeight: 74, transform: nil)
+    let path = CGPath(roundedRect: rect, cornerWidth: 74 * k, cornerHeight: 74 * k, transform: nil)
 
     ctx.saveGState()
-    ctx.setShadow(offset: CGSize(width: 0, height: -46), blur: 110,
+    ctx.setShadow(offset: CGSize(width: 0, height: -46 * k), blur: 110 * k,
                   color: CGColor(red: 0, green: 0, blue: 0, alpha: 0.5))
     ctx.addPath(path)
     ctx.setFillColor(CGColor(red: 0, green: 0, blue: 0, alpha: 1))
@@ -138,7 +148,7 @@ func draw(_ panel: Panel, index: Int) throws {
     ctx.saveGState()
     ctx.addPath(path)
     ctx.setStrokeColor(CGColor(red: 1, green: 1, blue: 1, alpha: 0.12))
-    ctx.setLineWidth(12)
+    ctx.setLineWidth(12 * k)
     ctx.strokePath()
     ctx.restoreGState()
 
@@ -150,4 +160,10 @@ func draw(_ panel: Panel, index: Int) throws {
     print("\(url.lastPathComponent)  \(image.width)x\(image.height)")
 }
 
-for (index, panel) in panels.enumerated() { try draw(panel, index: index) }
+for canvas in canvases {
+    let out = root.appendingPathComponent("AppStore/\(canvas.name)")
+    try? FileManager.default.createDirectory(at: out, withIntermediateDirectories: true)
+    for (index, panel) in panels.enumerated() {
+        try draw(panel, index: index, canvas: canvas, out: out)
+    }
+}
