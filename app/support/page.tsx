@@ -76,6 +76,10 @@ export default function SupportPage() {
           <Link href="/privacy" className={styles.back}>
             Privacy Policy →
           </Link>
+          <br />
+          <Link href="/about" className={styles.back}>
+            About Pesolita →
+          </Link>
         </div>
       </div>
     </main>
