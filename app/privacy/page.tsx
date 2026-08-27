@@ -9,8 +9,9 @@ export const metadata: Metadata = {
 };
 
 const UPDATED = "27 August 2026";
-// App Review needs a working contact route; swap this for the address you want to publish.
-const CONTACT = "support@pesolita.app";
+// Published deliberately: App Review may email this, and the support URL has to offer a
+// real way to get in touch.
+const CONTACT = "charlesleyb24@gmail.com";
 
 export default function PrivacyPage() {
   return (
