@@ -1,0 +1,122 @@
+/*
+ * The app shell pins `body` to the viewport with `overflow: hidden`, so these long-form
+ * pages have to own their own scroll container rather than relying on the document.
+ */
+.page {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  background: var(--ink);
+  color: #fff;
+  -webkit-overflow-scrolling: touch;
+}
+
+.inner {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 56px 24px calc(80px + env(safe-area-inset-bottom, 0px));
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-decoration: none;
+}
+
+.mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+}
+
+.kicker {
+  margin-top: 42px;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.title {
+  margin: 10px 0 0;
+  font-weight: 800;
+  font-size: clamp(30px, 7vw, 42px);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.updated {
+  margin-top: 12px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.lede {
+  margin-top: 26px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: var(--dark-1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.86);
+  text-wrap: pretty;
+}
+
+.h2 {
+  margin: 38px 0 0;
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: -0.02em;
+}
+
+.body {
+  margin: 11px 0 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.66);
+  text-wrap: pretty;
+}
+
+.list {
+  margin: 11px 0 0;
+  padding-left: 20px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.list li + li {
+  margin-top: 7px;
+}
+
+.body a,
+.list a {
+  color: var(--accent);
+}
+
+.footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 8px;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
