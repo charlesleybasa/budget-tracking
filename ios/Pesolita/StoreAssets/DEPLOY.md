@@ -1,0 +1,238 @@
+# Shipping Pesolita to the App Store — every click
+
+Follow top to bottom. Nothing here assumes you have done it before.
+
+Your URLs are already live:
+- Privacy policy → `https://pesolita.vercel.app/privacy`
+- Support → `https://pesolita.vercel.app/support`
+
+---
+
+## Step 0 — Two things to fix first (5 minutes)
+
+### 0a. Put a real support email on the site
+
+Both pages currently say `support@pesolita.app`, which does not exist. App Review does
+sometimes email that address. Replace it with an inbox you actually read:
+
+```bash
+grep -rl "support@pesolita.app" app/ | xargs sed -i '' 's/support@pesolita.app/YOUR@EMAIL.com/g'
+```
+
+Then publish the change:
+
+```bash
+git commit -am "Use a working support address" && git push
+```
+
+Vercel redeploys in about 30 seconds.
+
+### 0b. Decide iPad
+
+The app currently claims iPad support but the iPad layout has large empty areas and a
+stranded compose button. **This is the most likely reason you would get rejected.** For
+version 1.0, ship iPhone-only:
+
+```bash
+sed -i '' 's/TARGETED_DEVICE_FAMILY = "1,2"/TARGETED_DEVICE_FAMILY = "1"/g' ios/Pesolita/Pesolita.xcodeproj/project.pbxproj
+```
+
+This also means you do **not** need to produce iPad screenshots.
+
+---
+
+## Step 1 — Confirm you can sign the app
+
+You need the **Apple Developer Program** ($99/year). The project already has a team ID set
+(`UZMK9VPGZ7`), which suggests you are enrolled. To be sure:
+
+1. Open `ios/Pesolita/Pesolita.xcodeproj` in Xcode.
+2. Click the blue **Pesolita** project icon in the left sidebar.
+3. Select the **Pesolita** target → **Signing & Capabilities** tab.
+4. **Automatically manage signing** should be ticked and **Team** should show your name.
+5. Repeat for the **PesolitaWidget** target.
+
+If Team is empty: Xcode → **Settings** → **Accounts** → **+** → sign in with your Apple ID.
+If you are not enrolled yet, do that at <https://developer.apple.com/programs/> first — approval
+can take a day or two.
+
+---
+
+## Step 2 — Set the version number
+
+- **Version** `1.0` — what customers see.
+- **Build** `1` — must increase on *every* upload, even a re-upload of the same version.
+
+Both are on the same **General** tab of the Pesolita target. Leave them at 1.0 / 1 for your
+first submission.
+
+---
+
+## Step 3 — Archive the app
+
+1. At the top of Xcode, next to the Pesolita scheme, click the device selector.
+2. Choose **Any iOS Device (arm64)**. *Not* a simulator — archiving is disabled for simulators.
+3. Menu bar → **Product** → **Archive**.
+4. Wait. This takes a few minutes; the Organizer window opens when it finishes.
+
+If Archive is greyed out, you are still on a simulator. Go back to step 3.2.
+
+---
+
+## Step 4 — Validate before you upload
+
+In the Organizer window that just opened:
+
+1. Select your archive → **Distribute App**.
+2. Choose **App Store Connect** → **Next**.
+3. Choose **Upload** → **Next**.
+4. Accept the defaults on the signing screens → **Next**.
+5. Click **Validate** first if offered. Fix anything it flags, then continue.
+6. Click **Upload**.
+
+Upload takes a few minutes. Then Apple processes the build for **5–30 minutes** before it
+appears in App Store Connect. This wait is normal.
+
+---
+
+## Step 5 — Create the app record
+
+Go to <https://appstoreconnect.apple.com> → **My Apps** → **+** → **New App**.
+
+| Field | What to enter |
+|---|---|
+| Platforms | iOS |
+| Name | `Pesolita` (must be unique across the whole App Store) |
+| Primary language | English (U.S.) |
+| Bundle ID | `com.pesolita.app` |
+| SKU | `pesolita-ios-1` (internal only, any unique string) |
+| User Access | Full Access |
+
+If the name is taken, try `Pesolita — Budget Wallet`.
+
+---
+
+## Step 6 — Fill in the listing
+
+On your app's page, left sidebar → **1.0 Prepare for Submission**.
+
+**Subtitle** (30 characters max):
+> Manual wallet, zero snooping
+
+**Promotional text** (170 max, editable without review):
+> Every peso gets a home. Log spending by hand, see where it goes, and keep every number on your own phone.
+
+**Description** — paste this:
+
+> Pesolita is a budget wallet you fill in yourself.
+>
+> Make a card for each pocket of your money — a bank account, an e-wallet, a savings goal, or the cash in your bag — and log what goes in and out. No bank login. No syncing. No account. Every number stays on your phone.
+>
+> WHAT IT DOES
+> • A card for every pocket, each one a piece of generated artwork with the balance on the front
+> • Log a spend in seconds on a keypad built for money, not a form
+> • It stops you overspending — try to spend more than a card holds and Pesolita blocks it, then offers to spend exactly what is there
+> • See where your money actually went, by category, this week or this month
+> • Search your history by merchant, note or category
+> • Move money between your own pockets
+> • Attach a receipt photo to any entry
+> • Home screen widget for your balance and a one-tap log
+> • Back up and restore your wallet as a file you control
+>
+> WHY MANUAL
+> Typing it in takes four seconds and makes you notice. Apps that connect to your bank do the noticing for you, and ask for your bank credentials to do it. Pesolita asks for nothing.
+>
+> PRIVACY
+> Pesolita has no server. It makes no network requests. There is no analytics, no advertising and no tracking of any kind. We could not see your money if we wanted to.
+
+**Keywords** (100 characters total, comma-separated, no spaces after commas):
+```
+budget,expense,tracker,wallet,money,peso,spending,cash,finance,savings,manual,offline
+```
+
+**Support URL:** `https://pesolita.vercel.app/support`
+**Marketing URL:** `https://pesolita.vercel.app`
+
+---
+
+## Step 7 — Screenshots
+
+Scroll to **App Previews and Screenshots** → **iPhone 6.9" Display**.
+
+Drag in all five files from `StoreAssets/AppStore/iphone-6.9/`, in numbered order. They are
+already the exact size Apple requires.
+
+If you kept iPad support in step 0b, you must also supply 13" iPad screenshots. If you
+switched to iPhone-only, the iPad tab disappears.
+
+---
+
+## Step 8 — App Privacy (this is the one people get wrong)
+
+Left sidebar → **App Privacy** → **Get Started**.
+
+1. "Do you or your third-party partners collect data from this app?" → **No**
+2. Save. That is the whole thing.
+
+This is truthful: the app has no server and makes no network calls. Then set:
+
+**Privacy Policy URL:** `https://pesolita.vercel.app/privacy`
+
+---
+
+## Step 9 — Review information
+
+Still on the Prepare for Submission page, scroll to **App Review Information**.
+
+- **Sign-in required:** leave **UNCHECKED**. There is no login, so there is no demo account
+  to provide and no OTP problem to solve.
+- **Notes** — paste this:
+
+> Pesolita is a fully offline manual budget wallet. There is no account, no login, no server and no network requests of any kind.
+>
+> To review: launch the app, complete the ~20 second first-run flow (enter a name, pick a card category and design, enter any starting amount), then tap the blue + button to log a spend.
+>
+> All data is entered by hand by the user and stored only on device. Nothing is transmitted. Photo attachment uses the system photo picker. The daily reminder uses local notifications only.
+
+- **Contact information:** your name, phone and the email from step 0a.
+
+---
+
+## Step 10 — Attach the build and submit
+
+1. Scroll to the **Build** section → **+** or **Add Build**.
+2. Pick the build you uploaded. If it is not there yet, wait — processing takes up to 30 minutes.
+3. **Age Rating** → answer all questions "None" / "No" → it will come out **4+**.
+4. **Content Rights** → you own or have rights to all content → Yes.
+5. **Pricing and Availability** (left sidebar) → **Free**, all territories.
+6. **Export Compliance** — if asked, "Does your app use encryption?" → **No**. Already
+   declared in `Info.plist`, so it may not even ask.
+7. Top right → **Add for Review** → **Submit to App Review**.
+
+---
+
+## What happens next
+
+- **Waiting for Review** → usually 24–48 hours.
+- **In Review** → a few hours.
+- **Approved** → it goes live, or waits if you chose manual release.
+
+**If you get rejected, do not panic.** Read the message in **Resolution Center**, fix it,
+upload a new build with the build number bumped, and reply in the same thread. Most first
+submissions get one round of notes.
+
+The rejections most likely to hit this app, in order:
+1. **iPad layout** (Guideline 2.1 / 4.0) — avoided entirely if you did step 0b.
+2. **Broken support email** — avoided if you did step 0a.
+3. Something small in the metadata, fixable in minutes without a new build.
+
+---
+
+## Before you submit, run these once by hand
+
+- [ ] Complete first-run setup on a real iPhone.
+- [ ] Log a spend, edit it, delete it.
+- [ ] Try to spend more than a card holds — confirm it blocks you.
+- [ ] Back up the wallet, "Start over", then restore it.
+- [ ] Add the widget to your home screen and tap both buttons.
+- [ ] Turn on the daily reminder and confirm iOS asks for notification permission.
