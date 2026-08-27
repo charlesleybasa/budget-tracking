@@ -12,7 +12,9 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "templates:build": "node scripts/build-card-templates.mjs"
+    "templates:build": "node scripts/build-card-templates.mjs",
+    "tokens:ios": "node tools/export-tokens.mjs",
+    "templates:ios": "node tools/export-card-templates-ios.mjs"
   },
   "dependencies": {
     "next": "^16.3.1",
