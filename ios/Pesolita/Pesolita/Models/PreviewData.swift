@@ -55,4 +55,36 @@ extension WalletSnapshot {
         value.nudgeDailyLog = false
         return value
     }
+
+    /// A fuller wallet used only for store screenshots. Kept separate from `simulatorDemo`
+    /// so the UI tests that assert on specific card ids keep seeing exactly three cards.
+    static var simulatorShowcase: WalletSnapshot {
+        var value = WalletSnapshot.simulatorDemo
+        let credit = Card(
+            id: "card_credit",
+            kind: .credit,
+            nick: "BPI Platinum",
+            last4: "9043",
+            exp: "08 / 29",
+            bal: 26_400,
+            limit: 40_000,
+            art: CardTemplates.byID["credit-cards/bpi-platinum-rewards-credit"]!.art,
+            frozen: false
+        )
+        let savings = Card(
+            id: "card_savings",
+            kind: .digitalBank,
+            nick: "GoTyme Savings",
+            last4: "3317",
+            exp: "—",
+            bal: 54_120.75,
+            limit: 0,
+            art: CardTemplates.byID["digital-banks/go-tyme-digital-bank"]!.art,
+            frozen: false
+        )
+        value.cards.insert(credit, at: 1)
+        value.cards.append(savings)
+        value.homeLayout = .stack
+        return value
+    }
 }

@@ -95,7 +95,7 @@ final class WalletStore {
 #if DEBUG
         if launchArguments.contains("--demo-wallet") {
             try? await repository.erase()
-            snapshot = .simulatorDemo
+            snapshot = launchArguments.contains("--showcase") ? .simulatorShowcase : .simulatorDemo
             if launchArguments.contains("--empty-activity") { snapshot.tx = [] }
             if launchArguments.contains("--layout=stack") { snapshot.homeLayout = .stack }
             if launchArguments.contains("--tab=insights") { selectedTab = .insights }

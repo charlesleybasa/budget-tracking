@@ -119,6 +119,16 @@ accepts — `StoreAssets/AppStore/iphone-6.9/` at **1320 × 2868** and
 | 3 | Template picker | 70 card designs. Pick yours. |
 | 4 | Logged confirmation | Logged in four seconds. |
 | 5 | Onboarding | No bank login. Ever. |
+| 6 | Five-card stack | Your whole wallet, stacked. |
+| 7 | Widget on Home Screen | Balance on your Home Screen. |
+
+Six and seven carry the mascot, anchored at the foot of the phone and mostly outside it so
+it reads as standing beside the device rather than covering a balance.
+
+The widget shot is the real widget on a real Home Screen, added through Springboard by
+`StoreShotTests`. Note the path that finally worked: iOS 26 offers widget sizes as a row of
+glyphs in the app icon's long-press menu, with no "Add Widget" label to query, and the widget
+gallery's own result rows reject synthetic taps entirely.
 
 Regenerate both sizes with `swift render.swift` from `StoreAssets/`. Edit the `panels` array
 to change copy or swap screens, or the `canvases` array to add another display size.
