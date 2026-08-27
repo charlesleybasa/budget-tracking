@@ -31,11 +31,8 @@ func outfit(_ size: CGFloat, _ weight: NSFont.Weight) -> NSFont {
     return NSFont(descriptor: descriptor, size: size) ?? base
 }
 
-enum MascotSide { case none, left, right }
-
 struct Panel {
     let file: String, headline: String, body: String, style: String
-    var mascot: MascotSide = .none
 }
 
 let panels: [Panel] = [
@@ -62,13 +59,11 @@ let panels: [Panel] = [
     .init(file: "12-stacked-wallet",
           headline: "Your whole\nwallet, stacked.",
           body: "Every pocket in one place. Tap a card to open it, tap again for its history.",
-          style: "ink",
-          mascot: .right),
+          style: "ink"),
     .init(file: "13-widget-home",
           headline: "Balance on your\nHome Screen.",
           body: "Flick between cards, see what is safe to spend today, and log a spend without opening the app.",
-          style: "blue",
-          mascot: .left),
+          style: "blue"),
 ]
 
 func draw(_ panel: Panel, index: Int, canvas: Canvas, out: URL) throws {
@@ -164,24 +159,6 @@ func draw(_ panel: Panel, index: Int, canvas: Canvas, out: URL) throws {
     ctx.setLineWidth(12 * k)
     ctx.strokePath()
     ctx.restoreGState()
-
-    if panel.mascot != .none,
-       let mascot = NSImage(contentsOf: build.appendingPathComponent("mascot.png")),
-       let mascotRef = mascot.cgImage(forProposedRect: nil, context: nil, hints: nil) {
-        // Sized against the device rather than the canvas so it reads as standing beside
-        // the phone, and drawn last so it laps over the device edge like a sticker.
-        let mw = deviceW * 0.33
-        let mh = mw * (CGFloat(mascotRef.height) / CGFloat(mascotRef.width))
-        // Anchored near the foot of the phone and pushed mostly outside it, so the mascot
-        // reads as standing beside the device instead of covering live balances.
-        let mx = panel.mascot == .left ? rect.minX - mw * 0.58 : rect.maxX - mw * 0.42
-        let my = rect.minY + deviceH * 0.055
-        ctx.saveGState()
-        ctx.setShadow(offset: CGSize(width: 0, height: -10 * k), blur: 34 * k,
-                      color: CGColor(red: 0, green: 0, blue: 0, alpha: 0.45))
-        ctx.draw(mascotRef, in: CGRect(x: mx, y: my, width: mw, height: mh))
-        ctx.restoreGState()
-    }
 
     guard let image = ctx.makeImage() else { throw NSError(domain: "image", code: 3) }
     let rep = NSBitmapImageRep(cgImage: image)
