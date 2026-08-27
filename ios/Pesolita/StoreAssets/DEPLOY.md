@@ -49,28 +49,40 @@ first submission.
 
 ## Step 3 — Archive the app
 
-1. At the top of Xcode, next to the Pesolita scheme, click the device selector.
-2. Choose **Any iOS Device (arm64)**. *Not* a simulator — archiving is disabled for simulators.
-3. Menu bar → **Product** → **Archive**.
-4. Wait. This takes a few minutes; the Organizer window opens when it finishes.
+> **There is no upload button in App Store Connect.** The empty **Build** box on the web page
+> only *receives* builds — it says "Upload your builds using one of several tools" because the
+> uploading happens from Xcode on your Mac. The box stays empty until you finish Step 4, then
+> fills in by itself. This is the single most confusing part of the process and it trips
+> up nearly everyone the first time.
 
-If Archive is greyed out, you are still on a simulator. Go back to step 3.2.
+1. Open `ios/Pesolita/Pesolita.xcodeproj` in Xcode.
+2. At the top, next to the Pesolita scheme, click the device selector.
+3. Choose **Any iOS Device (arm64)**. *Not* a simulator — Archive is disabled for simulators.
+4. Menu bar → **Product** → **Archive**.
+5. Wait a few minutes. The **Organizer** window opens on its own when it finishes.
+
+If **Archive** is greyed out, you are still on a simulator. Go back to 3.3.
 
 ---
 
-## Step 4 — Validate before you upload
+## Step 4 — Upload from the Organizer
 
 In the Organizer window that just opened:
 
 1. Select your archive → **Distribute App**.
-2. Choose **App Store Connect** → **Next**.
-3. Choose **Upload** → **Next**.
+2. **App Store Connect** → **Next**.
+3. **Upload** → **Next**.
 4. Accept the defaults on the signing screens → **Next**.
-5. Click **Validate** first if offered. Fix anything it flags, then continue.
-6. Click **Upload**.
+5. If a **Validate** option is offered, run it first and fix anything it reports.
+6. **Upload**.
 
-Upload takes a few minutes. Then Apple processes the build for **5–30 minutes** before it
-appears in App Store Connect. This wait is normal.
+The first time you do this, Xcode may ask permission to create a **distribution certificate**
+and provisioning profile. Say yes — your Mac currently only has a development certificate,
+which cannot sign an App Store build.
+
+Uploading takes a few minutes. Apple then **processes** the build for anywhere from 5 to 30
+minutes. Only after that does it appear in the Build section of App Store Connect, where you
+attach it in Step 10. Refresh the page; there is no notification.
 
 ---
 
