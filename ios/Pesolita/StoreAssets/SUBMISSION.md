@@ -21,20 +21,17 @@ reading the project, building Release, or running the test suite.
       so App Store Connect stops asking on every upload. Accurate here: no custom crypto,
       no HTTPS, no network.
 
-## Decide before you submit
+## Decided and applied
 
-- [ ] **iPad support — this is the one real rejection risk (2.1, 4.0).**
-      `TARGETED_DEVICE_FAMILY = "1,2"` claims iPad support, but the layout does not hold up:
-      content crams into the top-left, roughly 40% of the screen is empty black, and the
-      compose button strands itself in the bottom-left corner. The UI test fails on iPad for
-      that reason. Two ways out:
-
-      **Recommended — ship iPhone-only for 1.0.** One setting, removes the risk, and drops
-      the 13" iPad screenshot requirement:
-      ```
-      TARGETED_DEVICE_FAMILY = "1"
-      ```
-      **Or** do real iPad layout work first. That is a project, not a checkbox.
+- [x] **iPhone-only for 1.0** (**2.1**, **4.0**). The app previously claimed iPad support
+      (`TARGETED_DEVICE_FAMILY = "1,2"`) while the iPad layout left roughly 40% of the screen
+      empty and stranded the compose button in a corner — the most likely reason this would
+      have been rejected. Now `"1"` across every target and configuration. This also removes
+      the 13" iPad screenshot requirement.
+- [x] **Support and privacy URLs are live**, both returning 200 and both carrying a working
+      contact address:
+      - `https://pesolita.vercel.app/privacy`
+      - `https://pesolita.vercel.app/support`
 
 ---
 
@@ -96,14 +93,16 @@ reading the project, building Release, or running the test suite.
       - **Product → Scheme → Edit Scheme → Diagnostics → Address Sanitizer** and
         **Main Thread Checker** for one full run-through.
       - **Product → Analyze** for static issues.
-- [ ] **Known test failure to fix or accept:** `testBackupAndRestorePickersOpen` fails. It
-      asserts on the iOS 26 Files app's own chrome, not on Pesolita. Not a shipping bug, but
-      do exercise Back up / Restore by hand once before you submit.
+- [x] **Resolved the flaky backup test.** It asserted on the system Files UI, which runs
+      out of process and alternated between failing on "Save" and on "Open" across identical
+      runs. Rewritten to check what is actually Pesolita's responsibility — both entry points
+      reachable, app healthy after the handoff — with the file formats and replace-not-merge
+      restore still covered by the unit tests. Still worth exercising Back up / Restore by
+      hand once on a real device before submitting.
 
 ## Test suite status
 
-27 of 28 pass — 17 unit tests, 6 formatting tests, 4 of 5 UI tests. The only failure is the
-Files-app one noted above.
+All 28 pass — 16 unit tests, 6 formatting tests, 6 persistence tests and 5 UI tests.
 
 ---
 

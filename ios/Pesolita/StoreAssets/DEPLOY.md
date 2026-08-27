@@ -8,36 +8,15 @@ Your URLs are already live:
 
 ---
 
-## Step 0 — Two things to fix first (5 minutes)
+## Step 0 — Already done
 
-### 0a. Put a real support email on the site
+Both of these are finished; nothing for you to do here.
 
-Both pages currently say `support@pesolita.app`, which does not exist. App Review does
-sometimes email that address. Replace it with an inbox you actually read:
+- [x] **Support address published.** Both pages carry `charlesleyb24@gmail.com` and are live.
+- [x] **iPhone-only.** `TARGETED_DEVICE_FAMILY` is now `"1"` across every target, so the
+      iPad layout can no longer be held against you and you do **not** need iPad screenshots.
 
-```bash
-grep -rl "support@pesolita.app" app/ | xargs sed -i '' 's/support@pesolita.app/YOUR@EMAIL.com/g'
-```
-
-Then publish the change:
-
-```bash
-git commit -am "Use a working support address" && git push
-```
-
-Vercel redeploys in about 30 seconds.
-
-### 0b. Decide iPad
-
-The app currently claims iPad support but the iPad layout has large empty areas and a
-stranded compose button. **This is the most likely reason you would get rejected.** For
-version 1.0, ship iPhone-only:
-
-```bash
-sed -i '' 's/TARGETED_DEVICE_FAMILY = "1,2"/TARGETED_DEVICE_FAMILY = "1"/g' ios/Pesolita/Pesolita.xcodeproj/project.pbxproj
-```
-
-This also means you do **not** need to produce iPad screenshots.
+Start at Step 1.
 
 ---
 
@@ -162,8 +141,7 @@ Scroll to **App Previews and Screenshots** → **iPhone 6.9" Display**.
 Drag in all five files from `StoreAssets/AppStore/iphone-6.9/`, in numbered order. They are
 already the exact size Apple requires.
 
-If you kept iPad support in step 0b, you must also supply 13" iPad screenshots. If you
-switched to iPhone-only, the iPad tab disappears.
+Since the app is iPhone-only, there is no iPad tab to fill in.
 
 ---
 
@@ -222,9 +200,11 @@ upload a new build with the build number bumped, and reply in the same thread. M
 submissions get one round of notes.
 
 The rejections most likely to hit this app, in order:
-1. **iPad layout** (Guideline 2.1 / 4.0) — avoided entirely if you did step 0b.
-2. **Broken support email** — avoided if you did step 0a.
-3. Something small in the metadata, fixable in minutes without a new build.
+1. Something small in the metadata — fixable in minutes, no new build needed.
+2. A screenshot that does not match what the app actually does.
+
+The two big ones — iPad layout (**2.1** / **4.0**) and a dead support address — are already
+handled.
 
 ---
 
