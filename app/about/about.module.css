@@ -28,18 +28,8 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 9px;
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: -0.02em;
   color: #fff;
   text-decoration: none;
-}
-
-.mark {
-  width: 28px;
-  height: 28px;
-  border-radius: 9px;
 }
 
 .navLinks {
@@ -93,10 +83,8 @@
   text-align: center;
 }
 
-.mascot {
-  width: clamp(96px, 20vw, 132px);
-  height: auto;
-  border-radius: 26px;
+.heroWordmark {
+  justify-content: center;
 }
 
 .h1 {
@@ -269,6 +257,106 @@
   }
 }
 
+/* ── native iPhone showcase ── */
+.iphoneShowcase {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(64px, 11vw, 116px) 22px clamp(72px, 12vw, 126px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.showcaseGlow {
+  position: absolute;
+  right: -24%;
+  bottom: -20%;
+  width: min(820px, 110vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(29, 111, 242, 0.2) 0%, rgba(29, 111, 242, 0) 68%);
+  pointer-events: none;
+}
+
+.showcaseInner {
+  position: relative;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.showcaseHead {
+  max-width: 700px;
+}
+
+.eyebrow {
+  margin-bottom: 14px;
+  font-weight: 700;
+  font-size: 11.5px;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.showcaseGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(24px, 5vw, 58px);
+  margin-top: clamp(42px, 7vw, 72px);
+}
+
+.showcasePoster {
+  min-width: 0;
+  margin: 0;
+  transition: transform 0.34s var(--ease-out);
+}
+
+.showcasePosterOffset {
+  margin-top: clamp(42px, 7vw, 76px);
+}
+
+.showcaseShot {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: clamp(24px, 3.5vw, 38px);
+  box-shadow: 0 38px 90px rgba(0, 0, 0, 0.56);
+}
+
+.showcaseCaption {
+  margin: 18px 10px 0;
+  font-size: clamp(13px, 1.7vw, 15px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.showcaseCaption strong {
+  color: #fff;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .showcasePoster:hover {
+    transform: translateY(-8px);
+  }
+}
+
+@media (max-width: 720px) {
+  .showcaseGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .showcasePoster {
+    width: min(100%, 470px);
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .showcasePosterOffset {
+    margin-top: 26px;
+  }
+}
+
 /* ── privacy band: the one place the surface itself carries the colour ── */
 .band {
   background: var(--accent);
@@ -384,7 +472,8 @@
   }
 
   .ctaPrimary,
-  .ctaGhost {
+  .ctaGhost,
+  .showcasePoster {
     transition: background 0.2s;
   }
 }

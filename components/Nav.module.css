@@ -171,24 +171,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 9px;
     height: var(--rail-brand);
     overflow: hidden;
   }
 
-  .brandMark {
-    width: 22px;
-    height: 22px;
-    flex: none;
-  }
-
-  .brandName {
-    display: none;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    color: #fff;
+  .navWordmark {
+    max-width: 22px;
+    overflow: hidden;
   }
 
   .tab {
@@ -230,8 +219,8 @@
     padding-left: 12px;
   }
 
-  .brandName {
-    display: block;
+  .navWordmark {
+    max-width: none;
   }
 
   .tab {

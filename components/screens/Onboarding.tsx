@@ -5,7 +5,7 @@ import { flushSync } from "react-dom";
 
 import { CardArt } from "@/components/CardArt";
 import { CardTemplatePicker } from "@/components/CardTemplatePicker";
-import { MascotMark } from "@/components/MascotMark";
+import { BrandWordmark } from "@/components/BrandWordmark";
 import { Mascot } from "@/components/Mascot";
 import { SpriteAnimation, preloadSprite } from "@/components/SpriteAnimation";
 import { cardTheme } from "@/components/cardTheme";
@@ -177,10 +177,7 @@ export function Onboarding() {
           and that is a returning user rather than a skip. */}
       <div className={styles.topBar}>
         <div className={styles.brand}>
-          <div className={styles.brandMark}>
-            <MascotMark />
-          </div>
-          <div className={styles.brandName}>Pesolita</div>
+          <BrandWordmark size="small" tone="onDark" />
         </div>
       </div>
 

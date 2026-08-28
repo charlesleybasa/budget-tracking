@@ -1,0 +1,76 @@
+.wordmark {
+  --wordmark-text: #fff;
+  --wordmark-accent: var(--accent);
+  --wordmark-mark-size: 26px;
+  --wordmark-text-size: 17px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--wordmark-mark-size) * 0.28);
+  color: var(--wordmark-text);
+  text-decoration: none;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.onLight {
+  --wordmark-text: var(--ink);
+}
+
+.small {
+  --wordmark-mark-size: 22px;
+  --wordmark-text-size: 16px;
+}
+
+.medium {
+  --wordmark-mark-size: 34px;
+  --wordmark-text-size: 24px;
+}
+
+.large {
+  --wordmark-mark-size: 74px;
+  --wordmark-text-size: 58px;
+}
+
+.mark {
+  width: var(--wordmark-mark-size);
+  height: var(--wordmark-mark-size);
+  flex: none;
+}
+
+.text {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  font-size: var(--wordmark-text-size);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 0.92;
+}
+
+.peso {
+  color: var(--wordmark-accent);
+}
+
+.lita {
+  color: var(--wordmark-text);
+}
+
+.text::after {
+  content: "";
+  position: absolute;
+  right: 1.34em;
+  top: -0.18em;
+  width: 0.25em;
+  height: 0.25em;
+  border-radius: 50%;
+  background: var(--wordmark-accent);
+  box-shadow: 0 0 0 0.08em rgba(255, 202, 40, 0.18);
+}
+
+@media (max-width: 420px) {
+  .large {
+    --wordmark-mark-size: 54px;
+    --wordmark-text-size: 42px;
+  }
+}

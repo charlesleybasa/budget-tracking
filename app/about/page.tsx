@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
+
+import { BrandWordmark } from "@/components/BrandWordmark";
 
 import styles from "./about.module.css";
 
@@ -51,12 +54,13 @@ export default function AboutPage() {
   return (
     <main className={styles.page}>
       <nav className={styles.nav}>
-        <Link href="/about" className={styles.brand}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/icon.png" alt="" className={styles.mark} />
-          Pesolita
+        <Link href="/about" className={styles.brand} aria-label="Pesolita about">
+          <BrandWordmark size="small" tone="onDark" />
         </Link>
         <div className={styles.navLinks}>
+          <Link href="/brand" className={styles.navLink}>
+            Brand
+          </Link>
           <Link href="/privacy" className={styles.navLink}>
             Privacy
           </Link>
@@ -72,8 +76,7 @@ export default function AboutPage() {
       <header className={styles.hero}>
         <div className={styles.heroGlow} aria-hidden="true" />
         <div className={styles.heroInner}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/icon.png" alt="" className={styles.mascot} />
+          <BrandWordmark size="large" tone="onDark" className={styles.heroWordmark} />
           <h1 className={styles.h1}>
             Every peso gets a <span className={styles.accentWord}>home</span>.
           </h1>
@@ -138,6 +141,54 @@ export default function AboutPage() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className={styles.iphoneShowcase} aria-labelledby="iphone-showcase-title">
+        <div className={styles.showcaseGlow} aria-hidden="true" />
+        <div className={styles.showcaseInner}>
+          <div className={styles.showcaseHead}>
+            <div className={styles.eyebrow}>Native on iPhone</div>
+            <h2 id="iphone-showcase-title" className={styles.h2}>
+              Your whole wallet, one glance away.
+            </h2>
+            <p className={styles.sectionBody}>
+              Stack every pocket in one place, then pin Pesolita to your Home Screen. Flick
+              between cards, check what is safe today, and jump straight into Spend or Top up.
+            </p>
+          </div>
+
+          <div className={styles.showcaseGrid}>
+            <figure className={styles.showcasePoster}>
+              <Image
+                src="/shots/06-12-stacked-wallet.webp"
+                width={960}
+                height={2086}
+                sizes="(max-width: 720px) 88vw, 440px"
+                alt="Pesolita on iPhone showing five bank, e-wallet, cash and savings cards stacked into one wallet"
+                className={styles.showcaseShot}
+              />
+              <figcaption className={styles.showcaseCaption}>
+                <strong>One wallet.</strong> Every card, e-wallet and cash pocket stays easy to
+                reach.
+              </figcaption>
+            </figure>
+
+            <figure className={`${styles.showcasePoster} ${styles.showcasePosterOffset}`}>
+              <Image
+                src="/shots/07-13-widget-home.webp"
+                width={960}
+                height={2086}
+                sizes="(max-width: 720px) 88vw, 440px"
+                alt="Pesolita Pocket Widget on an iPhone Home Screen with a card balance, safe-today amount, recent activity, Spend and Top up actions"
+                className={styles.showcaseShot}
+              />
+              <figcaption className={styles.showcaseCaption}>
+                <strong>No app-opening ritual.</strong> Your balance and everyday actions live
+                on the Home Screen.
+              </figcaption>
+            </figure>
+          </div>
         </div>
       </section>
 

@@ -91,8 +91,11 @@ final class WalletStore {
             }
         }
         guard let repository else { return }
-        let launchArguments = ProcessInfo.processInfo.arguments
 #if DEBUG
+        // Every launch-argument hook below exists only for the UI tests and the store-asset
+        // captures. The read itself is inside the guard so a shipping build never inspects
+        // its launch arguments at all.
+        let launchArguments = ProcessInfo.processInfo.arguments
         if launchArguments.contains("--demo-wallet") {
             try? await repository.erase()
             snapshot = launchArguments.contains("--showcase") ? .simulatorShowcase : .simulatorDemo
@@ -113,10 +116,14 @@ final class WalletStore {
             }
             return
         }
-#endif
+        // Inside the debug guard on purpose. A shipping build must expose no way to erase
+        // someone's wallet that is not visible in the interface — an undocumented launch
+        // argument that destroys data is indistinguishable from a deliberately hidden
+        // feature, which is what Guideline 5.6 prohibits.
         if launchArguments.contains("--reset-wallet") {
             try? await repository.erase()
         }
+#endif
         do {
             if let stored = try await repository.load() { snapshot = stored }
             synchronizeEndpoints()

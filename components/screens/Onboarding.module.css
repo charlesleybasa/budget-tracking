@@ -20,20 +20,6 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-.brandMark {
-  width: 19px;
-  height: 19px;
-  position: relative;
-}
-
-.brandName {
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 1;
-  letter-spacing: -0.02em;
 }
 
 .step {

@@ -1,0 +1,396 @@
+.page {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  background: var(--ink);
+  color: #fff;
+  -webkit-overflow-scrolling: touch;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 22px;
+  background: rgba(11, 11, 12, 0.86);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+}
+
+.brand {
+  color: #fff;
+  text-decoration: none;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 100px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.hero {
+  display: grid;
+  gap: 38px;
+  align-items: center;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 64px 22px 48px;
+}
+
+.heroCopy {
+  min-width: 0;
+}
+
+.kicker {
+  margin: 0 0 14px;
+  color: var(--accent);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.heroWordmark {
+  margin-top: 10px;
+}
+
+.heroTitle {
+  max-width: 9ch;
+  margin: 28px 0 0;
+  font-size: 54px;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 0.96;
+}
+
+.heroBody {
+  max-width: 46ch;
+  margin: 20px 0 0;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 17px;
+  line-height: 1.58;
+  text-wrap: pretty;
+}
+
+.heroArt {
+  min-width: 0;
+}
+
+.promo {
+  display: block;
+  width: min(100%, 460px);
+  height: auto;
+  margin: 0 auto;
+  border-radius: 28px;
+  box-shadow: 0 34px 80px rgba(0, 0, 0, 0.46);
+}
+
+.section,
+.band {
+  padding: 58px 22px;
+}
+
+.band {
+  background: #f6f1df;
+  color: var(--ink);
+}
+
+.band .kicker {
+  color: #a87600;
+}
+
+.sectionHead,
+.identityGrid,
+.palette,
+.mascotGrid,
+.typeGrid,
+.flow {
+  max-width: 1120px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.h2 {
+  max-width: 13ch;
+  margin: 0;
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.identityGrid {
+  display: grid;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.specimen,
+.iconCard,
+.swatch,
+.mascotCard,
+.typeSpec {
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 42px rgba(11, 11, 12, 0.08);
+}
+
+.specimen {
+  padding: 28px;
+}
+
+.specimen p,
+.iconCard p,
+.mascotCard p,
+.typeSpec p {
+  margin: 16px 0 0;
+  color: rgba(11, 11, 12, 0.62);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.iconCard {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px;
+}
+
+.iconCard h3,
+.mascotCard h3,
+.typeSpec h3 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.1;
+}
+
+.appIcon {
+  width: 86px;
+  height: 86px;
+  border-radius: 22px;
+  flex: none;
+}
+
+.mark {
+  width: 70px;
+  height: 70px;
+  flex: none;
+}
+
+.palette {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.swatch {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+}
+
+.swatchColor {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  border: 1px solid rgba(11, 11, 12, 0.08);
+  flex: none;
+}
+
+.swatchText {
+  min-width: 0;
+}
+
+.swatchText strong,
+.swatchText span {
+  display: block;
+}
+
+.swatchText strong {
+  font-size: 14px;
+  line-height: 1.15;
+}
+
+.swatchText span {
+  margin-top: 4px;
+  color: rgba(11, 11, 12, 0.42);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.swatchText p {
+  margin: 8px 0 0;
+  color: rgba(11, 11, 12, 0.58);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.mascotGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.mascotCard {
+  padding: 18px;
+  text-align: center;
+}
+
+.mascotStage {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  height: 132px;
+  margin-bottom: 14px;
+}
+
+.typeGrid {
+  display: grid;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.typeSpec {
+  padding: 24px;
+}
+
+.bigAa {
+  color: var(--accent);
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 0.9;
+}
+
+.alphabet {
+  margin-top: 18px;
+  color: rgba(11, 11, 12, 0.56);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.personality {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-content: start;
+}
+
+.personality span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 100px;
+  background: var(--accent);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.flowItem {
+  min-width: 0;
+  margin: 0;
+}
+
+.flowShot {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 24px;
+  border: 7px solid #1b1b20;
+  box-shadow: 0 18px 40px rgba(11, 11, 12, 0.18);
+}
+
+.flowItem figcaption {
+  margin-top: 10px;
+  color: rgba(11, 11, 12, 0.64);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+}
+
+@media (min-width: 760px) {
+  .hero {
+    grid-template-columns: minmax(0, 0.92fr) minmax(320px, 0.8fr);
+    padding-top: 86px;
+    padding-bottom: 74px;
+  }
+
+  .heroTitle {
+    font-size: 68px;
+  }
+
+  .identityGrid {
+    grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.8fr);
+  }
+
+  .specimen {
+    grid-row: span 2;
+  }
+
+  .typeGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.72fr);
+  }
+
+  .flow {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .nav {
+    padding: 12px 16px;
+  }
+
+  .hero {
+    padding-top: 48px;
+  }
+
+  .heroTitle {
+    font-size: 42px;
+  }
+
+  .h2 {
+    font-size: 31px;
+  }
+
+  .iconCard {
+    align-items: flex-start;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .navLink:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+}

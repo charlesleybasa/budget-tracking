@@ -2,7 +2,7 @@
 
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
-import { MascotMark } from "@/components/MascotMark";
+import { BrandWordmark } from "@/components/BrandWordmark";
 import { useWallet } from "@/lib/store";
 import type { Screen } from "@/lib/types";
 
@@ -81,10 +81,7 @@ export function Nav() {
   return (
     <nav ref={navRef} className={`${styles.nav} ${onPhoneBar ? "" : styles.hiddenOnPhone}`} aria-label="Main">
       <div className={styles.brand} aria-hidden="true">
-        <span className={styles.brandMark}>
-          <MascotMark />
-        </span>
-        <span className={styles.brandName}>Pesolita</span>
+        <BrandWordmark size="small" tone="onDark" className={styles.navWordmark} />
       </div>
 
       {box ? (
