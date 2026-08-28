@@ -38,21 +38,32 @@ final class StoreShotTests: XCTestCase {
             icon.press(forDuration: 1.4)
             settle(1.4)
 
-            // iOS 26's icon menu offers widget sizes as a row of glyphs rather than an
-            // "Add Widget" label, so there is no text to query — the medium size sits
-            // third along that row.
-            springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.711, dy: 0.324)).tap()
+            // Exact labels, read from Springboard's own tree. Two details cost several
+            // attempts: the size button is "Medium-sized widget", not "Medium", and the
+            // confirm button's label carries a leading space — " Add Widget" — so every
+            // exact-match query for "Add Widget" silently found nothing.
+            let tree = XCTAttachment(string: springboard.debugDescription)
+            tree.name = "icon-menu-tree"
+            tree.lifetime = .keepAlways
+            add(tree)
+
+            // Large, not medium: the medium size collapses the widget to icon-only
+            // buttons, while the large one shows the card, the safe-to-spend figure and
+            // labelled Spend / Top up — which is what the screenshot is meant to show.
+            let large = springboard.buttons["Large widget"]
+            if large.waitForExistence(timeout: 4), large.isHittable {
+                large.tap()
+            } else {
+                springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.777, dy: 0.324)).tap()
+            }
             settle(2.2)
 
-            for label in ["Add Widget", "Add"] where springboard.buttons[label].waitForExistence(timeout: 4) {
-                let button = springboard.buttons[label]
-                if button.isHittable {
-                    button.tap()
-                } else {
-                    button.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-                }
+            let confirm = springboard.buttons.matching(
+                NSPredicate(format: "label CONTAINS[c] 'Add Widget'")
+            ).firstMatch
+            if confirm.waitForExistence(timeout: 5) {
+                confirm.tap()
                 settle(2.4)
-                break
             }
 
             if springboard.buttons["Done"].waitForExistence(timeout: 3) {
@@ -62,6 +73,10 @@ final class StoreShotTests: XCTestCase {
         }
 
         capture("13-widget-home-screen")
+        XCTAssertTrue(
+            springboard.staticTexts["SAFE TODAY"].exists,
+            "The widget is not on the Home Screen — the captured image would be unusable."
+        )
     }
 
     private func capture(_ name: String) {
