@@ -89,7 +89,7 @@ struct SearchView: View {
             HStack(spacing: 10) {
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: 18, weight: .medium)).foregroundStyle(Tokens.muted2)
-                TextField("Jollibee, load, last Tuesday…", text: $store.searchQuery)
+                TextField("Coffee, load, last Tuesday…", text: $store.searchQuery)
                     .focused($focused)
                     .font(AppFont.outfit(14, weight: .medium, relativeTo: .subheadline))
                     .foregroundStyle(Tokens.ink)

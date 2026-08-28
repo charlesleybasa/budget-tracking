@@ -15,16 +15,16 @@ struct WalletStoreTests {
         let store = WalletStore(repository: nil)
         store.onboarding.name = "Rli"
         store.selectKind(.debit)
-        let bdo = CardTemplates.byID["banks/bdo-debit"]!
-        store.selectTemplate(bdo)
+        let template = CardTemplates.byID["banks/deep-blue-wave"]!
+        store.selectTemplate(template)
         store.onboarding.balance = "2500"
         store.finishOnboarding()
 
         #expect(store.snapshot.onboarded)
         #expect(store.snapshot.cards.count == 1)
-        #expect(store.snapshot.cards[0].nick == "BDO Debit")
+        #expect(store.snapshot.cards[0].nick == "Deep Blue Wave")
         #expect(store.snapshot.cards[0].bal == 2500)
-        #expect(store.snapshot.cards[0].art.photo?.src == "template:banks/bdo-debit.webp")
+        #expect(store.snapshot.cards[0].art.photo?.src == "template:banks/deep-blue-wave.webp")
     }
 
     @Test func spendingExactlyTheBalanceIsAllowed() {
@@ -96,14 +96,14 @@ struct WalletStoreTests {
 
     @Test func changingBundledTemplateUpdatesTheFollowedName() {
         var value = snapshot(balance: 100)
-        value.cards[0].nick = "AUB Debit"
-        value.cards[0].art = CardTemplates.byID["banks/aub-debit"]!.art
+        value.cards[0].nick = "Crimson Wave"
+        value.cards[0].art = CardTemplates.byID["banks/crimson-wave"]!.art
         let store = WalletStore(snapshot: value, repository: nil)
         store.openEditor(cardID: "card")
-        store.applyTemplate(CardTemplates.byID["banks/bdo-debit"]!)
+        store.applyTemplate(CardTemplates.byID["banks/deep-blue-wave"]!)
 
-        #expect(store.editor?.card.nick == "BDO Debit")
-        #expect(store.editor?.card.art.photo?.src == "template:banks/bdo-debit.webp")
+        #expect(store.editor?.card.nick == "Deep Blue Wave")
+        #expect(store.editor?.card.art.photo?.src == "template:banks/deep-blue-wave.webp")
     }
 
     @Test func deletingCardAlsoDeletesItsActivity() {
@@ -199,7 +199,7 @@ struct WalletStoreTests {
         let payload = WidgetWalletPayload(snapshot: value, now: Date(timeIntervalSince1970: 1_000))
 
         #expect(payload.cards.count == 1)
-        #expect(payload.cards[0].templatePath == "banks/all-bank-debit.webp")
+        #expect(payload.cards[0].templatePath == "banks/navy-wave.webp")
         #expect(payload.cards[0].balance == 1_200)
         #expect(payload.transactions.first?.merchant == "Coffee")
         #expect(payload.privacyEnabled)

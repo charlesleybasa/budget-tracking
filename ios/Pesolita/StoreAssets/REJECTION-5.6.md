@@ -40,29 +40,31 @@ against cards that already exist.
 
 ---
 
-## Finding 2 — not fixed, needs your decision: 70 real bank names
+## Finding 2 — fixed: 70 real bank names removed
 
-The app ships 70 card templates named after real financial institutions — **BDO, BPI,
-Metrobank, Landbank, Chinabank, EastWest, Maybank, AUB, DBP, CTBC, GCash, Maya** and more —
-with artwork in each institution's brand colours.
+The app shipped 70 card templates named after real financial institutions — BDO, BPI,
+Metrobank, Landbank, Chinabank, EastWest, Maybank, GCash, Maya and more — in a
+**Finance-category** app. To a reviewer that reads as claiming an association the app does
+not have, which is plausibly what "commonly associated with fraudulent activity" pointed at.
+It was also trademark exposure under **Guideline 5.2.1**, independent of this rejection.
 
-This is a **Finance-category app**. From a reviewer's perspective, an app that displays dozens
-of real bank cards can read as impersonating those banks or as a phishing surface, which is
-plausibly what "commonly associated with fraudulent activity" refers to. It is also a
-trademark exposure under **Guideline 5.2.1** independent of this rejection.
+All 70 are renamed after the artwork itself, derived from each template's own sampled colour:
+"BDO Debit" → **Deep Blue Wave**, "GCash" → **Azure Ripple**, "Metrobank Platinum" →
+**Graphite Prism**. The designs are unchanged — only the claim of association is gone. Card
+ids and asset filenames were renamed too, so no institution appears anywhere in the bundle.
 
-Three ways to resolve it:
+Also removed:
 
-1. **Rename the templates, keep the artwork.** "BDO Debit" → "Navy Wave", "GCash" → "Blue
-   Ripple". The designs are abstract patterns and survive intact; only the claim of
-   association goes. Users can still name their own card whatever they like, because it is
-   their card. This is the lowest-risk option that keeps the feature.
-2. **Ship generative art only** and drop the 70 bundled templates.
-3. **Keep them and argue it.** You would be arguing that naming 70 banks in a finance app is
-   nominative fair use. Possible, but it is the position most likely to cost you further
-   review cycles.
+- The demo wallet's card nicknames and merchants, which put bank names into the App Store
+  screenshots. Now "Main Account", "Rewards Card", "Daily Wallet", "Savings".
+- `lib/bankPresets.ts`, 23 further bank names in dead code that nothing imported.
+- Two visible strings: the search placeholder, and the E-wallet hint that read "GCash, Maya".
 
-I recommend option 1.
+**Deliberately kept:** the category-guessing keyword table. Typing "jollibee" in a note still
+suggests Food. That is invisible in the interface, it is how the feature works, and naming a
+merchant you actually spent at is ordinary nominative use in any expense tracker.
+
+All screenshots were re-captured and re-rendered against the renamed templates.
 
 ---
 
@@ -71,7 +73,7 @@ I recommend option 1.
 1. **Reply to App Review before resubmitting.** They will often name the specific feature when
    asked directly, and guessing wrong costs a full review cycle. Draft below.
 2. Upload a new build (**build number must increase — set it to 2**).
-3. Decide on the bank names.
+3. The bank names are already handled.
 
 ### Draft reply to App Review
 

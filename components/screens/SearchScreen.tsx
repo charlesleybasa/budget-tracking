@@ -69,7 +69,7 @@ export function SearchScreen() {
               className={styles.searchInput}
               value={state.query}
               onChange={(e) => actions.patch({ query: e.target.value })}
-              placeholder="Jollibee, load, last Tuesday…"
+              placeholder="Coffee, load, last Tuesday…"
               aria-label="Search transactions"
               type="search"
             />

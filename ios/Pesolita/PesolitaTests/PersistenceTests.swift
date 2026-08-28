@@ -38,12 +38,12 @@ struct PersistenceTests {
         snapshot.cards = [Card(
             id: "card",
             kind: .debit,
-            nick: "BDO Debit",
+            nick: "Main Account",
             last4: "",
             exp: "—",
             bal: 1000,
             limit: 0,
-            art: CardTemplates.byID["banks/bdo-debit"]!.art,
+            art: CardTemplates.byID["banks/deep-blue-wave"]!.art,
             frozen: false
         )]
         snapshot.activeId = "card"
@@ -58,8 +58,8 @@ struct PersistenceTests {
         #expect(web.version == 1)
 
         let restored = try await BackupCodec.restore(data, media: media)
-        #expect(restored.cards.first?.nick == "BDO Debit")
-        #expect(restored.cards.first?.art.photo?.src == "template:banks/bdo-debit.webp")
+        #expect(restored.cards.first?.nick == "Main Account")
+        #expect(restored.cards.first?.art.photo?.src == "template:banks/deep-blue-wave.webp")
         #expect(restored.haptics == false)
         #expect(restored.sfx == false)
         try? FileManager.default.removeItem(at: root)

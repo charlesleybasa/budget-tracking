@@ -19,14 +19,14 @@ export const metadata: Metadata = {
 
 /** Real card artwork from the app, doubled so the marquee can loop seamlessly. */
 const CARDS = [
-  "banks/bpi-debit",
-  "e-wallets/gcash-ewallet",
-  "credit-cards/bpi-platinum-rewards-credit",
-  "digital-banks/go-tyme-digital-bank",
-  "banks/bdo-debit",
-  "e-wallets/grab-pay-ewallet",
-  "banks/chinabank-debit",
-  "prepaid/beep-prepaid",
+  "banks/ember-wave",
+  "e-wallets/azure-ripple",
+  "credit-cards/slate-facet",
+  "digital-banks/obsidian-pulse",
+  "banks/deep-blue-wave",
+  "e-wallets/jade-ripple",
+  "banks/crimson-ridge",
+  "prepaid/navy-track",
 ];
 
 const FEATURES = [

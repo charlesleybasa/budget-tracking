@@ -134,7 +134,7 @@ export const CARD_KINDS: ReadonlyArray<readonly [CardKind, string, string, Templ
   ["ATM / Debit", "Banks", "Traditional bank cards", "banks"],
   ["Credit card", "Credit Cards", "Borrowed spending", "credit-cards"],
   ["Digital bank", "Digital Banks", "App-first bank accounts", "digital-banks"],
-  ["E-wallet", "E-wallets", "GCash, Maya and more", "e-wallets"],
+  ["E-wallet", "E-wallets", "Pay by app", "e-wallets"],
   ["Membership card", "Membership Cards", "Rewards and loyalty", "membership"],
   ["Prepaid card", "Prepaid Cards", "Load it before spending", "prepaid"],
   ["Cash on hand", "Cash on hand", "DIY card for physical pesos", null],

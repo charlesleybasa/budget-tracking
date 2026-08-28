@@ -136,7 +136,7 @@ enum CardKind: String, Codable, CaseIterable, Identifiable, Sendable {
         case .credit: "Borrowed money"
         case .digitalBank: "App-first accounts"
         case .cash: "Actual paper"
-        case .eWallet: "GCash, Maya"
+        case .eWallet: "Pay by app"
         case .membership: "Rewards and loyalty"
         case .prepaid: "Load it before use"
         case .savings: "Money with a job"
