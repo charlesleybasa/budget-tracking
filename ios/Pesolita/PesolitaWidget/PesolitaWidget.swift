@@ -20,23 +20,29 @@ struct PesolitaWidgetEntry: TimelineEntry {
     }
 }
 
-struct PesolitaWidgetProvider: TimelineProvider {
+struct PesolitaWidgetProvider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> PesolitaWidgetEntry {
-        PesolitaWidgetEntry(date: .now, payload: .placeholder, selectedCardID: "preview-bdo")
+        PesolitaWidgetEntry(date: .now, payload: .placeholder, selectedCardID: "preview-bank")
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (PesolitaWidgetEntry) -> Void) {
-        completion(makeEntry())
+    func snapshot(for configuration: PocketConfigurationIntent, in context: Context) async -> PesolitaWidgetEntry {
+        makeEntry(configuration: configuration)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<PesolitaWidgetEntry>) -> Void) {
-        let entry = makeEntry()
+    func timeline(for configuration: PocketConfigurationIntent, in context: Context) async -> Timeline<PesolitaWidgetEntry> {
+        let entry = makeEntry(configuration: configuration)
         let refresh = Calendar.current.date(byAdding: .minute, value: 20, to: .now) ?? .now.addingTimeInterval(1_200)
-        completion(Timeline(entries: [entry], policy: .after(refresh)))
+        return Timeline(entries: [entry], policy: .after(refresh))
     }
 
-    private func makeEntry() -> PesolitaWidgetEntry {
-        let payload = WidgetSharedStore.loadPayload()
+    private func makeEntry(configuration: PocketConfigurationIntent? = nil) -> PesolitaWidgetEntry {
+        var payload = WidgetSharedStore.loadPayload()
+        if let configuration {
+            payload.privacyEnabled = !configuration.showAmount || payload.privacyEnabled
+        }
+        if let override = WidgetSharedStore.getPrivacyOverride() {
+            payload.privacyEnabled = override
+        }
         return PesolitaWidgetEntry(
             date: .now,
             payload: payload,
@@ -49,7 +55,7 @@ struct PesolitaPocketWidget: Widget {
     let kind = WidgetSharedStore.widgetKind
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: PesolitaWidgetProvider()) { entry in
+        AppIntentConfiguration(kind: kind, intent: PocketConfigurationIntent.self, provider: PesolitaWidgetProvider()) { entry in
             PesolitaWidgetView(entry: entry)
         }
         .configurationDisplayName("Pocket at a glance")
@@ -195,6 +201,14 @@ private struct PesolitaWidgetView: View {
                 .tracking(1)
                 .foregroundStyle(.white.opacity(0.35))
             Spacer()
+            Button(intent: TogglePrivacyIntent()) {
+                Image(systemName: entry.payload.privacyEnabled ? "eye.slash.fill" : "eye.fill")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.6))
+                    .frame(width: 30, height: 30)
+                    .background(.white.opacity(0.1), in: Circle())
+            }
+            .buttonStyle(.plain)
             Text("\(cardPosition(card)) of \(entry.payload.cards.count)")
                 .font(WidgetFont.outfit(10, weight: .medium, relativeTo: .caption))
                 .foregroundStyle(.white.opacity(0.48))
@@ -522,11 +536,11 @@ private extension Color {
 #Preview(as: .systemLarge) {
     PesolitaPocketWidget()
 } timeline: {
-    PesolitaWidgetEntry(date: .now, payload: .placeholder, selectedCardID: "preview-bdo")
+    PesolitaWidgetEntry(date: .now, payload: .placeholder, selectedCardID: "preview-bank")
 }
 
 #Preview(as: .systemMedium) {
     PesolitaPocketWidget()
 } timeline: {
-    PesolitaWidgetEntry(date: .now, payload: .placeholder, selectedCardID: "preview-bdo")
+    PesolitaWidgetEntry(date: .now, payload: .placeholder, selectedCardID: "preview-bank")
 }

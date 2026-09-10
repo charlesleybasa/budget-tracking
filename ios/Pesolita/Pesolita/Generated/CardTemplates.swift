@@ -6,63 +6,33 @@ import Foundation
 enum CardTemplates {
     static let all: [CardTemplate] = [
         CardTemplate(
-            id: "banks/navy-wave",
-            name: "Navy Wave",
+            id: "banks/amber-wave",
+            name: "Amber Wave",
             category: .banks,
-            resourcePath: "banks/navy-wave.webp",
+            resourcePath: "banks/amber-wave.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 6, green: 23, blue: 40),
-            fallbackHex: "#061728",
-            scrim: .off, textMode: .auto, chip: true
+            sample: RGBSample(red: 190, green: 185, blue: 34),
+            fallbackHex: "#beb922",
+            scrim: .strong, textMode: .auto, chip: true
         ),
         CardTemplate(
-            id: "banks/crimson-wave",
-            name: "Crimson Wave",
+            id: "banks/copper-wave",
+            name: "Copper Wave",
             category: .banks,
-            resourcePath: "banks/crimson-wave.webp",
+            resourcePath: "banks/copper-wave.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 131, green: 9, blue: 2),
-            fallbackHex: "#830902",
-            scrim: .off, textMode: .auto, chip: true
+            sample: RGBSample(red: 184, green: 118, blue: 55),
+            fallbackHex: "#b87637",
+            scrim: .soft, textMode: .auto, chip: true
         ),
         CardTemplate(
-            id: "banks/sapphire-wave",
-            name: "Sapphire Wave",
+            id: "banks/crimson-arc",
+            name: "Crimson Arc",
             category: .banks,
-            resourcePath: "banks/sapphire-wave.webp",
+            resourcePath: "banks/crimson-arc.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 0, green: 32, blue: 107),
-            fallbackHex: "#00206b",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/deep-blue-wave",
-            name: "Deep Blue Wave",
-            category: .banks,
-            resourcePath: "banks/deep-blue-wave.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 1, green: 25, blue: 102),
-            fallbackHex: "#011966",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/scarlet-wave",
-            name: "Scarlet Wave",
-            category: .banks,
-            resourcePath: "banks/scarlet-wave.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 144, green: 4, blue: 24),
-            fallbackHex: "#900418",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/ember-wave",
-            name: "Ember Wave",
-            category: .banks,
-            resourcePath: "banks/ember-wave.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 93, green: 1, blue: 1),
-            fallbackHex: "#5d0101",
+            sample: RGBSample(red: 175, green: 29, blue: 28),
+            fallbackHex: "#af1d1c",
             scrim: .off, textMode: .auto, chip: true
         ),
         CardTemplate(
@@ -71,128 +41,18 @@ enum CardTemplates {
             category: .banks,
             resourcePath: "banks/crimson-ridge.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 106, green: 1, blue: 0),
-            fallbackHex: "#6a0100",
+            sample: RGBSample(red: 142, green: 23, blue: 23),
+            fallbackHex: "#8e1717",
             scrim: .off, textMode: .auto, chip: true
         ),
         CardTemplate(
-            id: "banks/scarlet-ridge",
-            name: "Scarlet Ridge",
+            id: "banks/crimson-wave",
+            name: "Crimson Wave",
             category: .banks,
-            resourcePath: "banks/scarlet-ridge.webp",
+            resourcePath: "banks/crimson-wave.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 134, green: 2, blue: 1),
-            fallbackHex: "#860201",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/ember-ridge",
-            name: "Ember Ridge",
-            category: .banks,
-            resourcePath: "banks/ember-ridge.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 24, green: 2, blue: 1),
-            fallbackHex: "#180201",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/indigo-wave",
-            name: "Indigo Wave",
-            category: .banks,
-            resourcePath: "banks/indigo-wave.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 27, green: 5, blue: 99),
-            fallbackHex: "#1b0563",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/amber-wave",
-            name: "Amber Wave",
-            category: .banks,
-            resourcePath: "banks/amber-wave.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 191, green: 198, blue: 5),
-            fallbackHex: "#bfc605",
-            scrim: .strong, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/jade-wave",
-            name: "Jade Wave",
-            category: .banks,
-            resourcePath: "banks/jade-wave.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 21, green: 59, blue: 21),
-            fallbackHex: "#153b15",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/copper-wave",
-            name: "Copper Wave",
-            category: .banks,
-            resourcePath: "banks/copper-wave.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 49, green: 39, blue: 13),
-            fallbackHex: "#31270d",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/violet-wave",
-            name: "Violet Wave",
-            category: .banks,
-            resourcePath: "banks/violet-wave.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 61, green: 23, blue: 80),
-            fallbackHex: "#3d1750",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/crimson-arc",
-            name: "Crimson Arc",
-            category: .banks,
-            resourcePath: "banks/crimson-arc.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 176, green: 2, blue: 1),
-            fallbackHex: "#b00201",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/teal-wave",
-            name: "Teal Wave",
-            category: .banks,
-            resourcePath: "banks/teal-wave.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 32, green: 155, blue: 162),
-            fallbackHex: "#209ba2",
-            scrim: .soft, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/silver-wave",
-            name: "Silver Wave",
-            category: .banks,
-            resourcePath: "banks/silver-wave.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 180, green: 184, blue: 191),
-            fallbackHex: "#b4b8bf",
-            scrim: .strong, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/navy-ridge",
-            name: "Navy Ridge",
-            category: .banks,
-            resourcePath: "banks/navy-ridge.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 1, green: 33, blue: 99),
-            fallbackHex: "#012163",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "banks/sapphire-ridge",
-            name: "Sapphire Ridge",
-            category: .banks,
-            resourcePath: "banks/sapphire-ridge.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 1, green: 64, blue: 149),
-            fallbackHex: "#014095",
+            sample: RGBSample(red: 158, green: 35, blue: 45),
+            fallbackHex: "#9e232d",
             scrim: .off, textMode: .auto, chip: true
         ),
         CardTemplate(
@@ -201,8 +61,38 @@ enum CardTemplates {
             category: .banks,
             resourcePath: "banks/deep-blue-ridge.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 0, green: 41, blue: 133),
-            fallbackHex: "#002985",
+            sample: RGBSample(red: 23, green: 50, blue: 120),
+            fallbackHex: "#173278",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/deep-blue-wave",
+            name: "Deep Blue Wave",
+            category: .banks,
+            resourcePath: "banks/deep-blue-wave.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 34, green: 56, blue: 117),
+            fallbackHex: "#223875",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/ember-ridge",
+            name: "Ember Ridge",
+            category: .banks,
+            resourcePath: "banks/ember-ridge.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 120, green: 56, blue: 23),
+            fallbackHex: "#783817",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/ember-wave",
+            name: "Ember Wave",
+            category: .banks,
+            resourcePath: "banks/ember-wave.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 137, green: 56, blue: 39),
+            fallbackHex: "#893827",
             scrim: .off, textMode: .auto, chip: true
         ),
         CardTemplate(
@@ -211,8 +101,118 @@ enum CardTemplates {
             category: .banks,
             resourcePath: "banks/graphite-wave.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 75, green: 70, blue: 65),
-            fallbackHex: "#4b4641",
+            sample: RGBSample(red: 76, green: 76, blue: 81),
+            fallbackHex: "#4c4c51",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/indigo-wave",
+            name: "Indigo Wave",
+            category: .banks,
+            resourcePath: "banks/indigo-wave.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 86, green: 45, blue: 169),
+            fallbackHex: "#562da9",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/jade-wave",
+            name: "Jade Wave",
+            category: .banks,
+            resourcePath: "banks/jade-wave.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 44, green: 159, blue: 96),
+            fallbackHex: "#2c9f60",
+            scrim: .soft, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/navy-ridge",
+            name: "Navy Ridge",
+            category: .banks,
+            resourcePath: "banks/navy-ridge.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 22, green: 67, blue: 131),
+            fallbackHex: "#164383",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/navy-wave",
+            name: "Navy Wave",
+            category: .banks,
+            resourcePath: "banks/navy-wave.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 34, green: 68, blue: 128),
+            fallbackHex: "#224480",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/sapphire-ridge",
+            name: "Sapphire Ridge",
+            category: .banks,
+            resourcePath: "banks/sapphire-ridge.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 22, green: 100, blue: 185),
+            fallbackHex: "#1664b9",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/sapphire-wave",
+            name: "Sapphire Wave",
+            category: .banks,
+            resourcePath: "banks/sapphire-wave.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 34, green: 97, blue: 188),
+            fallbackHex: "#2261bc",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/scarlet-ridge",
+            name: "Scarlet Ridge",
+            category: .banks,
+            resourcePath: "banks/scarlet-ridge.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 182, green: 34, blue: 23),
+            fallbackHex: "#b62217",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/scarlet-wave",
+            name: "Scarlet Wave",
+            category: .banks,
+            resourcePath: "banks/scarlet-wave.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 187, green: 45, blue: 55),
+            fallbackHex: "#bb2d37",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/silver-wave",
+            name: "Silver Wave",
+            category: .banks,
+            resourcePath: "banks/silver-wave.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 183, green: 183, blue: 184),
+            fallbackHex: "#b7b7b8",
+            scrim: .strong, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/teal-wave",
+            name: "Teal Wave",
+            category: .banks,
+            resourcePath: "banks/teal-wave.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 34, green: 159, blue: 169),
+            fallbackHex: "#229fa9",
+            scrim: .soft, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "banks/violet-wave",
+            name: "Violet Wave",
+            category: .banks,
+            resourcePath: "banks/violet-wave.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 137, green: 56, blue: 168),
+            fallbackHex: "#8938a8",
             scrim: .off, textMode: .auto, chip: true
         ),
         CardTemplate(
@@ -221,8 +221,18 @@ enum CardTemplates {
             category: .creditCards,
             resourcePath: "credit-cards/copper-facet.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 184, green: 127, blue: 12),
-            fallbackHex: "#b87f0c",
+            sample: RGBSample(red: 185, green: 120, blue: 59),
+            fallbackHex: "#b9783b",
+            scrim: .soft, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "credit-cards/copper-prism",
+            name: "Copper Prism",
+            category: .creditCards,
+            resourcePath: "credit-cards/copper-prism.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 185, green: 121, blue: 53),
+            fallbackHex: "#b97935",
             scrim: .soft, textMode: .auto, chip: true
         ),
         CardTemplate(
@@ -231,69 +241,9 @@ enum CardTemplates {
             category: .creditCards,
             resourcePath: "credit-cards/graphite-facet.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 50, green: 52, blue: 57),
-            fallbackHex: "#323439",
+            sample: RGBSample(red: 84, green: 84, blue: 89),
+            fallbackHex: "#545459",
             scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "credit-cards/rust-facet",
-            name: "Rust Facet",
-            category: .creditCards,
-            resourcePath: "credit-cards/rust-facet.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 151, green: 100, blue: 8),
-            fallbackHex: "#976408",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "credit-cards/slate-facet",
-            name: "Slate Facet",
-            category: .creditCards,
-            resourcePath: "credit-cards/slate-facet.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 110, green: 115, blue: 124),
-            fallbackHex: "#6e737c",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "credit-cards/terracotta-facet",
-            name: "Terracotta Facet",
-            category: .creditCards,
-            resourcePath: "credit-cards/terracotta-facet.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 197, green: 145, blue: 39),
-            fallbackHex: "#c59127",
-            scrim: .soft, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "credit-cards/pewter-facet",
-            name: "Pewter Facet",
-            category: .creditCards,
-            resourcePath: "credit-cards/pewter-facet.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 74, green: 75, blue: 79),
-            fallbackHex: "#4a4b4f",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "credit-cards/obsidian-facet",
-            name: "Obsidian Facet",
-            category: .creditCards,
-            resourcePath: "credit-cards/obsidian-facet.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 2, green: 2, blue: 2),
-            fallbackHex: "#020202",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "credit-cards/copper-prism",
-            name: "Copper Prism",
-            category: .creditCards,
-            resourcePath: "credit-cards/copper-prism.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 187, green: 139, blue: 39),
-            fallbackHex: "#bb8b27",
-            scrim: .soft, textMode: .auto, chip: true
         ),
         CardTemplate(
             id: "credit-cards/graphite-prism",
@@ -301,28 +251,8 @@ enum CardTemplates {
             category: .creditCards,
             resourcePath: "credit-cards/graphite-prism.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 75, green: 85, blue: 94),
-            fallbackHex: "#4b555e",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "credit-cards/rust-prism",
-            name: "Rust Prism",
-            category: .creditCards,
-            resourcePath: "credit-cards/rust-prism.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 176, green: 129, blue: 31),
-            fallbackHex: "#b0811f",
-            scrim: .soft, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "credit-cards/navy-facet",
-            name: "Navy Facet",
-            category: .creditCards,
-            resourcePath: "credit-cards/navy-facet.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 29, green: 47, blue: 69),
-            fallbackHex: "#1d2f45",
+            sample: RGBSample(red: 84, green: 90, blue: 94),
+            fallbackHex: "#545a5e",
             scrim: .off, textMode: .auto, chip: true
         ),
         CardTemplate(
@@ -331,49 +261,89 @@ enum CardTemplates {
             category: .creditCards,
             resourcePath: "credit-cards/jade-facet.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 205, green: 237, blue: 226),
-            fallbackHex: "#cdede2",
+            sample: RGBSample(red: 185, green: 194, blue: 190),
+            fallbackHex: "#b9c2be",
+            scrim: .strong, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "credit-cards/navy-facet",
+            name: "Navy Facet",
+            category: .creditCards,
+            resourcePath: "credit-cards/navy-facet.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 59, green: 70, blue: 99),
+            fallbackHex: "#3b4663",
             scrim: .off, textMode: .auto, chip: true
         ),
         CardTemplate(
-            id: "digital-banks/crimson-pulse",
-            name: "Crimson Pulse",
-            category: .digitalBanks,
-            resourcePath: "digital-banks/crimson-pulse.webp",
+            id: "credit-cards/obsidian-facet",
+            name: "Obsidian Facet",
+            category: .creditCards,
+            resourcePath: "credit-cards/obsidian-facet.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 133, green: 27, blue: 49),
-            fallbackHex: "#851b31",
-            scrim: .off, textMode: .auto, chip: false
+            sample: RGBSample(red: 49, green: 49, blue: 51),
+            fallbackHex: "#313133",
+            scrim: .off, textMode: .auto, chip: true
         ),
         CardTemplate(
-            id: "digital-banks/jade-pulse",
-            name: "Jade Pulse",
-            category: .digitalBanks,
-            resourcePath: "digital-banks/jade-pulse.webp",
+            id: "credit-cards/pewter-facet",
+            name: "Pewter Facet",
+            category: .creditCards,
+            resourcePath: "credit-cards/pewter-facet.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 80, green: 191, blue: 149),
-            fallbackHex: "#50bf95",
+            sample: RGBSample(red: 129, green: 134, blue: 139),
+            fallbackHex: "#81868b",
+            scrim: .soft, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "credit-cards/rust-facet",
+            name: "Rust Facet",
+            category: .creditCards,
+            resourcePath: "credit-cards/rust-facet.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 179, green: 90, blue: 49),
+            fallbackHex: "#b35a31",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "credit-cards/rust-prism",
+            name: "Rust Prism",
+            category: .creditCards,
+            resourcePath: "credit-cards/rust-prism.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 182, green: 96, blue: 43),
+            fallbackHex: "#b6602b",
+            scrim: .soft, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "credit-cards/slate-facet",
+            name: "Slate Facet",
+            category: .creditCards,
+            resourcePath: "credit-cards/slate-facet.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 119, green: 130, blue: 140),
+            fallbackHex: "#77828c",
+            scrim: .soft, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "credit-cards/terracotta-facet",
+            name: "Terracotta Facet",
+            category: .creditCards,
+            resourcePath: "credit-cards/terracotta-facet.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 187, green: 130, blue: 69),
+            fallbackHex: "#bb8245",
+            scrim: .soft, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "digital-banks/amber-pulse",
+            name: "Amber Pulse",
+            category: .digitalBanks,
+            resourcePath: "digital-banks/amber-pulse.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 187, green: 180, blue: 22),
+            fallbackHex: "#bbb416",
             scrim: .strong, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "digital-banks/obsidian-pulse",
-            name: "Obsidian Pulse",
-            category: .digitalBanks,
-            resourcePath: "digital-banks/obsidian-pulse.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 10, green: 11, blue: 13),
-            fallbackHex: "#0a0b0d",
-            scrim: .off, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "digital-banks/teal-pulse",
-            name: "Teal Pulse",
-            category: .digitalBanks,
-            resourcePath: "digital-banks/teal-pulse.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 79, green: 213, blue: 231),
-            fallbackHex: "#4fd5e7",
-            scrim: .off, textMode: .auto, chip: false
         ),
         CardTemplate(
             id: "digital-banks/copper-pulse",
@@ -381,28 +351,18 @@ enum CardTemplates {
             category: .digitalBanks,
             resourcePath: "digital-banks/copper-pulse.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 244, green: 126, blue: 43),
-            fallbackHex: "#f47e2b",
+            sample: RGBSample(red: 183, green: 129, blue: 43),
+            fallbackHex: "#b7812b",
             scrim: .soft, textMode: .auto, chip: false
         ),
         CardTemplate(
-            id: "digital-banks/onyx-pulse",
-            name: "Onyx Pulse",
+            id: "digital-banks/crimson-pulse",
+            name: "Crimson Pulse",
             category: .digitalBanks,
-            resourcePath: "digital-banks/onyx-pulse.webp",
+            resourcePath: "digital-banks/crimson-pulse.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 22, green: 26, blue: 29),
-            fallbackHex: "#161a1d",
-            scrim: .off, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "digital-banks/navy-pulse",
-            name: "Navy Pulse",
-            category: .digitalBanks,
-            resourcePath: "digital-banks/navy-pulse.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 0, green: 35, blue: 117),
-            fallbackHex: "#002375",
+            sample: RGBSample(red: 160, green: 33, blue: 54),
+            fallbackHex: "#a02136",
             scrim: .off, textMode: .auto, chip: false
         ),
         CardTemplate(
@@ -411,18 +371,8 @@ enum CardTemplates {
             category: .digitalBanks,
             resourcePath: "digital-banks/fern-pulse.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 119, green: 200, blue: 43),
-            fallbackHex: "#77c82b",
-            scrim: .strong, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "digital-banks/scarlet-pulse",
-            name: "Scarlet Pulse",
-            category: .digitalBanks,
-            resourcePath: "digital-banks/scarlet-pulse.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 246, green: 108, blue: 95),
-            fallbackHex: "#f66c5f",
+            sample: RGBSample(red: 64, green: 181, blue: 54),
+            fallbackHex: "#40b536",
             scrim: .soft, textMode: .auto, chip: false
         ),
         CardTemplate(
@@ -431,18 +381,18 @@ enum CardTemplates {
             category: .digitalBanks,
             resourcePath: "digital-banks/indigo-pulse.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 133, green: 68, blue: 239),
-            fallbackHex: "#8544ef",
+            sample: RGBSample(red: 117, green: 55, blue: 187),
+            fallbackHex: "#7537bb",
             scrim: .off, textMode: .auto, chip: false
         ),
         CardTemplate(
-            id: "digital-banks/violet-pulse",
-            name: "Violet Pulse",
+            id: "digital-banks/jade-pulse",
+            name: "Jade Pulse",
             category: .digitalBanks,
-            resourcePath: "digital-banks/violet-pulse.webp",
+            resourcePath: "digital-banks/jade-pulse.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 171, green: 150, blue: 233),
-            fallbackHex: "#ab96e9",
+            sample: RGBSample(red: 43, green: 178, blue: 129),
+            fallbackHex: "#2bb281",
             scrim: .soft, textMode: .auto, chip: false
         ),
         CardTemplate(
@@ -451,48 +401,68 @@ enum CardTemplates {
             category: .digitalBanks,
             resourcePath: "digital-banks/midnight-pulse.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 12, green: 8, blue: 14),
-            fallbackHex: "#0c080e",
+            sample: RGBSample(red: 32, green: 27, blue: 37),
+            fallbackHex: "#201b25",
             scrim: .off, textMode: .auto, chip: false
         ),
         CardTemplate(
-            id: "digital-banks/amber-pulse",
-            name: "Amber Pulse",
+            id: "digital-banks/navy-pulse",
+            name: "Navy Pulse",
             category: .digitalBanks,
-            resourcePath: "digital-banks/amber-pulse.webp",
+            resourcePath: "digital-banks/navy-pulse.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 244, green: 190, blue: 6),
-            fallbackHex: "#f4be06",
+            sample: RGBSample(red: 22, green: 44, blue: 150),
+            fallbackHex: "#162c96",
             scrim: .off, textMode: .auto, chip: false
         ),
         CardTemplate(
-            id: "e-wallets/copper-ripple",
-            name: "Copper Ripple",
-            category: .eWallets,
-            resourcePath: "e-wallets/copper-ripple.webp",
+            id: "digital-banks/obsidian-pulse",
+            name: "Obsidian Pulse",
+            category: .digitalBanks,
+            resourcePath: "digital-banks/obsidian-pulse.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 250, green: 126, blue: 55),
-            fallbackHex: "#fa7e37",
+            sample: RGBSample(red: 27, green: 27, blue: 30),
+            fallbackHex: "#1b1b1e",
+            scrim: .off, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "digital-banks/onyx-pulse",
+            name: "Onyx Pulse",
+            category: .digitalBanks,
+            resourcePath: "digital-banks/onyx-pulse.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 43, green: 43, blue: 45),
+            fallbackHex: "#2b2b2d",
+            scrim: .off, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "digital-banks/scarlet-pulse",
+            name: "Scarlet Pulse",
+            category: .digitalBanks,
+            resourcePath: "digital-banks/scarlet-pulse.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 186, green: 65, blue: 65),
+            fallbackHex: "#ba4141",
+            scrim: .off, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "digital-banks/teal-pulse",
+            name: "Teal Pulse",
+            category: .digitalBanks,
+            resourcePath: "digital-banks/teal-pulse.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 32, green: 181, blue: 184),
+            fallbackHex: "#20b5b8",
             scrim: .soft, textMode: .auto, chip: false
         ),
         CardTemplate(
-            id: "e-wallets/navy-ripple",
-            name: "Navy Ripple",
-            category: .eWallets,
-            resourcePath: "e-wallets/navy-ripple.webp",
+            id: "digital-banks/violet-pulse",
+            name: "Violet Pulse",
+            category: .digitalBanks,
+            resourcePath: "digital-banks/violet-pulse.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 15, green: 45, blue: 86),
-            fallbackHex: "#0f2d56",
-            scrim: .off, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "e-wallets/cobalt-ripple",
-            name: "Cobalt Ripple",
-            category: .eWallets,
-            resourcePath: "e-wallets/cobalt-ripple.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 49, green: 111, blue: 251),
-            fallbackHex: "#316ffb",
+            sample: RGBSample(red: 160, green: 108, blue: 188),
+            fallbackHex: "#a06cbc",
             scrim: .soft, textMode: .auto, chip: false
         ),
         CardTemplate(
@@ -501,38 +471,8 @@ enum CardTemplates {
             category: .eWallets,
             resourcePath: "e-wallets/azure-ripple.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 0, green: 36, blue: 155),
-            fallbackHex: "#00249b",
-            scrim: .off, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "e-wallets/jade-ripple",
-            name: "Jade Ripple",
-            category: .eWallets,
-            resourcePath: "e-wallets/jade-ripple.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 39, green: 209, blue: 99),
-            fallbackHex: "#27d163",
-            scrim: .strong, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "e-wallets/fern-ripple",
-            name: "Fern Ripple",
-            category: .eWallets,
-            resourcePath: "e-wallets/fern-ripple.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 25, green: 45, blue: 10),
-            fallbackHex: "#192d0a",
-            scrim: .off, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "e-wallets/plum-ripple",
-            name: "Plum Ripple",
-            category: .eWallets,
-            resourcePath: "e-wallets/plum-ripple.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 179, green: 12, blue: 75),
-            fallbackHex: "#b30c4b",
+            sample: RGBSample(red: 23, green: 67, blue: 185),
+            fallbackHex: "#1743b9",
             scrim: .off, textMode: .auto, chip: false
         ),
         CardTemplate(
@@ -541,9 +481,29 @@ enum CardTemplates {
             category: .eWallets,
             resourcePath: "e-wallets/cerulean-ripple.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 47, green: 175, blue: 251),
-            fallbackHex: "#2faffb",
-            scrim: .strong, textMode: .auto, chip: false
+            sample: RGBSample(red: 44, green: 178, blue: 191),
+            fallbackHex: "#2cb2bf",
+            scrim: .soft, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "e-wallets/cobalt-ripple",
+            name: "Cobalt Ripple",
+            category: .eWallets,
+            resourcePath: "e-wallets/cobalt-ripple.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 44, green: 110, blue: 191),
+            fallbackHex: "#2c6ebf",
+            scrim: .off, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "e-wallets/copper-ripple",
+            name: "Copper Ripple",
+            category: .eWallets,
+            resourcePath: "e-wallets/copper-ripple.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 187, green: 120, blue: 44),
+            fallbackHex: "#bb782c",
+            scrim: .soft, textMode: .auto, chip: false
         ),
         CardTemplate(
             id: "e-wallets/emerald-ripple",
@@ -551,18 +511,58 @@ enum CardTemplates {
             category: .eWallets,
             resourcePath: "e-wallets/emerald-ripple.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 14, green: 92, blue: 35),
-            fallbackHex: "#0e5c23",
+            sample: RGBSample(red: 34, green: 142, blue: 66),
+            fallbackHex: "#228e42",
+            scrim: .soft, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "e-wallets/fern-ripple",
+            name: "Fern Ripple",
+            category: .eWallets,
+            resourcePath: "e-wallets/fern-ripple.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 33, green: 99, blue: 45),
+            fallbackHex: "#21632d",
             scrim: .off, textMode: .auto, chip: false
         ),
         CardTemplate(
-            id: "e-wallets/sapphire-ripple",
-            name: "Sapphire Ripple",
+            id: "e-wallets/jade-orbit",
+            name: "Jade Orbit",
             category: .eWallets,
-            resourcePath: "e-wallets/sapphire-ripple.webp",
+            resourcePath: "e-wallets/jade-orbit.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 1, green: 48, blue: 143),
-            fallbackHex: "#01308f",
+            sample: RGBSample(red: 152, green: 187, blue: 33),
+            fallbackHex: "#98bb21",
+            scrim: .strong, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "e-wallets/jade-ripple",
+            name: "Jade Ripple",
+            category: .eWallets,
+            resourcePath: "e-wallets/jade-ripple.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 44, green: 184, blue: 98),
+            fallbackHex: "#2cb862",
+            scrim: .soft, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "e-wallets/navy-ripple",
+            name: "Navy Ripple",
+            category: .eWallets,
+            resourcePath: "e-wallets/navy-ripple.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 34, green: 56, blue: 109),
+            fallbackHex: "#22386d",
+            scrim: .off, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "e-wallets/plum-ripple",
+            name: "Plum Ripple",
+            category: .eWallets,
+            resourcePath: "e-wallets/plum-ripple.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 173, green: 34, blue: 109),
+            fallbackHex: "#ad226d",
             scrim: .off, textMode: .auto, chip: false
         ),
         CardTemplate(
@@ -571,88 +571,18 @@ enum CardTemplates {
             category: .eWallets,
             resourcePath: "e-wallets/rust-ripple.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 251, green: 94, blue: 7),
-            fallbackHex: "#fb5e07",
-            scrim: .soft, textMode: .auto, chip: false
+            sample: RGBSample(red: 189, green: 88, blue: 34),
+            fallbackHex: "#bd5822",
+            scrim: .off, textMode: .auto, chip: false
         ),
         CardTemplate(
-            id: "e-wallets/jade-orbit",
-            name: "Jade Orbit",
+            id: "e-wallets/sapphire-ripple",
+            name: "Sapphire Ripple",
             category: .eWallets,
-            resourcePath: "e-wallets/jade-orbit.webp",
+            resourcePath: "e-wallets/sapphire-ripple.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 169, green: 210, blue: 21),
-            fallbackHex: "#a9d215",
-            scrim: .strong, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "membership/jade-halo",
-            name: "Jade Halo",
-            category: .membership,
-            resourcePath: "membership/jade-halo.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 81, green: 162, blue: 35),
-            fallbackHex: "#51a223",
-            scrim: .soft, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "membership/obsidian-halo",
-            name: "Obsidian Halo",
-            category: .membership,
-            resourcePath: "membership/obsidian-halo.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 22, green: 19, blue: 15),
-            fallbackHex: "#16130f",
-            scrim: .off, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "membership/crimson-halo",
-            name: "Crimson Halo",
-            category: .membership,
-            resourcePath: "membership/crimson-halo.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 221, green: 11, blue: 20),
-            fallbackHex: "#dd0b14",
-            scrim: .off, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "membership/copper-halo",
-            name: "Copper Halo",
-            category: .membership,
-            resourcePath: "membership/copper-halo.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 70, green: 43, blue: 10),
-            fallbackHex: "#462b0a",
-            scrim: .off, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "membership/silver-halo",
-            name: "Silver Halo",
-            category: .membership,
-            resourcePath: "membership/silver-halo.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 244, green: 245, blue: 245),
-            fallbackHex: "#f4f5f5",
-            scrim: .off, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "membership/fern-halo",
-            name: "Fern Halo",
-            category: .membership,
-            resourcePath: "membership/fern-halo.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 5, green: 40, blue: 14),
-            fallbackHex: "#05280e",
-            scrim: .off, textMode: .auto, chip: false
-        ),
-        CardTemplate(
-            id: "membership/scarlet-halo",
-            name: "Scarlet Halo",
-            category: .membership,
-            resourcePath: "membership/scarlet-halo.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 184, green: 12, blue: 2),
-            fallbackHex: "#b80c02",
+            sample: RGBSample(red: 23, green: 78, blue: 179),
+            fallbackHex: "#174eb3",
             scrim: .off, textMode: .auto, chip: false
         ),
         CardTemplate(
@@ -661,9 +591,79 @@ enum CardTemplates {
             category: .membership,
             resourcePath: "membership/cobalt-halo.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 0, green: 63, blue: 168),
-            fallbackHex: "#003fa8",
+            sample: RGBSample(red: 32, green: 94, blue: 185),
+            fallbackHex: "#205eb9",
             scrim: .off, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "membership/copper-halo",
+            name: "Copper Halo",
+            category: .membership,
+            resourcePath: "membership/copper-halo.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 134, green: 84, blue: 42),
+            fallbackHex: "#86542a",
+            scrim: .off, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "membership/crimson-halo",
+            name: "Crimson Halo",
+            category: .membership,
+            resourcePath: "membership/crimson-halo.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 183, green: 43, blue: 47),
+            fallbackHex: "#b72b2f",
+            scrim: .off, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "membership/fern-halo",
+            name: "Fern Halo",
+            category: .membership,
+            resourcePath: "membership/fern-halo.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 37, green: 94, blue: 47),
+            fallbackHex: "#255e2f",
+            scrim: .off, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "membership/jade-halo",
+            name: "Jade Halo",
+            category: .membership,
+            resourcePath: "membership/jade-halo.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 73, green: 180, blue: 53),
+            fallbackHex: "#49b435",
+            scrim: .soft, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "membership/obsidian-halo",
+            name: "Obsidian Halo",
+            category: .membership,
+            resourcePath: "membership/obsidian-halo.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 47, green: 47, blue: 47),
+            fallbackHex: "#2f2f2f",
+            scrim: .off, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "membership/scarlet-halo",
+            name: "Scarlet Halo",
+            category: .membership,
+            resourcePath: "membership/scarlet-halo.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 185, green: 48, blue: 37),
+            fallbackHex: "#b93025",
+            scrim: .off, textMode: .auto, chip: false
+        ),
+        CardTemplate(
+            id: "membership/silver-halo",
+            name: "Silver Halo",
+            category: .membership,
+            resourcePath: "membership/silver-halo.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 187, green: 187, blue: 188),
+            fallbackHex: "#bbbbbc",
+            scrim: .strong, textMode: .auto, chip: false
         ),
         CardTemplate(
             id: "prepaid/amber-track",
@@ -671,19 +671,9 @@ enum CardTemplates {
             category: .prepaid,
             resourcePath: "prepaid/amber-track.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 235, green: 230, blue: 198),
-            fallbackHex: "#ebe6c6",
-            scrim: .off, textMode: .auto, chip: true
-        ),
-        CardTemplate(
-            id: "prepaid/navy-track",
-            name: "Navy Track",
-            category: .prepaid,
-            resourcePath: "prepaid/navy-track.webp",
-            focalX: 0, focalY: 0,
-            sample: RGBSample(red: 33, green: 37, blue: 87),
-            fallbackHex: "#212557",
-            scrim: .off, textMode: .auto, chip: true
+            sample: RGBSample(red: 191, green: 189, blue: 181),
+            fallbackHex: "#bfbdb5",
+            scrim: .strong, textMode: .auto, chip: true
         ),
         CardTemplate(
             id: "prepaid/cobalt-track",
@@ -691,8 +681,8 @@ enum CardTemplates {
             category: .prepaid,
             resourcePath: "prepaid/cobalt-track.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 58, green: 71, blue: 95),
-            fallbackHex: "#3a475f",
+            sample: RGBSample(red: 70, green: 92, blue: 123),
+            fallbackHex: "#465c7b",
             scrim: .off, textMode: .auto, chip: true
         ),
         CardTemplate(
@@ -701,8 +691,18 @@ enum CardTemplates {
             category: .prepaid,
             resourcePath: "prepaid/jade-track.webp",
             focalX: 0, focalY: 0,
-            sample: RGBSample(red: 1, green: 50, blue: 24),
-            fallbackHex: "#013218",
+            sample: RGBSample(red: 27, green: 92, blue: 59),
+            fallbackHex: "#1b5c3b",
+            scrim: .off, textMode: .auto, chip: true
+        ),
+        CardTemplate(
+            id: "prepaid/navy-track",
+            name: "Navy Track",
+            category: .prepaid,
+            resourcePath: "prepaid/navy-track.webp",
+            focalX: 0, focalY: 0,
+            sample: RGBSample(red: 53, green: 60, blue: 102),
+            fallbackHex: "#353c66",
             scrim: .off, textMode: .auto, chip: true
         )
     ]

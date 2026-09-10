@@ -227,6 +227,12 @@ final class WalletStore {
         showToast(snapshot.privacy ? "Balances hidden." : "Balances visible.")
     }
 
+    func toggleWidgetPrivacy() {
+        snapshot.widgetPrivacy.toggle()
+        persist()
+        FeedbackCenter.tap()
+    }
+
     func setHomeLayout(_ layout: HomeLayout) {
         snapshot.homeLayout = layout
         persist()
@@ -705,13 +711,6 @@ final class WalletStore {
         snapshot.userName = trimmed
         persist()
         FeedbackCenter.success()
-    }
-
-    func toggleLowBalanceNudge() {
-        snapshot.nudgeLowBalance.toggle()
-        persist()
-        FeedbackCenter.toggle(on: snapshot.nudgeLowBalance)
-        showToast(snapshot.nudgeLowBalance ? "Low balance nudges on." : "Low balance nudges off.")
     }
 
     func toggleDailyReminder() async {

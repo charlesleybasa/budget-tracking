@@ -23,9 +23,8 @@ Then open http://localhost:3000. Other scripts: `npm run typecheck`, `npm run li
 
 ## Stack
 
-TypeScript, Next.js 15 (App Router), React 19, CSS Modules. No state library, no UI kit, no
-runtime dependencies beyond React and Next — the card artwork is generated from CSS gradients
-and inline SVG rather than image assets.
+TypeScript, Next.js 16 (App Router), React 19, CSS Modules. No state library or UI kit.
+Three.js is loaded on demand for the web spend celebration.
 
 ## Layout
 
@@ -95,6 +94,18 @@ flag in global state, and press feedback on every control.
 
 Reduced motion removes movement, not meaning — spatial entrances become a fade and ambient
 loops stop, while the colour and opacity changes that confirm an action keep running.
+
+Logging a spend on the web shows a 3D Kuya Ipis with a golden segmented belly and green peso pendant.
+The model in `lib/mascot3d/model.ts` follows the supplied storyboard and close-up face reference:
+a long left antenna and short right curl, a compact body, smooth feet, round cheeks, brown irises,
+bright eye highlights, and an open pink-tongued smile.
+Opening the Spend sheet preloads the renderer. The 3.6-second timeline in `animation.ts` comes
+from the supplied `Pesolita celebration loop animation.zip`: anticipation, a two-arm jump,
+happy closed eyes, a coin/confetti burst, and a landing rebound. It plays once and returns to idle.
+`effects.ts` samples the burst deterministically so pausing and replaying keep the effects in sync.
+Reduce Motion shows a still pose, hidden tabs pause playback, and dismissing the success screen
+releases its GPU resources. A static mascot remains available while loading or if WebGL fails.
+Top-up, transfer, and native iOS celebrations continue to use their existing sprite artwork.
 
 ## The screens
 

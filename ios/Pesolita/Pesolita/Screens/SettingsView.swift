@@ -17,7 +17,7 @@ struct SettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.white.ignoresSafeArea()
+            Tokens.ink.ignoresSafeArea()
             VStack(spacing: 0) {
                 header
                 ScrollView {
@@ -34,16 +34,6 @@ struct SettingsView: View {
 
                         settingsGroup("Nudges") {
                             VStack(spacing: 0) {
-                                settingsRow(
-                                    title: "Low balance nudge",
-                                    subtitle: "When a card drops under ₱1,500",
-                                    symbol: "exclamationmark.triangle",
-                                    tint: Tokens.red,
-                                    iconBackground: Tokens.red.opacity(0.14),
-                                    isOn: store.snapshot.nudgeLowBalance,
-                                    action: store.toggleLowBalanceNudge
-                                )
-                                separator
                                 settingsRow(
                                     title: "Daily log reminder",
                                     subtitle: "A nudge at 9pm — needs notification permission",
@@ -83,12 +73,22 @@ struct SettingsView: View {
                             VStack(spacing: 0) {
                                 settingsRow(
                                     title: "Hide balances",
-                                    subtitle: "Blur every number on unlock",
+                                    subtitle: "Blur every number across the app and widget",
                                     symbol: "eye",
                                     tint: Tokens.ink,
                                     iconBackground: Tokens.ink.opacity(0.08),
                                     isOn: store.snapshot.privacy,
                                     action: store.togglePrivacy
+                                )
+                                separator
+                                settingsRow(
+                                    title: "Hide widget balances",
+                                    subtitle: "Blur numbers on your Home Screen widget only",
+                                    symbol: "eye.slash",
+                                    tint: Tokens.ink,
+                                    iconBackground: Tokens.ink.opacity(0.08),
+                                    isOn: store.snapshot.widgetPrivacy,
+                                    action: store.toggleWidgetPrivacy
                                 )
                                 separator
                                 settingsRow(title: "Back up wallet", subtitle: "Cards, history and settings as one file", symbol: "arrow.down", tint: Tokens.green, iconBackground: Tokens.green.opacity(0.12), identifier: "backup-wallet", action: exportBackup)
@@ -107,7 +107,55 @@ struct SettingsView: View {
                             }
                         }
 
-                        Text("Pesolita 1.0 · Your numbers never leave this device.")
+                        settingsGroup("About & help") {
+                            VStack(spacing: 0) {
+                                Link(destination: URL(string: "https://pesolita.vercel.app/privacy")!) {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: "hand.raised.fill")
+                                            .font(.system(size: 15, weight: .semibold))
+                                            .foregroundStyle(Tokens.blue)
+                                            .frame(width: 32, height: 32)
+                                            .background(Tokens.blue.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                        Text("Privacy Policy")
+                                            .font(AppFont.outfit(13.5, weight: .semibold, relativeTo: .subheadline))
+                                            .foregroundStyle(Tokens.ink)
+                                        Spacer()
+                                        Image(systemName: "arrow.up.right")
+                                            .font(.system(size: 11, weight: .semibold))
+                                            .foregroundStyle(Tokens.muted3)
+                                    }
+                                    .padding(.horizontal, 15)
+                                    .padding(.vertical, 14)
+                                    .contentShape(Rectangle())
+                                }
+                                .buttonStyle(PesolitaPressStyle())
+                                
+                                separator
+                                
+                                Link(destination: URL(string: "https://pesolita.vercel.app/support")!) {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: "questionmark.circle.fill")
+                                            .font(.system(size: 15, weight: .semibold))
+                                            .foregroundStyle(Tokens.green)
+                                            .frame(width: 32, height: 32)
+                                            .background(Tokens.green.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                        Text("Support")
+                                            .font(AppFont.outfit(13.5, weight: .semibold, relativeTo: .subheadline))
+                                            .foregroundStyle(Tokens.ink)
+                                        Spacer()
+                                        Image(systemName: "arrow.up.right")
+                                            .font(.system(size: 11, weight: .semibold))
+                                            .foregroundStyle(Tokens.muted3)
+                                    }
+                                    .padding(.horizontal, 15)
+                                    .padding(.vertical, 14)
+                                    .contentShape(Rectangle())
+                                }
+                                .buttonStyle(PesolitaPressStyle())
+                            }
+                        }
+
+                        Text("Pesolita 1.0 · Data is stored on device unless you export it.")
                             .font(AppFont.outfit(11.5, relativeTo: .caption))
                             .foregroundStyle(Tokens.muted3)
                             .multilineTextAlignment(.center)

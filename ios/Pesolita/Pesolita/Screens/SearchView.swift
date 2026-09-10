@@ -12,7 +12,7 @@ struct SearchView: View {
 
     var body: some View {
         ZStack {
-            Color.white.ignoresSafeArea()
+            Tokens.ink.ignoresSafeArea()
             VStack(spacing: 0) {
                 searchHeader
                 ScrollView {
@@ -70,6 +70,7 @@ struct SearchView: View {
                     .padding(.top, 19)
                     .padding(.bottom, 112)
                 }
+                .background(.white)
                 .scrollDismissesKeyboard(.interactively)
                 .scrollIndicators(.hidden)
             }

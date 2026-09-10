@@ -191,10 +191,10 @@ final class PesolitaUITests: XCTestCase {
     }
 
     private func capture(_ name: String) {
-        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
-        attachment.name = name
-        attachment.lifetime = .keepAlways
-        add(attachment)
+        let image = XCUIScreen.main.screenshot().image
+        let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(name).png")
+        try? image.pngData()?.write(to: url)
+        print("WROTE_SCREENSHOT_TO: \(url.path)")
     }
 
     private func settleTransition() {

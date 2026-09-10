@@ -1,0 +1,42 @@
+.stage {
+  position: relative;
+  width: clamp(200px, 34vh, 280px);
+  height: clamp(240px, 41vh, 336px);
+  max-width: 100%;
+  pointer-events: none;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* A held fallback is also the loading pose, so it never starts a second animation. */
+.fallback svg * {
+  animation: none !important;
+}
+
+@media (max-height: 560px) {
+  .stage {
+    width: 148px;
+    height: 178px;
+  }
+
+  .fallback {
+    transform: scale(0.7);
+  }
+}

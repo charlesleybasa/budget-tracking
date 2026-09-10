@@ -23,7 +23,7 @@ struct WidgetWalletPayload: Codable, Equatable, Sendable {
         version: 1,
         cards: [
             WidgetCardPayload(
-                id: "preview-bdo",
+                id: "preview-bank",
                 name: "BDO Debit",
                 kind: "ATM / Debit",
                 balance: 8_425.50,
@@ -54,14 +54,14 @@ struct WidgetWalletPayload: Codable, Equatable, Sendable {
         transactions: [
             WidgetTransactionPayload(
                 id: "preview-transaction",
-                cardID: "preview-bdo",
+                cardID: "preview-bank",
                 merchant: "Jollibee",
                 category: "Food",
                 amount: -245,
                 timestamp: Date().addingTimeInterval(-3_600).timeIntervalSince1970 * 1_000
             )
         ],
-        activeCardID: "preview-bdo",
+        activeCardID: "preview-bank",
         totalBalance: 9_185.50,
         privacyEnabled: false,
         updatedAt: Date().timeIntervalSince1970
@@ -97,6 +97,18 @@ enum WidgetSharedStore {
     static let payloadKey = "pesolita.widget.wallet.v1"
     static let selectedCardKey = "pesolita.widget.selected-card"
     static let widgetKind = "PesolitaPocketWidget"
+    static let privacyOverrideKey = "pesolita.widget.privacy-override"
+
+    static func getPrivacyOverride() -> Bool? {
+        if defaults.object(forKey: privacyOverrideKey) != nil {
+            return defaults.bool(forKey: privacyOverrideKey)
+        }
+        return nil
+    }
+
+    static func togglePrivacyOverride(currentPrivacy: Bool) {
+        defaults.set(!currentPrivacy, forKey: privacyOverrideKey)
+    }
 
     static func loadPayload() -> WidgetWalletPayload {
         guard let data = defaults.data(forKey: payloadKey),

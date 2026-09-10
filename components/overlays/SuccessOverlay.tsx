@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 
+import { CelebrationMascot3D } from "@/components/CelebrationMascot3D";
 import { Mascot } from "@/components/Mascot";
 import { SpriteAnimation } from "@/components/SpriteAnimation";
 import { CELEBRATE } from "@/lib/sprites";
@@ -42,18 +43,28 @@ function Confetti() {
 export function SuccessOverlay() {
   const { state, actions } = useWallet();
   if (!state.success) return null;
+  const isSpend = state.success.kind === "logged";
 
   return (
-    <div className={styles.screen} role="dialog" aria-modal="true" aria-label={state.success.head}>
-      <Confetti />
+    <div
+      className={`${styles.screen} ${isSpend ? styles.with3D : ""}`}
+      role="dialog"
+      aria-modal="true"
+      aria-label={state.success.head}
+    >
+      {!isSpend && <Confetti />}
       <div className={styles.art}>
         <span className={styles.spotlight} aria-hidden="true" />
-        <SpriteAnimation
-          sheet={CELEBRATE}
-          size={168}
-          className={styles.mascot}
-          fallback={<Mascot mood="cheer" size={168} />}
-        />
+        {isSpend ? (
+          <CelebrationMascot3D />
+        ) : (
+          <SpriteAnimation
+            sheet={CELEBRATE}
+            size={168}
+            className={styles.mascot}
+            fallback={<Mascot mood="cheer" size={168} />}
+          />
+        )}
       </div>
 
       <div className={`${styles.copy} ${styles.copyWithArt}`}>

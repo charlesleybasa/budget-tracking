@@ -1,5 +1,6 @@
 import Foundation
 
+#if DEBUG
 extension WalletSnapshot {
     static var simulatorDemo: WalletSnapshot {
         let everyday = Card(
@@ -51,7 +52,6 @@ extension WalletSnapshot {
         value.activeId = everyday.id
         value.userName = "Rli"
         value.onboarded = true
-        value.nudgeLowBalance = false
         value.nudgeDailyLog = false
         return value
     }
@@ -88,3 +88,4 @@ extension WalletSnapshot {
         return value
     }
 }
+#endif

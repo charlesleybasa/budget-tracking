@@ -53,7 +53,8 @@ function slugify(value) {
 
 function displayName(filename) {
   return filename
-    .replace(/_background\.webp$/i, "")
+    .replace(/\.webp$/i, "")
+    .replace(/_background$/i, "")
     .split("_")
     .map((part) => nameReplacements.get(part) ?? part)
     .join(" ");

@@ -73,7 +73,6 @@ struct PersistenceTests {
         let restored = try await BackupCodec.restore(data, media: media)
         #expect(restored.cards.isEmpty)
         #expect(restored.homeLayout == .deck)
-        #expect(restored.nudgeLowBalance)
         #expect(restored.nudgeDailyLog)
         #expect(restored.haptics)
         #expect(restored.sfx)

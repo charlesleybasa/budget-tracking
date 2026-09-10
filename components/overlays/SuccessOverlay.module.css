@@ -49,6 +49,24 @@
   position: relative;
 }
 
+.with3D {
+  padding-top: 24px;
+  padding-bottom: 120px;
+}
+
+.with3D .art {
+  animation: none;
+}
+
+.with3D .spotlight {
+  width: 260px;
+  height: 260px;
+}
+
+.with3D .copyWithArt {
+  margin-top: 8px;
+}
+
 .copy {
   max-width: 360px;
   text-align: center;
@@ -130,5 +148,44 @@
   .piece,
   .art {
     animation: none;
+  }
+
+  .confetti {
+    display: none;
+  }
+}
+
+@media (max-height: 560px) {
+  .with3D {
+    padding-top: 12px;
+    padding-bottom: 84px;
+  }
+
+  .with3D .footer {
+    bottom: 16px;
+  }
+
+  .with3D .head {
+    font-size: 23px;
+  }
+
+  .with3D .body {
+    margin-top: 6px;
+  }
+}
+
+@media (max-height: 400px) {
+  .with3D {
+    display: grid;
+    grid-template-columns: 148px minmax(0, 260px);
+    gap: 16px;
+    align-content: center;
+    justify-content: center;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .with3D .copyWithArt {
+    margin-top: 0;
   }
 }

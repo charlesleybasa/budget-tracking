@@ -10,7 +10,7 @@ struct InsightsView: View {
 
     var body: some View {
         ZStack {
-            Color.white.ignoresSafeArea()
+            Tokens.ink.ignoresSafeArea()
             VStack(spacing: 0) {
                 header
                 ScrollView {
@@ -42,6 +42,7 @@ struct InsightsView: View {
                     .padding(.top, 20)
                     .padding(.bottom, 112)
                 }
+                .background(.white)
                 .scrollIndicators(.hidden)
             }
         }

@@ -1,0 +1,2979 @@
+{
+  "_type" : {
+    "_name" : "ActionTestPlanRunSummaries"
+  },
+  "summaries" : {
+    "_type" : {
+      "_name" : "Array"
+    },
+    "_values" : [
+      {
+        "_type" : {
+          "_name" : "ActionTestPlanRunSummary",
+          "_supertype" : {
+            "_name" : "ActionAbstractTestSummary"
+          }
+        },
+        "name" : {
+          "_type" : {
+            "_name" : "String"
+          },
+          "_value" : "Test Scheme Action"
+        },
+        "testableSummaries" : {
+          "_type" : {
+            "_name" : "Array"
+          },
+          "_values" : [
+            {
+              "_type" : {
+                "_name" : "ActionTestableSummary",
+                "_supertype" : {
+                  "_name" : "ActionAbstractTestSummary"
+                }
+              },
+              "diagnosticsDirectoryName" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : ""
+              },
+              "identifierURL" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests"
+              },
+              "name" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "PesolitaTests"
+              },
+              "projectRelativePath" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "Pesolita.xcodeproj"
+              },
+              "targetName" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "PesolitaTests"
+              },
+              "testKind" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "app hosted"
+              },
+              "testLanguage" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : ""
+              },
+              "testRegion" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : ""
+              },
+              "tests" : {
+                "_type" : {
+                  "_name" : "Array"
+                },
+                "_values" : [
+                  {
+                    "_type" : {
+                      "_name" : "ActionTestSummaryGroup",
+                      "_supertype" : {
+                        "_name" : "ActionTestSummaryIdentifiableObject",
+                        "_supertype" : {
+                          "_name" : "ActionAbstractTestSummary"
+                        }
+                      }
+                    },
+                    "duration" : {
+                      "_type" : {
+                        "_name" : "Double"
+                      },
+                      "_value" : "0.2597177028656006"
+                    },
+                    "identifier" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "WalletStoreTests"
+                    },
+                    "identifierURL" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests"
+                    },
+                    "name" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "WalletStoreTests"
+                    },
+                    "subtests" : {
+                      "_type" : {
+                        "_name" : "Array"
+                      },
+                      "_values" : [
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.0008389949798583984"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/allTemplateIDsAreUniqueAndComplete()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/allTemplateIDsAreUniqueAndComplete()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "allTemplateIDsAreUniqueAndComplete()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~0-YfpMe1073MU8u1vlBQNb723daU3gLRQYyW68SU5ApmNxLkhLs0TD3VzrwqrD1KiW5S2wyfuqSOQUQ9fx93ig=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.02547001838684082"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/onboardingCreatesTheChosenTemplateCard()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/onboardingCreatesTheChosenTemplateCard()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "onboardingCreatesTheChosenTemplateCard()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~qHt3gz_-vjUIfVxJS3HRWHGwIV30bDE2ugORdcVwJggyC5NXOmyf4wJnNOyMXqQZdfVpHET_w6Sd7E-ohGtw7g=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.03156089782714844"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/spendingExactlyTheBalanceIsAllowed()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/spendingExactlyTheBalanceIsAllowed()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "spendingExactlyTheBalanceIsAllowed()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~clOfU2vyzJNf8gYCOPiX8TUnoCWkIEVvI_ngE1r5Dvcw5F6KwWe7_wkgw0gi_pE0ezguC0WCJJKxRU_h5ktJMg=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.021034955978393555"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/overspendingAndFrozenCardsAreRejected()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/overspendingAndFrozenCardsAreRejected()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "overspendingAndFrozenCardsAreRejected()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~IKgxTitlHIETCbV5dr6sH8VjQ5sSFgeYoowCCEs8vuix94CTKygOPhviI-q8fU6gxv_Dub-67Lv4fqcfV4CU_Q=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.021184921264648438"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/topUpAddsMoneyAndAPositiveTransaction()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/topUpAddsMoneyAndAPositiveTransaction()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "topUpAddsMoneyAndAPositiveTransaction()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~3Oi6agT6UBgz0pb3FuX30fSHP4aRMOSqXMD6vEFo69GqxMZMbeH60zlgDVJIozWbrftEnY9Y3HBtuzoLb_hEvw=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.021322011947631836"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/transferConservesTotalAndRecordsDestination()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/transferConservesTotalAndRecordsDestination()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "transferConservesTotalAndRecordsDestination()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~-4jRi5cZlDLHmIKqwPGu6_euQvVIs01uyWmhzCf7kRmZmD7c4-qhkI6pH8Osf_sClpPfyjNIrkNMdpBJLSmgvg=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.04276895523071289"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/changingBundledTemplateUpdatesTheFollowedName()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/changingBundledTemplateUpdatesTheFollowedName()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "changingBundledTemplateUpdatesTheFollowedName()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~9hw7K6u1B8zX0q_Evo0YNecZiXNS0YM0RCKC1F5NkSis9TCdsqOfJylObplCf_hN17Z6Y-c6Fa9yvEYTeIbjNA=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.021178007125854492"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/deletingCardAlsoDeletesItsActivity()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/deletingCardAlsoDeletesItsActivity()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "deletingCardAlsoDeletesItsActivity()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~sBsqiowszFTlYLGj0xe3PzbO5y-u2Hfc_FBqDxxVGJuWHzphHEQllTaxQ2gQfaA95j3mxELEDWgy1T4cYrH-UQ=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.03216814994812012"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/editingAndDeletingSpendKeepsBalanceCorrect()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/editingAndDeletingSpendKeepsBalanceCorrect()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "editingAndDeletingSpendKeepsBalanceCorrect()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~icD1HRcux1SwmPLGQzylihJAEeS66jn7yZTn_WNVhkb-7q57ZqDFD-dtmu4yTXVeDqtMF1yNvmLY5YbPV-cVKQ=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.0003788471221923828"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/searchMatchesDirectionCategoryAndNote()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/searchMatchesDirectionCategoryAndNote()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "searchMatchesDirectionCategoryAndNote()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~02ltP97JQsgb7jcOwSthmydeUBhkMQMBqqKX4B-bWVrEZNzju9q1vNvx2Ihzl6LAZ7yWMqVoh9HSA4gCR1XdrA=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.003606081008911133"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/restoringBackupReplacesWalletAndReturnsHome()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/restoringBackupReplacesWalletAndReturnsHome()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "restoringBackupReplacesWalletAndReturnsHome()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~lj6tFajz_6F6Ps1FwM4uy47TtCqOH83dmgWW05cMxeBf4F0JMWG1uhdHg4CSegAocBmuKqi8bGHTWZlSsKT7rA=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.005692005157470703"
+                          },
+                          "failureSummariesCount" : {
+                            "_type" : {
+                              "_name" : "Int"
+                            },
+                            "_value" : "1"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/widgetPayloadKeepsCardArtPrivacyAndRecentActivity()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/widgetPayloadKeepsCardArtPrivacyAndRecentActivity()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "widgetPayloadKeepsCardArtPrivacyAndRecentActivity()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~0ollD0XUt2Q0Se7_X4Vm3TZF-EGqFlyCrbB4R76g3uNhzYY8xKkBs_R8kzzMZuR3wzv68bi0eG1JaSfQ1W3xtQ=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Failure"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.03251385688781738"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "WalletStoreTests\/widgetDeepLinksOpenTheRequestedCardAndMoneyFlow()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/WalletStoreTests\/widgetDeepLinksOpenTheRequestedCardAndMoneyFlow()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "widgetDeepLinksOpenTheRequestedCardAndMoneyFlow()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~JIMZmTwgljvQSV0d3HXUB16TEcn2OTCaWNrrU8JrzbUySZSlgZRgRf0UtckVkAua444o2WMsTpnJUfcliPbClA=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "_type" : {
+                      "_name" : "ActionTestSummaryGroup",
+                      "_supertype" : {
+                        "_name" : "ActionTestSummaryIdentifiableObject",
+                        "_supertype" : {
+                          "_name" : "ActionAbstractTestSummary"
+                        }
+                      }
+                    },
+                    "duration" : {
+                      "_type" : {
+                        "_name" : "Double"
+                      },
+                      "_value" : "0.03360414505004883"
+                    },
+                    "identifier" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "PersistenceTests"
+                    },
+                    "identifierURL" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/PersistenceTests"
+                    },
+                    "name" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "PersistenceTests"
+                    },
+                    "subtests" : {
+                      "_type" : {
+                        "_name" : "Array"
+                      },
+                      "_values" : [
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.005691051483154297"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "PersistenceTests\/webBackupRoundTripsTemplateCards()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/PersistenceTests\/webBackupRoundTripsTemplateCards()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "webBackupRoundTripsTemplateCards()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~_CG02Gx2JxPXZc1fp5yT0R3GdGlolfHooAwheFMuPteGmrAG65-UrRwUfqwKDnDrrk0oU966mURKji8ruab91A=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.004923105239868164"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "PersistenceTests\/repositoryRoundTripsAtomically()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/PersistenceTests\/repositoryRoundTripsAtomically()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "repositoryRoundTripsAtomically()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~0JhxkSZFKuGu4U2rqKWbB7cnHm7XqXsf_m7qy-JmNyVif1f36F3zAKvRrEpSzZ1bBRYpZB_sgSUU5mcFZyLlvA=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.0038208961486816406"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "PersistenceTests\/feedbackPreferencesRoundTripAndDefaultForOlderWallets()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/PersistenceTests\/feedbackPreferencesRoundTripAndDefaultForOlderWallets()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "feedbackPreferencesRoundTripAndDefaultForOlderWallets()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~DnjYjeXWiw7_ASB7_SAURajFteQb78npUuRMp_MFtrpC6CqgghxL1IqlSiMujCOepeLSYZJQ7e-ZSPqMsyNmHA=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.019169092178344727"
+                          },
+                          "failureSummariesCount" : {
+                            "_type" : {
+                              "_name" : "Int"
+                            },
+                            "_value" : "1"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "PersistenceTests\/restoreAcceptsOlderWebBackupWithoutOptionalPreferences()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/PersistenceTests\/restoreAcceptsOlderWebBackupWithoutOptionalPreferences()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "restoreAcceptsOlderWebBackupWithoutOptionalPreferences()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~J7VW4J7oUh83zntVSuQdq7AgpUo5gbEBbt5ZQY5W5-IStMJFO0oslV30zdwZDNddgViNRNfdE6M76eflfuRTwA=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Failure"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "_type" : {
+                      "_name" : "ActionTestSummaryGroup",
+                      "_supertype" : {
+                        "_name" : "ActionTestSummaryIdentifiableObject",
+                        "_supertype" : {
+                          "_name" : "ActionAbstractTestSummary"
+                        }
+                      }
+                    },
+                    "duration" : {
+                      "_type" : {
+                        "_name" : "Double"
+                      },
+                      "_value" : "0.005206108093261719"
+                    },
+                    "identifier" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "MoneyFormatTests"
+                    },
+                    "identifierURL" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/MoneyFormatTests"
+                    },
+                    "name" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "MoneyFormatTests"
+                    },
+                    "subtests" : {
+                      "_type" : {
+                        "_name" : "Array"
+                      },
+                      "_values" : [
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.0005300045013427734"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "MoneyFormatTests\/ungroupedStripsAnythingThatIsNotANumber()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/MoneyFormatTests\/ungroupedStripsAnythingThatIsNotANumber()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "ungroupedStripsAnythingThatIsNotANumber()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~bXK5qj-gCqmcGp167cpNFOyrAO64FS9WdHlaxDp6X12iQtS6Z1qjlb4WzvDuzIQS-sSFB6I4meyM9d1WRstW9Q=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.0006871223449707031"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "MoneyFormatTests\/groupsThousandsAndAbove()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/MoneyFormatTests\/groupsThousandsAndAbove()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "groupsThousandsAndAbove()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~6AIa0_ALXaRk1zhoryjTmNhi4PUOU2BaPaoPh9dtW4Gyt14T4jSErIgoF1-uf2yuPDVLJAK_dKEXTJMJfGXpfQ=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.0009310245513916016"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "MoneyFormatTests\/capsCentavosAtTwoPlaces()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/MoneyFormatTests\/capsCentavosAtTwoPlaces()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "capsCentavosAtTwoPlaces()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~N1Wdr2k4eAonK2l-UshbYxeZq7TNmSYv13OFJJ_cLdlDI-aB281VXTXP_gFyVVzSwshbkzQr-REm_BqTUji7Ng=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.0006439685821533203"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "MoneyFormatTests\/survivesPartiallyTypedDecimals()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/MoneyFormatTests\/survivesPartiallyTypedDecimals()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "survivesPartiallyTypedDecimals()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~N465_3XovspkRYAzOwe82liCjPq3GiOtS6HUEAlrr4NEVW3uGiQ6VSHzCdeXaEnnozpQarUPdDNpQ0BjVPSX7Q=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.0007231235504150391"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "MoneyFormatTests\/leavesShortNumbersAlone()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/MoneyFormatTests\/leavesShortNumbersAlone()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "leavesShortNumbersAlone()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~2dAg7-KX3RnbRBGYcRVDebZfxibwIaG90kB1u52i-y5LDE4bXX1oXIf7KCn9E2V9HTkrU2PaLlzvqu2MbiLjqA=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "0.0016908645629882812"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "MoneyFormatTests\/ungroupedRoundTripsBackToAParsableNumber()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaTests\/MoneyFormatTests\/ungroupedRoundTripsBackToAParsableNumber()"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "ungroupedRoundTripsBackToAParsableNumber()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~t9xF7gg8dRdyZhShmubMloCBdI4JEd0BWqKOpASAw6cSW5lHGvoLNfzlKqaFms61LWN1UfNkrka7QtHHgUwOVg=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "_type" : {
+                "_name" : "ActionTestableSummary",
+                "_supertype" : {
+                  "_name" : "ActionAbstractTestSummary"
+                }
+              },
+              "diagnosticsDirectoryName" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : ""
+              },
+              "identifierURL" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaUITests"
+              },
+              "name" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "PesolitaUITests"
+              },
+              "projectRelativePath" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "Pesolita.xcodeproj"
+              },
+              "targetName" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "PesolitaUITests"
+              },
+              "testKind" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "UI"
+              },
+              "testLanguage" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : ""
+              },
+              "testRegion" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : ""
+              },
+              "tests" : {
+                "_type" : {
+                  "_name" : "Array"
+                },
+                "_values" : [
+                  {
+                    "_type" : {
+                      "_name" : "ActionTestSummaryGroup",
+                      "_supertype" : {
+                        "_name" : "ActionTestSummaryIdentifiableObject",
+                        "_supertype" : {
+                          "_name" : "ActionAbstractTestSummary"
+                        }
+                      }
+                    },
+                    "duration" : {
+                      "_type" : {
+                        "_name" : "Double"
+                      },
+                      "_value" : "125.94002091884613"
+                    },
+                    "identifier" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "PesolitaUITests"
+                    },
+                    "identifierURL" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaUITests\/PesolitaUITests"
+                    },
+                    "name" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "PesolitaUITests"
+                    },
+                    "subtests" : {
+                      "_type" : {
+                        "_name" : "Array"
+                      },
+                      "_values" : [
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "activitySummariesCount" : {
+                            "_type" : {
+                              "_name" : "Int"
+                            },
+                            "_value" : "34"
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "24.77694308757782"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "PesolitaUITests\/testBackupAndRestoreEntryPointsSurviveTheSystemPicker()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaUITests\/PesolitaUITests\/testBackupAndRestoreEntryPointsSurviveTheSystemPicker"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "testBackupAndRestoreEntryPointsSurviveTheSystemPicker()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~0FTTVcMpzWepYYJUQ_wTnwqW6qBpq7LIAlgVMnZalCoQ9ZBUWWPe-ZEoJUM7st1mfqWtkq7NGjhCOzbUveJYsA=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "activitySummariesCount" : {
+                            "_type" : {
+                              "_name" : "Int"
+                            },
+                            "_value" : "23"
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "34.56392991542816"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "PesolitaUITests\/testCompletedAppSurfacesAreReachable()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaUITests\/PesolitaUITests\/testCompletedAppSurfacesAreReachable"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "testCompletedAppSurfacesAreReachable()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~7uTK-l9cAqSLBTmXqa-5fPp52v4Xwengv-lSeBpDakjUowRCZwKeu3rQ3V_On9_-Zm6bOktj6YLUpYvcZZuQ7w=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "activitySummariesCount" : {
+                            "_type" : {
+                              "_name" : "Int"
+                            },
+                            "_value" : "35"
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "23.331514954566956"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "PesolitaUITests\/testCoreMoneyJourney()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaUITests\/PesolitaUITests\/testCoreMoneyJourney"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "testCoreMoneyJourney()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~uN6jlaew_6dlIJgM2-0I4j4UBCmdIZjm7fRKCD_76ZJ-xNklBeQQDSIPFkgR4BJr_-wt8iLPADh5NCW2JBho8A=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "activitySummariesCount" : {
+                            "_type" : {
+                              "_name" : "Int"
+                            },
+                            "_value" : "17"
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "12.525660991668701"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "PesolitaUITests\/testKeypadAmountsGroupThousands()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaUITests\/PesolitaUITests\/testKeypadAmountsGroupThousands"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "testKeypadAmountsGroupThousands()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~_evDQhrAEH0PQtHgSm630TcaTPbU9aVnSu0e5wl8wXZJeGjFmp--_5iMMLPHhIow7l80aK8Gm_KDjnWcasVVxQ=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "activitySummariesCount" : {
+                            "_type" : {
+                              "_name" : "Int"
+                            },
+                            "_value" : "32"
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "30.741971969604492"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "PesolitaUITests\/testTransactionCardChangingMatchesWebFlow()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaUITests\/PesolitaUITests\/testTransactionCardChangingMatchesWebFlow"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "testTransactionCardChangingMatchesWebFlow()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~vtvro1N3u_L5F-cZWihEEpRcFtOluaLodzfPT9XDxUq5zU0vySlR0wSj433mVS00Nya4dG60YCbiyCPW7JqvgA=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "_type" : {
+                      "_name" : "ActionTestSummaryGroup",
+                      "_supertype" : {
+                        "_name" : "ActionTestSummaryIdentifiableObject",
+                        "_supertype" : {
+                          "_name" : "ActionAbstractTestSummary"
+                        }
+                      }
+                    },
+                    "duration" : {
+                      "_type" : {
+                        "_name" : "Double"
+                      },
+                      "_value" : "21.133994102478027"
+                    },
+                    "identifier" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "StoreShotTests"
+                    },
+                    "identifierURL" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaUITests\/StoreShotTests"
+                    },
+                    "name" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "StoreShotTests"
+                    },
+                    "subtests" : {
+                      "_type" : {
+                        "_name" : "Array"
+                      },
+                      "_values" : [
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "activitySummariesCount" : {
+                            "_type" : {
+                              "_name" : "Int"
+                            },
+                            "_value" : "6"
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "6.545077085494995"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "StoreShotTests\/testCaptureStackedWallet()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaUITests\/StoreShotTests\/testCaptureStackedWallet"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "testCaptureStackedWallet()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~T79diygCbspFKi6SzG_9IqIcOiMPwbLh8S4SjyVWqo2Kz1Ni2r8L-jM6ewd-WeK6idaAxhQfD64zP2Bq2YkAlQ=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Success"
+                          }
+                        },
+                        {
+                          "_type" : {
+                            "_name" : "ActionTestMetadata",
+                            "_supertype" : {
+                              "_name" : "ActionTestSummaryIdentifiableObject",
+                              "_supertype" : {
+                                "_name" : "ActionAbstractTestSummary"
+                              }
+                            }
+                          },
+                          "activitySummariesCount" : {
+                            "_type" : {
+                              "_name" : "Int"
+                            },
+                            "_value" : "7"
+                          },
+                          "duration" : {
+                            "_type" : {
+                              "_name" : "Double"
+                            },
+                            "_value" : "14.588917016983032"
+                          },
+                          "failureSummariesCount" : {
+                            "_type" : {
+                              "_name" : "Int"
+                            },
+                            "_value" : "1"
+                          },
+                          "identifier" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "StoreShotTests\/testCaptureWidgetOnHomeScreen()"
+                          },
+                          "identifierURL" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "test:\/\/com.apple.xcode\/Pesolita\/PesolitaUITests\/StoreShotTests\/testCaptureWidgetOnHomeScreen"
+                          },
+                          "name" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "testCaptureWidgetOnHomeScreen()"
+                          },
+                          "summaryRef" : {
+                            "_type" : {
+                              "_name" : "Reference"
+                            },
+                            "id" : {
+                              "_type" : {
+                                "_name" : "String"
+                              },
+                              "_value" : "0~duXjxUuazB4Ym9BWcAjAiWsqpOYEheyfjhzyydyDp9Dm3Aw8HXwhVmFaPOKrnE4YxUpuO1GUAChQJ8WnvRFHXQ=="
+                            },
+                            "targetType" : {
+                              "_type" : {
+                                "_name" : "TypeDefinition"
+                              },
+                              "name" : {
+                                "_type" : {
+                                  "_name" : "String"
+                                },
+                                "_value" : "ActionTestSummary"
+                              },
+                              "supertype" : {
+                                "_type" : {
+                                  "_name" : "TypeDefinition"
+                                },
+                                "name" : {
+                                  "_type" : {
+                                    "_name" : "String"
+                                  },
+                                  "_value" : "ActionTestSummaryIdentifiableObject"
+                                },
+                                "supertype" : {
+                                  "_type" : {
+                                    "_name" : "TypeDefinition"
+                                  },
+                                  "name" : {
+                                    "_type" : {
+                                      "_name" : "String"
+                                    },
+                                    "_value" : "ActionAbstractTestSummary"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "testStatus" : {
+                            "_type" : {
+                              "_name" : "String"
+                            },
+                            "_value" : "Failure"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

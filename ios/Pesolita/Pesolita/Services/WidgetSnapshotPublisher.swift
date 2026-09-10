@@ -46,7 +46,7 @@ struct WidgetWalletPayload: Codable, Equatable, Sendable {
             }
         activeCardID = snapshot.activeId
         totalBalance = snapshot.cards.reduce(0) { $0 + $1.bal }
-        privacyEnabled = snapshot.privacy
+        privacyEnabled = snapshot.privacy || snapshot.widgetPrivacy
         updatedAt = now.timeIntervalSince1970
     }
 }
@@ -86,6 +86,7 @@ enum WidgetSnapshotPublisher {
               let data = try? JSONEncoder().encode(WidgetWalletPayload(snapshot: snapshot)) else { return }
 
         defaults.set(data, forKey: payloadKey)
+        defaults.removeObject(forKey: "pesolita.widget.privacy-override")
         let selected = defaults.string(forKey: selectedCardKey)
         if selected == nil || !snapshot.cards.contains(where: { $0.id == selected }) {
             defaults.set(snapshot.activeId, forKey: selectedCardKey)

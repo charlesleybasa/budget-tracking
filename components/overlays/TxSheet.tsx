@@ -12,6 +12,7 @@ import { amountDisplay, peso } from "@/lib/format";
 import { findCard, guessCategory } from "@/lib/selectors";
 import { ImageError, RECEIPT_OPTIONS, readImage } from "@/lib/image";
 import { useWallet } from "@/lib/store";
+import { preloadCelebration3D } from "@/lib/mascot3d/load";
 import type { SheetKind } from "@/lib/types";
 
 import styles from "./TxSheet.module.css";
@@ -51,9 +52,10 @@ export function TxSheet() {
   // Which end of the transaction the picker is choosing for, if it is open.
   const [picking, setPicking] = useState<"source" | "destination" | null>(null);
 
-  // Every completed transaction celebrates, so fetch the atlas while the sheet is open.
+  // Fetch the spend renderer while entering the amount, before the success screen mounts.
   useEffect(() => {
-    if (state.sheet) preloadSprite(CELEBRATE);
+    if (state.sheet === "withdraw") preloadCelebration3D();
+    else if (state.sheet) preloadSprite(CELEBRATE);
   }, [state.sheet]);
 
   const sheet = state.sheet;

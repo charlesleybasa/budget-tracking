@@ -86,14 +86,19 @@ export default function AboutPage() {
             every number there.
           </p>
           <div className={styles.ctaRow}>
-            <Link href="/" className={styles.ctaPrimary}>
-              Try it in your browser →
-            </Link>
-            <Link href="/support" className={styles.ctaGhost}>
-              How it works
+            <a
+              href="https://apps.apple.com/ph/app/pesolita/id6805788143"
+              className={styles.ctaPrimary}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download on the App Store
+            </a>
+            <Link href="/" className={styles.ctaGhost}>
+              Try it in your browser
             </Link>
           </div>
-          <p className={styles.ctaNote}>Coming to the App Store for iPhone.</p>
+          <p className={styles.ctaNote}>Now available on iPhone.</p>
         </div>
 
         <div className={styles.rail} aria-hidden="true">

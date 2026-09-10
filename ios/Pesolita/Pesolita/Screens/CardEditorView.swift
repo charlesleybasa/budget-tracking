@@ -458,9 +458,26 @@ struct CardEditorView: View {
     }
 
     private func numberField(_ placeholder: String, value: Binding<Double>, icon: String) -> some View {
-        HStack(spacing: 7) {
+        let formattedBinding = Binding<String>(
+            get: {
+                if value.wrappedValue == 0 { return "" }
+                let formatter = NumberFormatter()
+                formatter.numberStyle = .decimal
+                formatter.maximumFractionDigits = 2
+                return formatter.string(from: NSNumber(value: value.wrappedValue)) ?? ""
+            },
+            set: { newValue in
+                let clean = newValue.replacingOccurrences(of: ",", with: "")
+                if let num = Double(clean) {
+                    value.wrappedValue = num
+                } else if newValue.isEmpty {
+                    value.wrappedValue = 0
+                }
+            }
+        )
+        return HStack(spacing: 7) {
             Image(systemName: icon).foregroundStyle(Tokens.muted3)
-            TextField(placeholder, value: value, format: .number)
+            TextField(placeholder, text: formattedBinding)
                 .keyboardType(.decimalPad)
                 .font(AppFont.outfit(13, weight: .medium, relativeTo: .body))
         }

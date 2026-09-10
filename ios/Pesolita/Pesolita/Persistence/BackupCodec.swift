@@ -12,14 +12,13 @@ struct WebBackup: Codable, Sendable {
     var userName: String
     var privacy: Bool
     var homeLayout: HomeLayout
-    var nudgeLowBalance: Bool
     var nudgeDailyLog: Bool
     var haptics: Bool
     var sfx: Bool
 
     enum CodingKeys: String, CodingKey {
         case format, version, exportedAt, cards, tx, dismissedNotices, userName, privacy
-        case homeLayout, nudgeLowBalance, nudgeDailyLog, haptics, sfx
+        case homeLayout, nudgeDailyLog, haptics, sfx
     }
 
     init(
@@ -32,7 +31,6 @@ struct WebBackup: Codable, Sendable {
         userName: String,
         privacy: Bool,
         homeLayout: HomeLayout,
-        nudgeLowBalance: Bool,
         nudgeDailyLog: Bool,
         haptics: Bool,
         sfx: Bool
@@ -46,7 +44,6 @@ struct WebBackup: Codable, Sendable {
         self.userName = userName
         self.privacy = privacy
         self.homeLayout = homeLayout
-        self.nudgeLowBalance = nudgeLowBalance
         self.nudgeDailyLog = nudgeDailyLog
         self.haptics = haptics
         self.sfx = sfx
@@ -65,8 +62,7 @@ struct WebBackup: Codable, Sendable {
         userName = (try? box.decode(String.self, forKey: .userName)) ?? ""
         privacy = (try? box.decode(Bool.self, forKey: .privacy)) ?? false
         homeLayout = (try? box.decode(HomeLayout.self, forKey: .homeLayout)) ?? .deck
-        nudgeLowBalance = (try? box.decode(Bool.self, forKey: .nudgeLowBalance)) ?? true
-        nudgeDailyLog = (try? box.decode(Bool.self, forKey: .nudgeDailyLog)) ?? true
+        nudgeDailyLog = (try? box.decode(Bool.self, forKey: .nudgeDailyLog)) ?? false
         haptics = (try? box.decode(Bool.self, forKey: .haptics)) ?? true
         sfx = (try? box.decode(Bool.self, forKey: .sfx)) ?? true
     }
@@ -118,7 +114,6 @@ enum BackupCodec {
             userName: snapshot.userName,
             privacy: snapshot.privacy,
             homeLayout: snapshot.homeLayout,
-            nudgeLowBalance: snapshot.nudgeLowBalance,
             nudgeDailyLog: snapshot.nudgeDailyLog,
             haptics: snapshot.haptics,
             sfx: snapshot.sfx
@@ -165,7 +160,6 @@ enum BackupCodec {
         snapshot.privacy = backup.privacy
         snapshot.homeLayout = backup.homeLayout
         snapshot.onboarded = !cards.isEmpty
-        snapshot.nudgeLowBalance = backup.nudgeLowBalance
         snapshot.nudgeDailyLog = backup.nudgeDailyLog
         snapshot.haptics = backup.haptics
         snapshot.sfx = backup.sfx

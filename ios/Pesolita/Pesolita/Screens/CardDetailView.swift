@@ -150,6 +150,7 @@ struct CardDetailView: View {
         .scrollIndicators(.hidden)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.white, in: UnevenRoundedRectangle(topLeadingRadius: 26, topTrailingRadius: 26))
+        .ignoresSafeArea(.container, edges: .bottom)
         .preferredColorScheme(.light)
     }
 

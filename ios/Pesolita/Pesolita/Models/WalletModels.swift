@@ -235,18 +235,18 @@ struct WalletSnapshot: Codable, Sendable, Equatable {
     var activeId = ""
     var userName = ""
     var privacy = false
+    var widgetPrivacy = false
     var homeLayout: HomeLayout = .deck
     var onboarded = false
-    var nudgeLowBalance = true
-    var nudgeDailyLog = true
+    var nudgeDailyLog = false
     var haptics = true
     var sfx = true
 
     static let empty = WalletSnapshot()
 
     enum CodingKeys: String, CodingKey {
-        case schemaVersion, cards, tx, dismissedNotices, activeId, userName, privacy
-        case homeLayout, onboarded, nudgeLowBalance, nudgeDailyLog, haptics, sfx
+        case schemaVersion, cards, tx, dismissedNotices, activeId, userName, privacy, widgetPrivacy
+        case homeLayout, onboarded, nudgeDailyLog, haptics, sfx
     }
 
     init() {}
@@ -260,10 +260,10 @@ struct WalletSnapshot: Codable, Sendable, Equatable {
         activeId = try box.decodeIfPresent(String.self, forKey: .activeId) ?? cards.first?.id ?? ""
         userName = try box.decodeIfPresent(String.self, forKey: .userName) ?? ""
         privacy = try box.decodeIfPresent(Bool.self, forKey: .privacy) ?? false
+        widgetPrivacy = try box.decodeIfPresent(Bool.self, forKey: .widgetPrivacy) ?? false
         homeLayout = try box.decodeIfPresent(HomeLayout.self, forKey: .homeLayout) ?? .deck
         onboarded = try box.decodeIfPresent(Bool.self, forKey: .onboarded) ?? !cards.isEmpty
-        nudgeLowBalance = try box.decodeIfPresent(Bool.self, forKey: .nudgeLowBalance) ?? true
-        nudgeDailyLog = try box.decodeIfPresent(Bool.self, forKey: .nudgeDailyLog) ?? true
+        nudgeDailyLog = try box.decodeIfPresent(Bool.self, forKey: .nudgeDailyLog) ?? false
         haptics = try box.decodeIfPresent(Bool.self, forKey: .haptics) ?? true
         sfx = try box.decodeIfPresent(Bool.self, forKey: .sfx) ?? true
         let valid = Set(cards.map(\.id))
