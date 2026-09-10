@@ -84,6 +84,23 @@ export function SettingsScreen() {
 
   const groups: ReadonlyArray<{ title: string; rows: Row[] }> = [
     {
+      title: "App",
+      rows: [
+        {
+          label: "Download on the App Store",
+          sub: "Get the native iPhone app",
+          bg: "#1d6ff233",
+          icon: (
+            <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="#1d6ff2" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+              <line x1="12" y1="18" x2="12.01" y2="18" />
+            </svg>
+          ),
+          onClick: () => window.open("https://apps.apple.com/ph/app/pesolita/id6805788143", "_blank"),
+        },
+      ],
+    },
+    {
       title: "Money",
       rows: [
         {
