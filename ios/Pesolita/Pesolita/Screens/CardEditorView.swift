@@ -18,13 +18,17 @@ struct CardEditorView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            Tokens.ink.ignoresSafeArea()
-            
             if let draft {
                 ScrollView {
                     VStack(spacing: 0) {
-                        Color.clear.frame(height: 352)
-                        controlsPanel(draft)
+                        Color.clear.frame(height: 310) // Tighter spacing to editorHeader
+                        
+                        VStack(spacing: 0) {
+                            controlsPanel(draft)
+                            Tokens.sand1.frame(height: 800) // Stretch white background forever
+                        }
+                        .background(Tokens.sand1)
+                        .clipShape(.rect(topLeadingRadius: 36, topTrailingRadius: 36))
                     }
                 }
                 .scrollIndicators(.hidden)
@@ -36,10 +40,10 @@ struct CardEditorView: View {
                 }
                 
                 editorHeader(draft)
-                    .background(Tokens.ink)
-                    .ignoresSafeArea(edges: .top)
+                    .background(Tokens.ink.ignoresSafeArea(edges: .top))
             }
         }
+        .background(Tokens.ink.ignoresSafeArea())
         .toolbar(.hidden, for: .navigationBar)
         .preferredColorScheme(.dark)
         .onAppear {
