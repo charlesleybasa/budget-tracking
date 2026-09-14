@@ -101,7 +101,7 @@ a long left antenna and short right curl, a compact body, smooth feet, round che
 bright eye highlights, and an open pink-tongued smile.
 Opening the Spend sheet preloads the renderer. The 3.6-second timeline in `animation.ts` comes
 from the supplied `Pesolita celebration loop animation.zip`: anticipation, a two-arm jump,
-happy closed eyes, a coin/confetti burst, and a landing rebound. It plays once and returns to idle.
+happy closed eyes, a coin/confetti burst, and a landing rebound. It loops while the success screen is open.
 `effects.ts` samples the burst deterministically so pausing and replaying keep the effects in sync.
 Reduce Motion shows a still pose, hidden tabs pause playback, and dismissing the success screen
 releases its GPU resources. A static mascot remains available while loading or if WebGL fails.

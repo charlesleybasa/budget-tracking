@@ -7,6 +7,7 @@ struct CardEditorView: View {
     @State private var artworkPhoto: PhotosPickerItem?
     @State private var qrPhoto: PhotosPickerItem?
     @State private var detailsExpanded = true
+    @State private var scrollOffset: CGFloat = 0
 
     private var draft: CardEditorDraft? { store.editor }
     private var card: Card? { draft?.card }
@@ -16,17 +17,27 @@ struct CardEditorView: View {
     }
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             Tokens.ink.ignoresSafeArea()
+            
             if let draft {
                 ScrollView {
                     VStack(spacing: 0) {
-                        editorHeader(draft)
+                        Color.clear.frame(height: 352)
                         controlsPanel(draft)
                     }
                 }
                 .scrollIndicators(.hidden)
                 .scrollDismissesKeyboard(.interactively)
+                .onScrollGeometryChange(for: CGFloat.self) { geometry in
+                    geometry.contentOffset.y
+                } action: { oldValue, newValue in
+                    scrollOffset = newValue
+                }
+                
+                editorHeader(draft)
+                    .background(Tokens.ink)
+                    .ignoresSafeArea(edges: .top)
             }
         }
         .toolbar(.hidden, for: .navigationBar)
@@ -36,6 +47,12 @@ struct CardEditorView: View {
         }
         .onChange(of: artworkPhoto) { _, item in importPhoto(item, qr: false) }
         .onChange(of: qrPhoto) { _, item in importPhoto(item, qr: true) }
+    }
+
+    private var scrollProgress: CGFloat {
+        // Clamp offset between 0 and 120pt of scrolling
+        let maxOffset: CGFloat = 120
+        return min(max(scrollOffset / maxOffset, 0), 1)
     }
 
     private func editorHeader(_ draft: CardEditorDraft) -> some View {
@@ -73,12 +90,17 @@ struct CardEditorView: View {
                 .id(draft.card.art)
                 .transition(.opacity.combined(with: .scale(scale: 0.98)))
                 .animation(Tokens.easeOut(0.26), value: draft.card.art)
+                .scaleEffect(1.0 + (scrollProgress * 0.12)) // Enlarge slightly
+                .offset(y: scrollProgress * 15) // Push down into freed space
                 .accessibilityIdentifier("card-editor-preview")
 
             HStack(spacing: 8) {
                 modeButton(.templates, icon: "rectangle.stack.fill", label: "Templates")
                 modeButton(.diy, icon: "paintpalette.fill", label: "DIY")
             }
+            .scaleEffect(1.0 - (scrollProgress * 0.3))
+            .opacity(1.0 - (scrollProgress * 1.5)) // Fade out quickly
+            .offset(y: scrollProgress * -10)
         }
         .padding(.horizontal, 22)
         .padding(.top, 6)
@@ -447,13 +469,21 @@ struct CardEditorView: View {
     }
 
     private func textField(_ placeholder: String, text: Binding<String>, icon: String) -> some View {
-        HStack(spacing: 9) {
-            Image(systemName: icon).foregroundStyle(Tokens.muted3)
-            TextField(placeholder, text: text)
-                .font(AppFont.outfit(13.5, weight: .medium, relativeTo: .body))
+        HStack(spacing: 12) {
+            Image(systemName: icon).foregroundStyle(Tokens.muted3).frame(width: 20)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(placeholder)
+                    .font(.system(size: 9, weight: .bold, design: .monospaced))
+                    .foregroundStyle(Tokens.muted3)
+                    .textCase(.uppercase)
+                    .tracking(0.8)
+                TextField(placeholder, text: text)
+                    .font(AppFont.outfit(14, weight: .medium, relativeTo: .body))
+            }
         }
         .padding(.horizontal, 13)
-        .frame(minHeight: 48)
+        .padding(.vertical, 8)
+        .frame(minHeight: 52)
         .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
     }
 
@@ -475,14 +505,22 @@ struct CardEditorView: View {
                 }
             }
         )
-        return HStack(spacing: 7) {
-            Image(systemName: icon).foregroundStyle(Tokens.muted3)
-            TextField(placeholder, text: formattedBinding)
-                .keyboardType(.decimalPad)
-                .font(AppFont.outfit(13, weight: .medium, relativeTo: .body))
+        return HStack(spacing: 12) {
+            Image(systemName: icon).foregroundStyle(Tokens.muted3).frame(width: 20)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(placeholder)
+                    .font(.system(size: 9, weight: .bold, design: .monospaced))
+                    .foregroundStyle(Tokens.muted3)
+                    .textCase(.uppercase)
+                    .tracking(0.8)
+                TextField(placeholder, text: formattedBinding)
+                    .keyboardType(.decimalPad)
+                    .font(AppFont.outfit(14, weight: .medium, relativeTo: .body))
+            }
         }
-        .padding(.horizontal, 12)
-        .frame(minHeight: 48)
+        .padding(.horizontal, 13)
+        .padding(.vertical, 8)
+        .frame(minHeight: 52)
         .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
     }
 

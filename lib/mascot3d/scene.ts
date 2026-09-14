@@ -126,7 +126,9 @@ export function mountCelebration(host: HTMLElement, onAvailability: (ready: bool
     const tick = (now: number) => {
       frame = 0;
       if (disposed || document.hidden) return;
-      if (previousTime !== undefined) elapsed = Math.min(CELEBRATION_SECONDS, elapsed + (now - previousTime) / 1000);
+      if (previousTime !== undefined) {
+        elapsed = (elapsed + (now - previousTime) / 1000) % CELEBRATION_SECONDS;
+      }
       previousTime = now;
       try {
         draw();
@@ -134,7 +136,7 @@ export function mountCelebration(host: HTMLElement, onAvailability: (ready: bool
         fail();
         return;
       }
-      if (!motion.matches && elapsed < CELEBRATION_SECONDS) frame = requestAnimationFrame(tick);
+      if (!motion.matches) frame = requestAnimationFrame(tick);
     };
     const resume = () => {
       stop();
@@ -145,7 +147,7 @@ export function mountCelebration(host: HTMLElement, onAvailability: (ready: bool
         fail();
         return;
       }
-      if (!motion.matches && elapsed < CELEBRATION_SECONDS) frame = requestAnimationFrame(tick);
+      if (!motion.matches) frame = requestAnimationFrame(tick);
     };
     const resize = () => {
       if (disposed) return;

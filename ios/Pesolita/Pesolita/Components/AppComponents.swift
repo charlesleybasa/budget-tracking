@@ -205,3 +205,21 @@ struct PhotoResourceView: View {
             .background(Tokens.sand1)
     }
 }
+
+struct AnimatedAmount: View {
+    var amount: Double
+    var font: Font
+    
+    var body: some View {
+        Text(MoneyFormat.balance(amount))
+            .font(font)
+            .contentTransition(.numericText(value: amount))
+    }
+}
+
+extension View {
+    func animatedAmountScrubbing(value: Double, font: Font) -> some View {
+        AnimatedAmount(amount: value, font: font)
+            .animation(Tokens.easeOut(0.52), value: value)
+    }
+}

@@ -490,6 +490,7 @@ export function createMascot(): MascotModel {
   tongue.quadraticCurveTo(-0.09, -0.281, -0.129, -0.22);
   faceShape("Little pink tongue", tongue, tongueColor, -0.255, 0.023);
 
+
   const antennae: THREE.Group[] = [];
   for (const side of [-1, 1]) {
     const antenna = new THREE.Group();

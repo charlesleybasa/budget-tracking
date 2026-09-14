@@ -33,11 +33,27 @@ struct HomeView: View {
                 Text("\(greeting), \(firstName)")
                     .font(AppFont.outfit(11.5, relativeTo: .caption))
                     .foregroundStyle(.white.opacity(0.42))
-                Text(store.snapshot.cards.isEmpty ? "Your wallet" : "Total \(store.snapshot.privacy ? "₱•••••" : MoneyFormat.balance(store.totalBalance))")
+                if store.snapshot.cards.isEmpty {
+                    Text("Your wallet")
+                        .font(AppFont.outfit(19, weight: .bold, relativeTo: .headline))
+                        .tracking(-0.45)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.76)
+                } else {
+                    HStack(spacing: 0) {
+                        Text("Total ")
+                        if store.snapshot.privacy {
+                            Text("₱•••••")
+                        } else {
+                            Text("₱").font(AppFont.outfit(16, weight: .semibold, relativeTo: .headline)).foregroundStyle(.white.opacity(0.8))
+                            AnimatedAmount(amount: store.totalBalance, font: AppFont.outfit(19, weight: .bold, relativeTo: .headline))
+                        }
+                    }
                     .font(AppFont.outfit(19, weight: .bold, relativeTo: .headline))
                     .tracking(-0.45)
                     .lineLimit(1)
                     .minimumScaleFactor(0.76)
+                }
             }
             Spacer(minLength: 0)
             HStack(spacing: 8) {
