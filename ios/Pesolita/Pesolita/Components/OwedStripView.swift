@@ -58,6 +58,14 @@ struct OwedStripView: View {
             .accessibilityElement(children: .contain)
             .accessibilityLabel("Money out with friends")
             .sheet(item: $sharing) { ActivityShareSheet(text: $0.text) }
+            #if DEBUG
+            .task {
+                // Video ads only: open the list the way a tap would.
+                guard StoreCapture.active, ProcessInfo.processInfo.arguments.contains("--demo-expand") else { return }
+                try? await Task.sleep(for: .seconds(1.4))
+                withAnimation(.spring(response: 0.42, dampingFraction: 0.86)) { expanded = true }
+            }
+            #endif
         }
     }
 

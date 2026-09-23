@@ -98,6 +98,19 @@ struct SettleSliderView: View {
             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
             .presentationDetents([.height(contentHeight + 12)])
             .presentationDragIndicator(.visible)
+            #if DEBUG
+            .task {
+                // Video ads only: the thumb travels the track as a finger would.
+                guard StoreCapture.active, ProcessInfo.processInfo.arguments.contains("--demo-slide") else { return }
+                try? await Task.sleep(for: .seconds(1.3))
+                for step in 0...36 {
+                    progress = Double(step) / 36
+                    try? await Task.sleep(for: .seconds(0.04))
+                }
+                try? await Task.sleep(for: .seconds(0.3))
+                commit()
+            }
+            #endif
         .sheet(isPresented: $picking) {
             MoneyCardPickerSheet(
                 title: "Land it in",

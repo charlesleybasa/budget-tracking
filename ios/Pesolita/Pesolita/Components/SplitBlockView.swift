@@ -45,6 +45,11 @@ struct SplitBlockView: View {
             }
             eventChips
         }
+        #if DEBUG
+        .onChange(of: store.captureSplitOpen) { _, open in
+            if open { withAnimation(Tokens.easeSpring(0.3)) { isOpen = true } }
+        }
+        #endif
     }
 
     /// Collapsed, with people picked. The avatars and the user's share stay on screen, so

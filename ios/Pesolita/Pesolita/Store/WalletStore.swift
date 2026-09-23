@@ -33,6 +33,10 @@ final class WalletStore {
     var splitExact: [String: String] = [:]
     /// Event this spend will be tagged with, or nil.
     var sheetEventID: String?
+#if DEBUG
+    /// Video-ad captures only: asks the split block to open, as a person would tap it.
+    var captureSplitOpen = false
+#endif
     /// The event open on the event detail screen.
     var openEventID: String?
 
@@ -220,6 +224,19 @@ final class WalletStore {
                 amountDraft = "3600"
                 noteDraft = "Beach dinner"
                 categoryDraft = .food
+                if launchArguments.contains("--demo-type") {
+                    // Video ads: type the amount key by key, then open the split.
+                    amountDraft = ""
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .seconds(1.0))
+                        for key in ["3", "6", "0", "0"] {
+                            pressKey(key)
+                            try? await Task.sleep(for: .seconds(0.3))
+                        }
+                        try? await Task.sleep(for: .seconds(0.5))
+                        captureSplitOpen = true
+                    }
+                }
             }
             if launchArguments.contains("--settle") {
                 askSettle(personID: "p-jr")
