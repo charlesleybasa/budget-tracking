@@ -308,9 +308,8 @@ final class SyncManager: ObservableObject {
         guard let mediaStore else { return cloud }
         var copy = cloud
         func localise(_ reference: String?) async -> String? {
-            guard let reference, reference.hasPrefix("http"), let url = URL(string: reference),
-                  let (data, response) = try? await URLSession.shared.data(from: url),
-                  (response as? HTTPURLResponse)?.statusCode == 200,
+            guard let reference, reference.hasPrefix("http"),
+                  let data = await downloadMedia(reference),
                   let stored = try? await mediaStore.write(data) else { return reference }
             return stored
         }
@@ -322,6 +321,74 @@ final class SyncManager: ObservableObject {
         copy.savedAt = nil
         copy.savedOn = nil
         return copy
+    }
+
+    /// Downloads a backed-up photo. Uses the user's sign-in first, so it keeps working after
+    /// the `media` bucket is made private; falls back to the plain link for anything else.
+    private func downloadMedia(_ link: String) async -> Data? {
+        if let path = CloudSync.mediaPath(fromLink: link),
+           let data = try? await supabase.storage.from("media").download(path: path) {
+            return data
+        }
+        guard let url = URL(string: link),
+              let (data, response) = try? await URLSession.shared.data(from: url),
+              (response as? HTTPURLResponse)?.statusCode == 200 else { return nil }
+        return data
+    }
+
+    // MARK: - Delete account
+
+    enum DeleteOutcome {
+        /// Backup, photos and the sign-in account are gone.
+        case everythingDeleted
+        /// Backup and photos are gone, but the server could not remove the sign-in account
+        /// (its delete function is not installed yet). Signing in again would start empty.
+        case dataDeletedAccountRemains
+    }
+
+    /// "Delete backup & account": removes the cloud photos, the wallet backup and the sign-in
+    /// account, then signs out. The wallet on this iPhone is not touched, and Pesolita Pro stays
+    /// with the Apple ID — it was bought from Apple, not from this account.
+    func deleteAccount() async throws -> DeleteOutcome {
+        guard let user = currentUser else { throw DeleteError.notSignedIn }
+        pushTask?.cancel()
+        pushTask = nil
+        pendingPush = nil
+        // Stop anything else writing while this runs.
+        phase = .reconciling
+
+        do {
+            // Photos first: the account's folder is the only way to find them.
+            let folder = user.id.uuidString
+            let files = try await supabase.storage.from("media").list(path: folder)
+            let paths = files.filter { $0.name != ".emptyFolderPlaceholder" }.map { "\(folder)/\($0.name)" }
+            if !paths.isEmpty { _ = try await supabase.storage.from("media").remove(paths: paths) }
+
+            // Deleting the row directly as well means the backup is gone even if the server
+            // function below is missing.
+            try await supabase.from("snapshots").delete().eq("user_id", value: user.id).execute()
+        } catch {
+            phase = .paused(.unreachable(error.localizedDescription))
+            throw error
+        }
+
+        var outcome = DeleteOutcome.everythingDeleted
+        do {
+            try await supabase.rpc("delete_my_account").execute()
+        } catch {
+            outcome = .dataDeletedAccountRemains
+        }
+
+        let key = "sync.ledger.\(user.id.uuidString)"
+        UserDefaults.standard.removeObject(forKey: key + ".cloudSavedAt")
+        UserDefaults.standard.removeObject(forKey: key + ".localFingerprint")
+        await signOut()
+        return outcome
+    }
+
+    enum DeleteError: LocalizedError {
+        case notSignedIn
+        var errorDescription: String? { "Sign in with Google first." }
     }
 
     // MARK: - Ledger

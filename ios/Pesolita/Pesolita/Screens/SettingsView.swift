@@ -20,6 +20,8 @@ struct SettingsView: View {
     @State private var showingProUpsell = false
     @State private var attachingPhotoToUser = false
     @State private var confirmingSignOut = false
+    @State private var confirmingDeleteAccount = false
+    @State private var deletingAccount = false
     @State private var isMascotFloating = false
 
     var body: some View {
@@ -62,6 +64,15 @@ struct SettingsView: View {
                                     iconBackground: Tokens.redTint,
                                     danger: true
                                 ) { confirmingSignOut = true }
+
+                                settingsRow(
+                                    title: deletingAccount ? "Deleting…" : "Delete backup & account",
+                                    subtitle: "Removes your cloud backup, photos and sign-in",
+                                    symbol: "trash",
+                                    tint: Tokens.negative,
+                                    iconBackground: Tokens.redTint,
+                                    danger: true
+                                ) { if !deletingAccount { confirmingDeleteAccount = true } }
                             }
 
                             if !store.isPro {
@@ -270,6 +281,12 @@ struct SettingsView: View {
             // Pesolita Pro belongs to the Apple ID, not the Google account — signing out
             // does not cost the user their purchase, and should not sound like it does.
             Text("Your wallet stays on this iPhone and your backup stays in the cloud. New changes won't back up until you sign in again. Pesolita Pro stays on.")
+        }
+        .alert("Delete your backup and account?", isPresented: $confirmingDeleteAccount) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) { deleteAccount() }
+        } message: {
+            Text("Your Pesolita Pro backup, its photos and receipts, and your sign-in for \(syncManager.email ?? "Google") are permanently deleted. This can't be undone.\n\nThe wallet on this iPhone stays, and Pesolita Pro stays with your Apple ID.")
         }
         .sheet(isPresented: $showingProUpsell) {
             ProUpsellView(store: store)
@@ -484,6 +501,23 @@ struct SettingsView: View {
         Section(header: Text(title.uppercased())) {
             content()
                 .listRowBackground(Tokens.dark2)
+        }
+    }
+
+    private func deleteAccount() {
+        deletingAccount = true
+        Task {
+            defer { deletingAccount = false }
+            do {
+                switch try await syncManager.deleteAccount() {
+                case .everythingDeleted:
+                    store.showToast("Backup and account deleted. Your wallet is still on this iPhone.")
+                case .dataDeletedAccountRemains:
+                    store.showToast("Backup deleted. Email support to finish removing your sign-in.")
+                }
+            } catch {
+                store.showToast("Couldn’t finish deleting. Check your connection and try again.")
+            }
         }
     }
 

@@ -273,3 +273,18 @@ erasing, so the backup survives. Restoring is free; ongoing backup requires Pro.
 `MergePreview.sameNamedCards` warns about the same real card typed in twice.
 UI: `Screens/RestoreFlowView.swift` (one sheet for every entry point), the Settings status row,
 and `BackupAttentionBanner` on Home for decisions found in the background.
+
+## Pesolita 1.7 additions
+
+- **Delete backup & account** (`SyncManager.deleteAccount`, Settings row while signed in): removes
+  `media/<USER-ID>/` files via the Storage API, deletes the `snapshots` row, then calls the
+  `delete_my_account()` RPC to remove the auth user. Without the RPC installed it returns
+  `.dataDeletedAccountRemains`. SQL: `supabase/pesolita_pro_account_and_media.sql`.
+- **Photo downloads use the user's sign-in** (`downloadMedia`, `CloudSync.mediaPath(fromLink:)`)
+  so the `media` bucket can be made private (SQL PART 2) without breaking 1.7+.
+  Media folders are the UPPERCASE uuid; storage policies lowercase them.
+- **Restore sheet** sizes to each state and shows a 3-step tracker while waiting; cancelling
+  Google's prompt returns to Welcome instead of showing `WebAuthenticationSession error 1`.
+- **Out with friends** (`OwedStripView`) is one collapsible row; open state is
+  `@AppStorage("home.owedExpanded")`.
+- Debug launch args: `--open-pro`, `--open-restore`, `--with-friends` (with `--demo-wallet`).

@@ -177,11 +177,25 @@ final class WalletStore {
             try? await repository.erase()
             snapshot = launchArguments.contains("--showcase") ? .simulatorShowcase : .simulatorDemo
             if launchArguments.contains("--empty-activity") { snapshot.tx = [] }
+            if launchArguments.contains("--with-friends"), let card = snapshot.cards.first?.id {
+                let now = Date().timeIntervalSince1970 * 1000
+                let friends = [("p-migo", "Migo", "#1d6ff2"), ("p-bea", "Bea", "#0b8f6a"),
+                               ("p-jr", "JR", "#f0483e"), ("p-ana", "Ana", "#7c3aed")]
+                snapshot.people = friends.map { Person(id: $0.0, name: $0.1, color: $0.2) }
+                snapshot.events = [EventGroup(id: "e-thai", name: "Day 1 Thailand", emoji: "🇹🇭", startedAt: now - 86_400_000,
+                                              memberIds: friends.map(\.0))]
+                snapshot.tx.insert(Transaction(id: "t-dinner", cardId: card, merchant: "Beach dinner", cat: .food,
+                                               amount: -2_500, at: now - 3_600_000, note: "", eventId: "e-thai",
+                                               split: Split(mode: .even, mine: 500, parts: friends.map {
+                                                   SplitPart(personId: $0.0, name: $0.1, amount: 500)
+                                               })), at: 0)
+            }
             if launchArguments.contains("--layout=stack") { snapshot.homeLayout = .stack }
             if launchArguments.contains("--tab=insights") { selectedTab = .insights }
             if launchArguments.contains("--tab=search") { selectedTab = .search }
             if launchArguments.contains("--tab=settings") { selectedTab = .settings }
             if launchArguments.contains("--open-pro") { selectedTab = .settings; showProUpsell = true }
+            if launchArguments.contains("--open-restore") { openRestoreFlow() }
             synchronizeEndpoints()
             if launchArguments.contains("--route=detail") {
                 path = [.detail(snapshot.activeId)]

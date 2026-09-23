@@ -1,3 +1,4 @@
+import AuthenticationServices
 import SwiftUI
 
 /// Bringing a Pesolita Pro wallet back with Google — every case in one sheet.
@@ -22,6 +23,8 @@ struct RestoreFlowView: View {
     @State private var choice: TwoWalletChoice = .combine
     @State private var confirmingDestructive = false
     @State private var importingFile = false
+    @State private var contentHeight: CGFloat = 520
+    @Environment(\.colorScheme) private var scheme
 
     private enum Outcome: Equatable {
         case restored(cards: Int, entries: Int)
@@ -34,19 +37,30 @@ struct RestoreFlowView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 0) {
-                Capsule().fill(Tokens.fillStrong).frame(width: 38, height: 4).padding(.top, 10)
-                content
-                    .padding(.horizontal, 22)
-                    .padding(.top, 18)
-                    .padding(.bottom, 28)
-                    .animation(Tokens.easeOut(0.28), value: stateKey)
-            }
+            content
+                .padding(.horizontal, 22)
+                .padding(.top, 34)
+                .padding(.bottom, 24)
+                .frame(maxWidth: .infinity)
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
+                .animation(Tokens.easeOut(0.28), value: stateKey)
         }
         .scrollBounceBehavior(.basedOnSize)
-        .background(Tokens.bgBase)
-        .presentationDetents([.large])
-        .presentationDragIndicator(.hidden)
+        .scrollIndicators(.hidden)
+        .background {
+            // The same soft gold wash as the Pro sheet, so the two read as one experience.
+            ZStack(alignment: .top) {
+                Tokens.bgBase
+                LinearGradient(colors: [Tokens.accent.opacity(scheme == .dark ? 0.08 : 0.14), Tokens.accent.opacity(0)],
+                               startPoint: .top, endPoint: UnitPoint(x: 0.5, y: 0.4))
+            }
+            .ignoresSafeArea()
+        }
+        // Each step is its own size — a short "Opening Google" never opens as a tall empty page.
+        .presentationDetents([.height(contentHeight + 20)])
+        .presentationDragIndicator(.visible)
+        .presentationCornerRadius(34)
+        .presentationBackground(Tokens.bgBase)
         .interactiveDismissDisabled(working || signingIn)
         .task {
             if !startsWithChoice && !sync.isAuthenticated { await signIn() }
@@ -71,7 +85,7 @@ struct RestoreFlowView: View {
         if let outcome {
             done(outcome)
         } else if signingIn {
-            waiting(title: "Opening Google…", body: "Sign in with the Google account you used for Pesolita Pro.")
+            waiting(title: "Opening Google", body: "Sign in with the Google account you used for Pesolita Pro.", step: 0)
         } else if let signInError {
             problem(title: "Google sign-in didn't finish", body: signInError, retry: "Try again") { await signIn() }
         } else if !sync.isAuthenticated {
@@ -79,7 +93,7 @@ struct RestoreFlowView: View {
         } else {
             switch sync.phase {
             case .signedOut, .reconciling:
-                waiting(title: "Finding your wallet…", body: "Checking the backup for \(sync.email ?? "your account").")
+                waiting(title: "Finding your wallet", body: "Looking for a backup on \(sync.email ?? "your account").", step: 1)
             case .needsDecision(let decision):
                 decide(decision)
             case .live:
@@ -129,7 +143,7 @@ struct RestoreFlowView: View {
         case .restore(let summary): found(summary)
         case .twoWallets(let summary): twoWallets(summary)
         case .nothingYet: noBackup
-        case .uploadLocal, .adoptCloud, .inStep: waiting(title: "Finishing up…", body: "")
+        case .uploadLocal, .adoptCloud, .inStep: waiting(title: "Finishing up", body: "Almost there.", step: 2)
         }
     }
 
@@ -318,14 +332,84 @@ struct RestoreFlowView: View {
 
     // MARK: - Shared pieces
 
-    private func waiting(title text: String, body: String) -> some View {
+    /// A step in progress. The tracker says where the user is — Google, then the backup, then
+    /// this iPhone — so a wait reads as progress rather than a spinner that might be stuck.
+    private func waiting(title text: String, body: String, step current: Int) -> some View {
         VStack(spacing: 0) {
-            SpriteAnimationView(spec: .flyingIdle, size: 140)
+            ZStack {
+                Circle()
+                    .fill(RadialGradient(colors: [Tokens.accent.opacity(scheme == .dark ? 0.32 : 0.28), Tokens.accent.opacity(0)],
+                                         center: .center, startRadius: 4, endRadius: 78))
+                    .frame(width: 160, height: 160)
+                SpriteAnimationView(spec: .flyingIdle, size: 124)
+            }
+            .frame(height: 132)
+            .accessibilityHidden(true)
+
             title(text)
-            if !body.isEmpty { lede(body).padding(.top, 8) }
-            ProgressView().tint(Tokens.textSecondary).padding(.top, 18)
+                .padding(.top, 6)
+            if !body.isEmpty { lede(body).padding(.top, 6) }
+
+            VStack(spacing: 0) {
+                ForEach(Array(["Sign in with Google", "Find your backup", "Bring it to this iPhone"].enumerated()), id: \.offset) { index, label in
+                    if index > 0 {
+                        Rectangle().fill(Tokens.hairline).frame(height: 1).padding(.leading, 56)
+                    }
+                    stepRow(label, state: index < current ? .done : index == current ? .current : .upcoming, number: index + 1)
+                }
+            }
+            .padding(.vertical, 4)
+            .background(Tokens.fill, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Tokens.hairline, lineWidth: 1))
+            .padding(.top, 22)
+
+            if current == 0 {
+                footnote("Google opens in a secure window. Pesolita never sees your password.")
+                    .padding(.top, 14)
+            }
         }
-        .frame(minHeight: 360)
+        .accessibilityElement(children: .combine)
+    }
+
+    private enum StepState { case done, current, upcoming }
+
+    private func stepRow(_ label: String, state: StepState, number: Int) -> some View {
+        HStack(spacing: 14) {
+            ZStack {
+                switch state {
+                case .done:
+                    Circle().fill(Tokens.greenDeep)
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(Tokens.onBrand)
+                case .current:
+                    Circle().fill(Tokens.accentTint)
+                    Circle().strokeBorder(Tokens.accent, lineWidth: 1.5)
+                    ProgressView().controlSize(.small).tint(Tokens.accentText)
+                case .upcoming:
+                    Circle().strokeBorder(Tokens.hairlineStrong, lineWidth: 1.5)
+                    Text("\(number)")
+                        .font(AppFont.outfit(12, weight: .bold))
+                        .foregroundStyle(Tokens.textTertiary)
+                }
+            }
+            .frame(width: 28, height: 28)
+
+            Text(label)
+                .font(AppFont.outfit(14.5, weight: state == .current ? .bold : .semibold, relativeTo: .body))
+                .foregroundStyle(state == .upcoming ? Tokens.textTertiary : Tokens.textPrimary)
+            Spacer(minLength: 0)
+            if state == .current {
+                Text("Now")
+                    .font(AppFont.outfit(10.5, weight: .bold, relativeTo: .caption2))
+                    .foregroundStyle(Tokens.accentText)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Tokens.accentTint, in: Capsule())
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
     }
 
     private func problem(title text: String, body: String, retry label: String, action: @escaping () async -> Void) -> some View {
@@ -454,9 +538,17 @@ struct RestoreFlowView: View {
         do {
             try await sync.signInWithGoogle()
         } catch {
-            // Closing Google's sheet is a choice, not an error worth a red screen.
-            let text = error.localizedDescription.lowercased()
-            if !(text.contains("cancel")) { signInError = error.localizedDescription }
+            // Closing Google's window (or tapping Cancel on iOS's "wants to use… to sign in"
+            // prompt) is a choice, not an error worth a sad screen: go back to Welcome.
+            let ns = error as NSError
+            let cancelled = error is CancellationError
+                || (ns.domain == ASWebAuthenticationSessionError.errorDomain
+                    && ns.code == ASWebAuthenticationSessionError.canceledLogin.rawValue)
+                || ns.localizedDescription.lowercased().contains("cancel")
+            guard !cancelled else { return }
+            signInError = ns.domain == NSURLErrorDomain
+                ? "Couldn't reach Google. Check your connection and try again."
+                : "Something interrupted the sign-in. Nothing on this iPhone changed — try again."
         }
     }
 

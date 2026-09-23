@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Pesolita keeps your wallet on your device. Only if you turn on Pesolita Pro backup is a copy stored in the cloud, under your Google sign-in.",
 };
 
-const UPDATED = "22 September 2026";
+const UPDATED = "23 September 2026";
 // Published deliberately: App Review may email this, and the support URL has to offer a
 // real way to get in touch.
 const CONTACT = "charlesleyb24@gmail.com";
@@ -61,8 +61,9 @@ export default function PrivacyPage() {
         </p>
         <p className={styles.body}>
           Signing out stops backup; your wallet stays on your phone and the backup stays in the
-          cloud. To delete your backup and account, email us from the Google address you signed
-          in with and we will delete them within 30 days.
+          cloud. To delete your backup, its photos and your account, open Pesolita and go to
+          Settings → Delete backup &amp; account (Pesolita 1.7 or later). You can also email us from
+          the Google address you signed in with and we will delete them within 30 days.
         </p>
         <p className={styles.body}>
           Purchases are handled entirely by Apple. We never see your payment details.

@@ -61,8 +61,11 @@ export default function SupportPage() {
 
         <h2 className={styles.h2}>Deleting your Pesolita Pro backup</h2>
         <p className={styles.body}>
-          Email us from the Google address you signed in with and we will delete your backup
-          and account within 30 days. Your wallet on your phone is not affected.
+          In Pesolita, go to <strong>Settings → Delete backup &amp; account</strong> (version 1.7
+          or later). It removes your cloud backup, its photos and your sign-in straight away. Or
+          email us from the Google address you signed in with and we will do it within 30 days.
+          Either way, the wallet on your phone is not affected, and Pesolita Pro stays with your
+          Apple ID.
         </p>
 
         <h2 className={styles.h2}>I deleted something by accident</h2>

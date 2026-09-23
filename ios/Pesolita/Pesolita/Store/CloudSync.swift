@@ -133,6 +133,22 @@ enum CloudSync {
 
     /// Whether the orphaned-media sweep may run after an upload.
     ///
+    /// The storage path inside the `media` bucket for a photo link the backup stores, so the
+    /// photo can be downloaded with the user's own sign-in — which keeps working once the
+    /// bucket is private. Backups hold public-style links (older versions read them directly),
+    /// and signed links look the same apart from `sign` and a query string.
+    static func mediaPath(fromLink link: String) -> String? {
+        guard let url = URL(string: link) else { return nil }
+        let parts = url.path.split(separator: "/", omittingEmptySubsequences: true).map(String.init)
+        // …/storage/v1/object/{public|sign|authenticated}/media/<path…>
+        guard let object = parts.firstIndex(of: "object"),
+              parts.count > object + 3,
+              ["public", "sign", "authenticated"].contains(parts[object + 1]),
+              parts[object + 2] == "media" else { return nil }
+        let path = parts[(object + 3)...].joined(separator: "/")
+        return path.removingPercentEncoding ?? path
+    }
+
     /// The sweep deletes cloud photos the new snapshot no longer references. After an ordinary
     /// edit that is housekeeping; after a wallet shrank by more than half it is almost always
     /// the tail end of a wipe, and deleting the photos would make it unrecoverable.

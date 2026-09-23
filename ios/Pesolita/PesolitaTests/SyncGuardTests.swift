@@ -121,6 +121,16 @@ struct SyncGuardTests {
         #expect(CloudSync.mediaSweepAllowed(previous: before, next: wallet(cards: ["a", "b", "c"], tx: ["1", "2", "3"])))
     }
 
+    /// Backups store public-style photo links; the app downloads them by storage path so a
+    /// private bucket keeps working.
+    @Test func photoLinksResolveToTheirStoragePath() {
+        let base = "https://exapqjxrptjhvvbcnrdr.supabase.co/storage/v1/object"
+        #expect(CloudSync.mediaPath(fromLink: "\(base)/public/media/ABC-123/file:9F2.jpg") == "ABC-123/file:9F2.jpg")
+        #expect(CloudSync.mediaPath(fromLink: "\(base)/sign/media/ABC/r.jpg?token=x") == "ABC/r.jpg")
+        #expect(CloudSync.mediaPath(fromLink: "\(base)/public/other/ABC/r.jpg") == nil)
+        #expect(CloudSync.mediaPath(fromLink: "https://example.com/photo.jpg") == nil)
+    }
+
     @Test func fingerprintIgnoresCloudStamps() {
         var a = wallet(cards: ["a"])
         let b = a
