@@ -9,8 +9,7 @@ struct ResourceViewer: View {
     @State private var appeared = false
 
     private func presentShareSheet(items: [Any]) {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = windowScene.windows.first,
+        guard let window = UIApplication.shared.frontWindow,
               let rootVC = window.rootViewController else { return }
         
         var topVC = rootVC
@@ -71,5 +70,16 @@ struct ResourceViewer: View {
             }
         }
         .onAppear { withAnimation(Tokens.easeSpring(0.42)) { appeared = true } }
+    }
+}
+
+
+extension UIApplication {
+    /// The window the user is looking at. With more than one scene (and on the iPhone Duo,
+    /// more than one screen) "the first scene's first window" can be the wrong one.
+    var frontWindow: UIWindow? {
+        let scenes = connectedScenes.compactMap { $0 as? UIWindowScene }
+        let active = scenes.first { $0.activationState == .foregroundActive } ?? scenes.first
+        return active?.keyWindow ?? active?.windows.first
     }
 }

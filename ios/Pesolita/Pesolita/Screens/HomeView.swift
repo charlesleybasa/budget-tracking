@@ -8,7 +8,10 @@ struct HomeView: View {
     @State private var dragOffset: CGFloat = 0
     @State private var dragAccumulator: CGFloat = 0
     @State private var isReordering = false
+    /// Unfolded in landscape, a card's detail opens in the right pane instead of over Home.
+    @State private var paneCardID: String?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.layout) private var layout
 
     var body: some View {
         ZStack {
@@ -16,8 +19,16 @@ struct HomeView: View {
             VStack(spacing: 0) {
                 header
                 if store.snapshot.cards.isEmpty { emptyWallet }
+                else if layout.isExpanded { expandedLayout }
                 else if store.snapshot.homeLayout == .deck { deckLayout }
                 else { stackLayout }
+            }
+        }
+        .onChange(of: layout.detailInPane) { _, inPane in
+            // Folding closes the side pane; the card the user was reading comes with them.
+            if !inPane, let id = paneCardID {
+                paneCardID = nil
+                store.path.append(.detail(id))
             }
         }
         .foregroundStyle(Tokens.text)
@@ -83,7 +94,7 @@ struct HomeView: View {
         }
         .padding(.horizontal, 22)
         .padding(.top, 4)
-        .padding(.bottom, 12)
+        .padding(.bottom, layout.isShort ? 8 : 12)
     }
 
     private func roundButton(_ symbol: String, label: String, action: @escaping () -> Void) -> some View {
@@ -121,9 +132,9 @@ struct HomeView: View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: 14) {
                 ForEach(store.snapshot.cards) { card in
-                    Button { store.showCardDetail(card.id) } label: {
+                    Button { openCard(card.id) } label: {
                         CardFaceView(card: card, privateMode: store.snapshot.privacy)
-                            .frame(width: 320, height: 196)
+                            .frame(width: layout.cardSize.width, height: layout.cardSize.height)
                             .shadow(color: .black.opacity(0.45), radius: 17, y: 10)
                     }
                     .buttonStyle(PesolitaPressStyle())
@@ -135,7 +146,7 @@ struct HomeView: View {
                         Image(systemName: "plus").frame(width: 38, height: 38).background(Tokens.background.opacity(0.09), in: Circle())
                         Text("Add a card").font(AppFont.outfit(12, relativeTo: .caption)).foregroundStyle(Tokens.text.opacity(0.5))
                     }
-                    .frame(width: 320, height: 196)
+                    .frame(width: layout.cardSize.width, height: layout.cardSize.height)
                     .overlay(RoundedRectangle(cornerRadius: 22).stroke(Tokens.paper.opacity(0.2), style: StrokeStyle(lineWidth: 1.5, dash: [7])))
                 }
                 .buttonStyle(PesolitaPressStyle())
@@ -148,7 +159,7 @@ struct HomeView: View {
         .scrollTargetBehavior(.viewAligned(limitBehavior: .always))
         .scrollPosition(id: $scrollID, anchor: .leading)
         .onChange(of: scrollID) { _, id in if let id { store.setActiveCard(id) } }
-        .frame(height: 196)
+        .frame(height: layout.cardSize.height)
         .offset(y: cardsDealt ? 0 : 54)
         .scaleEffect(cardsDealt ? 1 : 0.94)
     }
@@ -168,7 +179,7 @@ struct HomeView: View {
                 .buttonStyle(.plain)
             }
         }
-        .frame(height: 41)
+        .frame(height: layout.isShort ? 34 : 41)
         .animation(Tokens.easeOut(0.3), value: store.snapshot.activeId)
     }
 
@@ -269,7 +280,7 @@ struct HomeView: View {
 
     private var walletStack: some View {
         let cards = store.snapshot.cards
-        let stackHeight = stackOffset(for: cards.count) + 196
+        let stackHeight = stackOffset(for: cards.count) + layout.cardSize.height
         return ZStack(alignment: .top) {
             ForEach(Array(cards.enumerated()), id: \.element.id) { index, card in
                 StackWalletCard(
@@ -277,12 +288,13 @@ struct HomeView: View {
                     privateMode: store.snapshot.privacy,
                     open: card.id == store.snapshot.activeId,
                     onTap: {
-                        if card.id == store.snapshot.activeId { store.showCardDetail(card.id) }
+                        if card.id == store.snapshot.activeId { openCard(card.id) }
                         else { withAnimation(Tokens.easeOut(0.44)) { store.setActiveCard(card.id) } }
                     },
                     onTopUp: { store.openTransaction(.deposit, cardID: card.id) },
                     onSpend: { store.openTransaction(.withdraw, cardID: card.id) },
-                    onShowQR: { store.qrViewerCardID = card.id }
+                    onShowQR: { store.qrViewerCardID = card.id },
+                    height: layout.cardSize.height
                 )
                 // Match the web's inner `bwDeal` transform so each card rises
                 // without compressing the stack positions around it.
@@ -305,7 +317,7 @@ struct HomeView: View {
                                     dragOffset = delta
                                     
                                     let currentIndex = store.snapshot.cards.firstIndex(where: { $0.id == card.id }) ?? 0
-                                    let cardSpacing: CGFloat = (card.id == store.snapshot.activeId) ? 208 : 84
+                                    let cardSpacing: CGFloat = (card.id == store.snapshot.activeId) ? openStep : closedStep
                                     
                                     if dragOffset > 60 && currentIndex < store.snapshot.cards.count - 1 {
                                         dragAccumulator += cardSpacing
@@ -345,30 +357,46 @@ struct HomeView: View {
             .zIndex(Double(cards.count + 1))
         }
         .frame(height: stackHeight + 66, alignment: .top)
-        .padding(.bottom, 200)
+        .padding(.bottom, layout.isExpanded ? 40 : 200)
         .animation(Tokens.easeOut(0.44), value: store.snapshot.activeId)
     }
 
     private func stackOffset(for index: Int) -> CGFloat {
         guard index > 0 else { return 0 }
-        return store.snapshot.cards.prefix(index).reduce(0) { total, card in total + (card.id == store.snapshot.activeId ? 208 : 84) }
+        return store.snapshot.cards.prefix(index).reduce(0) { total, card in total + (card.id == store.snapshot.activeId ? openStep : closedStep) }
     }
+
+    /// Room an opened stack card takes before the next one starts, and a closed card's peek.
+    private var openStep: CGFloat { layout.cardSize.height + 12 }
+    private var closedStep: CGFloat { layout.isShort ? 76 : 84 }
 
     private var activityPanel: some View {
         VStack(alignment: .leading, spacing: 0) {
             if let card = store.activeCard { safeCard(card) }
+            owedAndActivity(rows: 6)
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, layout.isShort ? 14 : 18)
+        .padding(.bottom, 108)
+        .frame(maxWidth: .infinity, minHeight: layout.isShort ? 0 : 430, alignment: .topLeading)
+        .background(Tokens.background, in: UnevenRoundedRectangle(topLeadingRadius: 26, topTrailingRadius: 26))
+    }
 
-            // Above the activity list: money that is owed back is more actionable than a
-            // log of what already happened. Renders nothing when nobody owes anything.
+    /// Money out with friends, then the latest activity. Owed money comes first: it is more
+    /// actionable than a log of what already happened. The strip renders nothing when nobody
+    /// owes anything.
+    @ViewBuilder
+    private func owedAndActivity(rows: Int, leadingGap: Bool = true) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
             if !store.debts.isEmpty {
                 OwedStripView(store: store)
-                    .padding(.top, 22)
+                    .padding(.top, leadingGap ? layout.sectionGap : 0)
             }
 
             Text("Recent activity")
                 .font(AppFont.outfit(15, weight: .bold, relativeTo: .headline))
                 .foregroundStyle(Tokens.text)
-                .padding(.top, 24)
+                .padding(.top, store.debts.isEmpty && !leadingGap ? 0 : layout.sectionGap + 2)
             if store.snapshot.tx.isEmpty {
                 VStack(spacing: 0) {
                     SpriteAnimationView(spec: .flyingIdle, size: 118)
@@ -391,22 +419,18 @@ struct HomeView: View {
                 .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                 .padding(.top, 10)
             } else {
+                let recent = Array(store.snapshot.tx.sorted { $0.at > $1.at }.prefix(rows))
                 LazyVStack(spacing: 0) {
-                    ForEach(Array(store.snapshot.tx.sorted { $0.at > $1.at }.prefix(6))) { transaction in
+                    ForEach(recent) { transaction in
                         TransactionRowView(transaction: transaction, card: store.snapshot.cards.first { $0.id == transaction.cardId }) {
                             store.openTransactionEditor(transaction.id)
                         }
-                        if transaction.id != store.snapshot.tx.sorted(by: { $0.at > $1.at }).prefix(6).last?.id { Divider() }
+                        if transaction.id != recent.last?.id { Divider() }
                     }
                 }
                 .padding(.top, 8)
             }
         }
-        .padding(.horizontal, 20)
-        .padding(.top, 18)
-        .padding(.bottom, 108)
-        .frame(maxWidth: .infinity, minHeight: 430, alignment: .topLeading)
-        .background(Tokens.background, in: UnevenRoundedRectangle(topLeadingRadius: 26, topTrailingRadius: 26))
     }
 
     private func safeCard(_ card: Card) -> some View {
@@ -421,6 +445,8 @@ struct HomeView: View {
                 .font(AppFont.outfit(11, weight: .medium, relativeTo: .caption))
                 .tracking(0.7)
                 .foregroundStyle(Tokens.muted2)
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text(store.snapshot.privacy ? "₱•••••" : MoneyFormat.balance(safeToday))
                         .font(AppFont.outfit(32, weight: .bold, relativeTo: .title))
@@ -432,7 +458,11 @@ struct HomeView: View {
                 .foregroundStyle(Tokens.text)
                 .padding(.top, 8)
                 Capsule().fill(Tokens.sand4).frame(height: 7).overlay(alignment: .leading) {
-                    Capsule().fill(progress > 0.82 ? Tokens.red : Tokens.green).frame(maxWidth: max(7, 330 * progress))
+                    // Measured from the track itself, so the bar fills correctly at any width.
+                    GeometryReader { track in
+                        Capsule().fill(progress > 0.82 ? Tokens.red : Tokens.green)
+                            .frame(width: max(7, track.size.width * progress))
+                    }
                 }
                 .padding(.top, 12)
                 Text("Comfortable. Your money has room to breathe.")
@@ -472,6 +502,96 @@ struct HomeView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
+    // MARK: - Expanded (iPhone Duo unfolded, wide windows)
+
+    /// Two panes instead of one stretched column: the wallet on the left, what's happening on
+    /// the right. Each pane scrolls on its own.
+    private var expandedLayout: some View {
+        HStack(alignment: .top, spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    if store.snapshot.homeLayout == .deck {
+                        deck
+                        dots.frame(maxWidth: .infinity)
+                        HStack(spacing: 10) {
+                            quickPill("Spend", icon: "arrow.up.right") { store.openTransaction(.withdraw) }
+                            quickPill("Top up", icon: "arrow.down.left") { store.openTransaction(.deposit) }
+                        }
+                        .padding(.horizontal, layout.gutter)
+                        .padding(.bottom, 16)
+                        if let card = store.activeCard {
+                            safeCard(card).padding(.horizontal, layout.gutter)
+                        }
+                    } else {
+                        expandedStack
+                    }
+                }
+                .padding(.bottom, 110)
+            }
+            .scrollIndicators(.hidden)
+            .frame(width: layout.homeLeadingPaneWidth)
+
+            Rectangle().fill(Tokens.hairline).frame(width: 1).padding(.vertical, 8)
+
+            Group {
+                if layout.detailInPane, let id = paneCardID, store.snapshot.cards.contains(where: { $0.id == id }) {
+                    CardDetailView(store: store, cardID: id) {
+                        withAnimation(Tokens.easeOut(0.3)) { paneCardID = nil }
+                    }
+                    .id(id)
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
+                } else {
+                    ScrollView {
+                        owedAndActivity(rows: 12, leadingGap: false)
+                            .padding(.horizontal, layout.usesRail ? layout.gutter : 18)
+                            .padding(.top, 4)
+                            .padding(.bottom, 110)
+                            .readableWidth()
+                    }
+                    .scrollIndicators(.hidden)
+                    .transition(.opacity)
+                }
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .animation(Tokens.easeOut(0.3), value: paneCardID)
+    }
+
+    /// The wallet stack in the left pane: Safe today and Log spend above the cards.
+    private var expandedStack: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            if let card = store.activeCard {
+                safeCard(card).padding(.bottom, 16)
+            }
+            HStack {
+                Text("Your cards")
+                    .font(AppFont.outfit(15, weight: .bold, relativeTo: .headline))
+                Spacer()
+                Button(isReordering ? "Done" : "Reorder") {
+                    withAnimation(Tokens.easeOut(0.3)) { isReordering.toggle() }
+                }
+                .font(AppFont.outfit(13, weight: .semibold, relativeTo: .subheadline))
+                .foregroundStyle(isReordering ? Tokens.accentText : Tokens.text)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(isReordering ? Tokens.accent.opacity(0.2) : Tokens.paper.opacity(0.1), in: Capsule())
+            }
+            walletStack.padding(.top, 12)
+        }
+        .padding(.horizontal, layout.gutter)
+    }
+
+    /// Opens a card: beside Home when there's room for it, otherwise as its own screen.
+    private func openCard(_ id: String) {
+        if layout.detailInPane {
+            store.setActiveCard(id)
+            FeedbackCenter.opened()
+            withAnimation(Tokens.easeOut(0.3)) { paneCardID = id }
+        } else {
+            store.showCardDetail(id)
+        }
+    }
+
     private var firstName: String { store.snapshot.userName.split(separator: " ").first.map(String.init) ?? "there" }
 
     private func dealCardsIn() {
@@ -505,6 +625,7 @@ private struct StackWalletCard: View {
     var onTopUp: () -> Void
     var onSpend: () -> Void
     var onShowQR: () -> Void
+    var height: CGFloat = Tokens.cardH
 
     var body: some View {
         let theme = CardTheme(art: card.art)
@@ -550,7 +671,7 @@ private struct StackWalletCard: View {
                 Text("FROZEN").font(AppFont.outfit(11, weight: .semibold, relativeTo: .caption)).tracking(0.7).padding(.horizontal, 13).frame(height: 28).background(Tokens.background.opacity(0.72), in: Capsule())
             }
         }
-        .frame(height: 196)
+        .frame(height: height)
         .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .shadow(color: .black.opacity(0.38), radius: open ? 16 : 8, y: 7)
         .contentShape(RoundedRectangle(cornerRadius: 22))

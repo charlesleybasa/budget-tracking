@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct PesolitaApp: App {
+    @UIApplicationDelegateAdaptor(PesolitaAppDelegate.self) private var appDelegate
     @State private var store = WalletStore()
     @StateObject private var syncManager = SyncManager()
     @StateObject private var storeManager = StoreManager()
@@ -54,5 +55,28 @@ struct PesolitaApp: App {
     private func applyEntitlement(_ owned: Bool) {
         store.isPro = owned
         syncManager.isPro = owned
+    }
+}
+
+
+/// Landscape only where it earns its place: the iPhone Duo unfolded (or any window at least
+/// 600 pt on its short side). Every other iPhone — and the Duo folded — stays portrait, as the
+/// app always has.
+final class PesolitaAppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication,
+                     supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        guard let bounds = window?.windowScene?.screen.bounds else { return .portrait }
+        return min(bounds.width, bounds.height) >= 600 ? .allButUpsideDown : .portrait
+    }
+
+    /// Folding or unfolding changes which orientations are allowed; ask UIKit to check again so
+    /// the folded screen snaps back to portrait.
+    @MainActor
+    static func refreshSupportedOrientations() {
+        for case let scene as UIWindowScene in UIApplication.shared.connectedScenes {
+            for window in scene.windows {
+                window.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()
+            }
+        }
     }
 }

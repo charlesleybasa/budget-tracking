@@ -4,7 +4,9 @@ import PhotosUI
 struct RootView: View {
     @Bindable var store: WalletStore
     @EnvironmentObject private var syncManager: SyncManager
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    /// The window's size decides the layout (see `LayoutMetrics`); every screen reads it from
+    /// the environment rather than measuring for itself.
+    @State private var layout = LayoutMetrics.standard
 
     var body: some View {
         ZStack {
@@ -34,7 +36,8 @@ struct RootView: View {
                         .background(Tokens.darkHover, in: Capsule())
                         .shadow(color: .black.opacity(0.30), radius: 12, y: 8)
                         .padding(.horizontal, 24)
-                        .padding(.bottom, store.snapshot.onboarded ? 96 : 22)
+                        // Clear of the floating tab bar; with the side rail there is none.
+                        .padding(.bottom, store.snapshot.onboarded && !layout.usesRail ? 96 : 22)
                 }
                 .zIndex(30)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -43,6 +46,18 @@ struct RootView: View {
         }
         .animation(Tokens.easeOut(0.25), value: store.toast)
         .animation(Tokens.easeOut(0.28), value: store.success?.id)
+        .onGeometryChange(for: CGSize.self) { proxy in
+            // The whole window, safe areas included, so the Duo's two screens measure as
+            // themselves.
+            CGSize(width: proxy.size.width + proxy.safeAreaInsets.leading + proxy.safeAreaInsets.trailing,
+                   height: proxy.size.height + proxy.safeAreaInsets.top + proxy.safeAreaInsets.bottom)
+        } action: { size in
+            let next = LayoutMetrics.resolve(size)
+            guard next != layout else { return }
+            let expandedChanged = next.isExpanded != layout.isExpanded
+            layout = next
+            if expandedChanged { PesolitaAppDelegate.refreshSupportedOrientations() }
+        }
         .sheet(isPresented: Binding(
             get: { store.sheet != nil },
             set: { if !$0 { store.dismissSheet() } }
@@ -129,23 +144,47 @@ struct RootView: View {
                 store.openRestoreFlow()
             }
         }
+        // Outermost, so every sheet and cover presented above also sees the layout.
+        .environment(\.layout, layout)
     }
 
     private var mainApp: some View {
+        Group {
+            if layout.usesRail {
+                // Unfolded in landscape: the rail stays beside every screen, pushed ones too,
+                // so the NavigationStack lives inside the content column.
+                HStack(spacing: 0) {
+                    PesolitaRail(store: store)
+                    navigation
+                }
+                .background(Tokens.background.ignoresSafeArea())
+            } else {
+                navigation
+            }
+        }
+        .sheet(isPresented: Binding(
+            get: { store.pendingDebt != nil },
+            set: { if !$0 { store.cancelSettle() } }
+        )) {
+            if let debt = store.pendingDebt {
+                SettleSliderView(store: store, debt: debt)
+                    .presentationBackground(.regularMaterial)
+            }
+        }
+        .preferredColorScheme(store.snapshot.appTheme.colorScheme)
+    }
+
+    private var navigation: some View {
         NavigationStack(path: $store.path) {
             Group {
-                if horizontalSizeClass == .regular {
-                    HStack(spacing: 0) {
-                        PesolitaRail(store: store)
-                        tabContent
-                            .frame(maxWidth: 720)
-                            .frame(maxWidth: .infinity)
-                    }
-                    .background(store.selectedTab == .home ? Tokens.background : Tokens.dark1)
+                if layout.usesRail {
+                    tabContent
                 } else {
                     ZStack(alignment: .bottom) {
                         tabContent
                         PesolitaTabBar(store: store)
+                            // Phone-sized on a wide window, not stretched across both panes.
+                            .frame(maxWidth: layout.isExpanded ? 460 : .infinity)
                             .padding(.bottom, 8)
                     }
                 }
@@ -158,42 +197,47 @@ struct RootView: View {
                     BackupAttentionBanner { store.openRestoreFlow() }
                         .padding(.horizontal, 16)
                         .padding(.top, 4)
+                        .frame(maxWidth: LayoutMetrics.readableWidth)
                         .transition(.move(edge: .top).combined(with: .opacity))
                 }
             }
             .animation(Tokens.easeOut(0.3), value: syncManager.phase)
             .navigationDestination(for: AppRoute.self) { route in
-                switch route {
-                case .detail(let id): CardDetailView(store: store, cardID: id)
-                case .editor: CardEditorView(store: store)
-                case .transfer: TransferView(store: store)
-                case .people: PeopleView(store: store)
-                case .events: EventsView(store: store)
-                case .event(let id): EventDetailView(store: store, eventID: id)
+                Group {
+                    switch route {
+                    case .detail(let id): CardDetailView(store: store, cardID: id)
+                    case .editor: CardEditorView(store: store)
+                    case .transfer: TransferView(store: store)
+                    case .people: PeopleView(store: store)
+                    case .events: EventsView(store: store)
+                    case .event(let id): EventDetailView(store: store, eventID: id)
+                    }
                 }
+                // Pushed screens are single columns: on a wide window they keep a readable
+                // width, centred on the page's own background.
+                .frame(maxWidth: layout.isExpanded ? LayoutMetrics.readableWidth : .infinity)
+                .frame(maxWidth: .infinity)
+                .background(Tokens.background.ignoresSafeArea())
             }
         }
-        .sheet(isPresented: Binding(
-            get: { store.pendingDebt != nil },
-            set: { if !$0 { store.cancelSettle() } }
-        )) {
-            if let debt = store.pendingDebt {
-                SettleSliderView(store: store, debt: debt)
-                    .presentationDetents([.height(500)])
-                    .presentationBackground(.regularMaterial)
-            }
-        }
-        .preferredColorScheme(store.snapshot.appTheme.colorScheme)
     }
 
     @ViewBuilder
     private var tabContent: some View {
         switch store.selectedTab {
+        // Home lays out its own two panes; the others are single columns kept readable.
         case .home: HomeView(store: store)
-        case .insights: InsightsView(store: store)
-        case .search: SearchView(store: store)
-        case .settings: SettingsView(store: store)
+        case .insights: readableColumn(InsightsView(store: store))
+        case .search: readableColumn(SearchView(store: store))
+        case .settings: readableColumn(SettingsView(store: store))
         }
+    }
+
+    private func readableColumn(_ content: some View) -> some View {
+        content
+            .frame(maxWidth: layout.isExpanded ? LayoutMetrics.readableWidth : .infinity)
+            .frame(maxWidth: .infinity)
+            .background(Tokens.background.ignoresSafeArea())
     }
 
     private var splash: some View {

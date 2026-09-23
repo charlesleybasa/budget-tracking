@@ -99,7 +99,7 @@ struct PesolitaRail: View {
             .padding(.bottom, 14)
         }
         .padding(.horizontal, 8)
-        .frame(width: 82)
+        .frame(width: Tokens.railW)
         .background(Tokens.background)
     }
 }

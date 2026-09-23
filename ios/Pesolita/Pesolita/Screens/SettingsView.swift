@@ -282,6 +282,10 @@ struct SettingsView: View {
             // does not cost the user their purchase, and should not sound like it does.
             Text("Your wallet stays on this iPhone and your backup stays in the cloud. New changes won't back up until you sign in again. Pesolita Pro stays on.")
         }
+        .task {
+            // Fills in the Pro row's price badge from the App Store.
+            if storeManager.products.isEmpty { await storeManager.loadProducts() }
+        }
         .alert("Delete your backup and account?", isPresented: $confirmingDeleteAccount) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) { deleteAccount() }
@@ -413,8 +417,7 @@ struct SettingsView: View {
         items.append(contentsOf: qrImages)
         
         guard !qrImages.isEmpty, // Only share if there are actual QR codes to share
-              let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = windowScene.windows.first,
+              let window = UIApplication.shared.frontWindow,
               let rootVC = window.rootViewController else {
             FeedbackCenter.warning()
             return
@@ -551,7 +554,8 @@ struct SettingsView: View {
             if showMascot {
                 HStack(spacing: 8) {
                     if showPriceBadge {
-                        Text("₱49 only")
+                        // The App Store's price for this country, not a hard-coded one.
+                        Text(storeManager.products.first.map { "\($0.displayPrice) once" } ?? "One-time")
                             .font(AppFont.outfit(11, weight: .bold))
                             .foregroundStyle(Tokens.accentText)
                             .padding(.horizontal, 8)

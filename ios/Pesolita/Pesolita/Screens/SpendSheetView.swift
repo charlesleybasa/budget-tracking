@@ -5,6 +5,7 @@ struct SpendSheetView: View {
     @Bindable var store: WalletStore
     @State private var photoItem: PhotosPickerItem?
     @State private var picking: TransactionCardPicker?
+    @Environment(\.layout) private var layout
 
     private var mode: TransactionSheetKind { store.sheet ?? .withdraw }
 
@@ -21,7 +22,7 @@ struct SpendSheetView: View {
                     .tint(Tokens.dark2)
             }
             .padding(.horizontal, 20)
-            .padding(.top, 12)
+            .padding(.top, layout.isShort ? 8 : 12)
 
             Picker("Transaction type", selection: Binding(
                 get: { mode },
@@ -33,32 +34,46 @@ struct SpendSheetView: View {
             }
             .pickerStyle(.segmented)
             .padding(.horizontal, 20)
-            .padding(.top, 14)
+            .padding(.top, layout.isShort ? 10 : 14)
 
             amountHeader
-                .padding(.top, 18)
+                .padding(.top, layout.isShort ? 10 : 18)
 
-            ScrollView {
-                VStack(spacing: 14) {
-                    if store.spendOverage > 0 { overageNotice }
-                    if mode == .move { moveCardPicker }
-                    else { sourcePicker }
-                    if mode != .move {
-                        categoryPicker
-                        noteField
-                        // Only a spend can be split — money coming in was never anybody else's.
-                        if mode == .withdraw { SplitBlockView(store: store) }
-                        receiptPicker
-                    }
+            if layout.isShort {
+                // A short screen can't show the form and the keypad at once. The keypad is
+                // what every entry needs, so it stays put and the details scroll above it.
+                ScrollView {
+                    VStack(spacing: 12) { details }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                }
+                .scrollIndicators(.hidden)
+                VStack(spacing: 10) {
                     MoneyKeypad(onKey: store.pressKey)
                     submitButton
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 14)
-                .padding(.bottom, 24)
+                .padding(.top, 10)
+                .padding(.bottom, 8)
+                .background(Tokens.background)
+                .overlay(alignment: .top) { Rectangle().fill(Tokens.hairline).frame(height: 1) }
+            } else {
+                ScrollView {
+                    VStack(spacing: 14) {
+                        details
+                        MoneyKeypad(onKey: store.pressKey)
+                        submitButton
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 14)
+                    .padding(.bottom, 24)
+                }
+                .scrollIndicators(.hidden)
             }
-            .scrollIndicators(.hidden)
         }
+        // One column at a readable width when the sheet is wide (iPhone Duo unfolded).
+        .frame(maxWidth: LayoutMetrics.sheetWidth)
+        .frame(maxWidth: .infinity)
         .font(AppFont.outfit(15))
         .background(Tokens.background)
         .blur(radius: picking == nil ? 0 : 3)
@@ -92,6 +107,20 @@ struct SpendSheetView: View {
         }
     }
 
+    @ViewBuilder
+    private var details: some View {
+        if store.spendOverage > 0 { overageNotice }
+        if mode == .move { moveCardPicker }
+        else { sourcePicker }
+        if mode != .move {
+            categoryPicker
+            noteField
+            // Only a spend can be split — money coming in was never anybody else's.
+            if mode == .withdraw { SplitBlockView(store: store) }
+            receiptPicker
+        }
+    }
+
     private var title: String {
         switch mode {
         case .withdraw: "Log a spend"
@@ -108,7 +137,7 @@ struct SpendSheetView: View {
                 Text(store.amountDraft.isEmpty ? "0.00" : MoneyFormat.grouped(draft: store.amountDraft))
                     .foregroundStyle(store.spendOverage > 0 ? Tokens.negative : Tokens.text)
             }
-            .font(AppFont.outfit(46, weight: .black, relativeTo: .largeTitle))
+            .font(AppFont.outfit(layout.isShort ? 40 : 46, weight: .black, relativeTo: .largeTitle))
             .minimumScaleFactor(0.64)
             .lineLimit(1)
             Text(amountSubtitle)

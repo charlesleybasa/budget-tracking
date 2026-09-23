@@ -11,10 +11,13 @@ struct MoneyCardPickerSheet: View {
     let onSelect: (String) -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.layout) private var layout
 
+    /// Sized from the window, not the device screen: on the iPhone Duo those differ, and they
+    /// change the moment it folds.
     private var compactHeight: CGFloat {
         let rows = CGFloat(min(cards.count, 6))
-        return min(UIScreen.main.bounds.height * 0.86, max(330, 112 + rows * 74))
+        return min(layout.size.height * 0.86, max(330, 112 + rows * 74))
     }
 
     var body: some View {

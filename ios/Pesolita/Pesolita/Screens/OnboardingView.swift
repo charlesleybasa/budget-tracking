@@ -6,6 +6,7 @@ struct OnboardingView: View {
     @State private var showImporter = false
     @State private var balanceField = ""
     @FocusState private var focusedField: Field?
+    @Environment(\.layout) private var layout
 
     private enum Field { case name, nickname, balance }
 
@@ -27,6 +28,8 @@ struct OnboardingView: View {
                 pageDots
             }
             .padding(.top, 8)
+            // Unfolded, onboarding reads as a column rather than lines running 600 pt wide.
+            .frame(maxWidth: layout.isExpanded ? 520 : .infinity)
         }
         .foregroundStyle(Tokens.text)
         .font(AppFont.outfit(16))
@@ -68,11 +71,11 @@ struct OnboardingView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
             }
-            .frame(minHeight: 250)
+            .frame(minHeight: layout.isShort ? 170 : 250)
 
             VStack(alignment: .leading, spacing: 0) {
                 Text("Every peso\ngets a home.")
-                    .font(AppFont.outfit(38, weight: .black, relativeTo: .largeTitle))
+                    .font(AppFont.outfit(layout.isShort ? 34 : 38, weight: .black, relativeTo: .largeTitle))
                     .tracking(-1.25)
                     .lineSpacing(-2)
                 Text("Make a card for each pocket of your money — debit, e-wallets, or the cash in your actual wallet. You type it in. Private, and it works offline.")
@@ -85,7 +88,7 @@ struct OnboardingView: View {
                     store.onboarding.step = 1
                     focusedField = .name
                 }
-                .padding(.top, 25)
+                .padding(.top, layout.isShort ? 18 : 25)
 
                 // Opens Welcome back: Continue with Google for Pesolita Pro, or a backup file.
                 // The one place a returning user looks, so it offers both ways home.
@@ -106,7 +109,7 @@ struct OnboardingView: View {
 
     private var nameStep: some View {
         VStack(alignment: .leading, spacing: 0) {
-            SpriteAnimationView(spec: .peekaboo, size: 150)
+            SpriteAnimationView(spec: .peekaboo, size: 150 * layout.spriteScale)
                 .offset(x: -10)
             Text("First — what\nshould I call you?")
                 .font(AppFont.outfit(30, weight: .black, relativeTo: .title))

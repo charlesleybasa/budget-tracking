@@ -75,19 +75,21 @@ struct OwedStripView: View {
                     Text("OUT WITH FRIENDS")
                         .font(AppFont.outfit(9.5, weight: .bold))
                         .kerning(1.2)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                         .foregroundStyle(Tokens.accentText)
-                    HStack(alignment: .firstTextBaseline, spacing: 6) {
-                        Text("₱\(MoneyFormat.amount(store.totalOwed))")
-                            .font(AppFont.outfit(19, weight: .bold, relativeTo: .headline))
-                            .foregroundStyle(Tokens.text)
-                            .monospacedDigit()
-                            .lineLimit(1)
-                            .fixedSize()
-                            .contentTransition(.numericText())
-                        Text(debts.count == 1 ? "from 1 person" : "from \(debts.count) people")
-                            .font(AppFont.outfit(11.5, weight: .medium))
-                            .foregroundStyle(Tokens.muted3)
-                            .lineLimit(1)
+                    // Where there's no room for "from 4 people", the faces already say it —
+                    // show the amount alone rather than a clipped "from 4 p…".
+                    ViewThatFits(in: .horizontal) {
+                        HStack(alignment: .firstTextBaseline, spacing: 6) {
+                            owedAmount
+                            Text(debts.count == 1 ? "from 1 person" : "from \(debts.count) people")
+                                .font(AppFont.outfit(11.5, weight: .medium))
+                                .foregroundStyle(Tokens.muted3)
+                                .lineLimit(1)
+                                .fixedSize()
+                        }
+                        owedAmount
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -106,6 +108,16 @@ struct OwedStripView: View {
         .accessibilityLabel("Out with friends, ₱\(MoneyFormat.amount(store.totalOwed)), \(subtitle(for: debts))")
         .accessibilityHint(expanded ? "Hides the list" : "Shows who owes you")
         .accessibilityAddTraits(.isButton)
+    }
+
+    private var owedAmount: some View {
+        Text("₱\(MoneyFormat.amount(store.totalOwed))")
+            .font(AppFont.outfit(19, weight: .bold, relativeTo: .headline))
+            .foregroundStyle(Tokens.text)
+            .monospacedDigit()
+            .lineLimit(1)
+            .fixedSize()
+            .contentTransition(.numericText())
     }
 
     /// Up to three faces, overlapping, so the row reads as "these people" at a glance.
@@ -153,7 +165,16 @@ struct OwedStripView: View {
         return "\(people) · \(events.count == 1 ? "1 event" : "\(events.count) events")"
     }
 
+    /// In a narrow pane (iPhone Duo unfolded, portrait) the reminder button gives way so the
+    /// person's name still shows; reminders stay a tap away on the People screen.
     private func row(for debt: PersonDebt) -> some View {
+        ViewThatFits(in: .horizontal) {
+            rowContent(for: debt, showsReminder: true)
+            rowContent(for: debt, showsReminder: false)
+        }
+    }
+
+    private func rowContent(for debt: PersonDebt, showsReminder: Bool) -> some View {
         HStack(spacing: 9) {
             avatar(for: debt, size: 28)
 
@@ -174,20 +195,27 @@ struct OwedStripView: View {
                 .font(AppFont.outfit(13, weight: .bold))
                 .foregroundStyle(Tokens.text)
                 .monospacedDigit()
+                // Amounts and the button never wrap; the name gives way instead.
+                .lineLimit(1)
+                .fixedSize()
 
-            Button {
-                sharing = SharePayload(text: SplitMath.reminder(for: debt, ownerName: store.snapshot.userName))
-            } label: {
-                Image(systemName: "paperplane")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Tokens.muted3)
-                    .frame(width: 32, height: 32)
-                    .overlay(Circle().strokeBorder(Tokens.darkHover, lineWidth: 1))
+            if showsReminder {
+                Button {
+                    sharing = SharePayload(text: SplitMath.reminder(for: debt, ownerName: store.snapshot.userName))
+                } label: {
+                    Image(systemName: "paperplane")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Tokens.muted3)
+                        .frame(width: 32, height: 32)
+                        .overlay(Circle().strokeBorder(Tokens.darkHover, lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Send \(debt.name) a reminder")
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Send \(debt.name) a reminder")
 
             Button("Paid me") { store.askSettle(personID: debt.personId) }
+                .lineLimit(1)
+                .fixedSize()
                 .font(AppFont.outfit(11, weight: .bold))
                 .foregroundStyle(Tokens.onAccent)
                 .padding(.horizontal, 11)

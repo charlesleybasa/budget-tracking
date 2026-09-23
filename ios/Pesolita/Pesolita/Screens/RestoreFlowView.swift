@@ -41,6 +41,7 @@ struct RestoreFlowView: View {
                 .padding(.horizontal, 22)
                 .padding(.top, 34)
                 .padding(.bottom, 24)
+                .frame(maxWidth: LayoutMetrics.sheetWidth)
                 .frame(maxWidth: .infinity)
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
                 .animation(Tokens.easeOut(0.28), value: stateKey)

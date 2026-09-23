@@ -26,7 +26,11 @@ struct SettleSliderView: View {
     /// what is actually in them, which is the one thing a manual wallet cannot afford.
     @State private var intoID: String?
     @State private var picking = false
+    /// The sheet fits what it holds: a fixed height clipped the "Not yet" button on shorter
+    /// screens, and left empty space on taller ones.
+    @State private var contentHeight: CGFloat = 520
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.layout) private var layout
 
     private var frame: Int { Int((progress * Double(frames - 1)).rounded()) }
 
@@ -37,13 +41,8 @@ struct SettleSliderView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-                Capsule()
-                    .fill(Tokens.line1)
-                    .frame(width: 34, height: 4)
-                    .padding(.top, 10)
-
                 character
-                    .padding(.top, 6)
+                    .padding(.top, layout.isShort ? 14 : 22)
 
                 Text("\(debt.name.uppercased()) PAID YOU BACK")
                     .font(AppFont.outfit(12, weight: .medium))
@@ -93,8 +92,12 @@ struct SettleSliderView: View {
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 12)
+            // Phone proportions inside a wide window: the slide track stays a thumb's reach.
+            .frame(maxWidth: LayoutMetrics.controlMaxWidth)
             .frame(maxWidth: .infinity)
-            .background(Color.clear)
+            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
+            .presentationDetents([.height(contentHeight + 12)])
+            .presentationDragIndicator(.visible)
         .sheet(isPresented: $picking) {
             MoneyCardPickerSheet(
                 title: "Land it in",
@@ -172,15 +175,15 @@ struct SettleSliderView: View {
                         center: .center, startRadius: 4, endRadius: 95
                     )
                 )
-                .frame(width: 190, height: 190)
+                .frame(width: 190 * layout.spriteScale, height: 190 * layout.spriteScale)
                 .opacity(progress * 0.9)
 
             SpriteFrameView(spec: .settleSlider, frame: frame)
-                .frame(width: 168, height: 168)
-                
+                .frame(width: 168 * layout.spriteScale, height: 168 * layout.spriteScale)
+
             FlyingCoinsView(progress: progress)
         }
-        .frame(height: 176)
+        .frame(height: 176 * layout.spriteScale)
         .accessibilityHidden(true)
     }
 

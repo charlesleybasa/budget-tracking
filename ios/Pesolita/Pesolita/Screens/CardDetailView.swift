@@ -4,7 +4,11 @@ import UIKit
 struct CardDetailView: View {
     @Bindable var store: WalletStore
     var cardID: String
+    /// Set when the detail sits in Home's right pane (iPhone Duo unfolded, landscape): the back
+    /// button becomes a close button that returns the pane to activity.
+    var onClose: (() -> Void)? = nil
     @State private var flipped = false
+    @Environment(\.layout) private var layout
     @State private var editingLimit = false
     @State private var draftLimit = ""
 
@@ -27,11 +31,15 @@ struct CardDetailView: View {
 
     private func navigation(_ card: Card) -> some View {
         HStack {
-            circleButton("arrow.left", label: "Back to home", action: store.popRoute)
+            if let onClose {
+                circleButton("xmark", label: "Close \(card.nick)", action: onClose)
+            } else {
+                circleButton("arrow.left", label: "Back to home", action: store.popRoute)
+            }
             Spacer()
             Text(card.nick)
                 .font(AppFont.outfit(14, weight: .semibold, relativeTo: .subheadline))
-                .lineLimit(1).frame(maxWidth: 190)
+                .lineLimit(1).frame(maxWidth: layout.cardSize.width * 0.6)
             Spacer()
             circleButton("pencil", label: "Redesign \(card.nick)") { store.openEditor(cardID: card.id) }
         }
@@ -65,7 +73,7 @@ struct CardDetailView: View {
                 .allowsHitTesting(flipped)
                 .onTapGesture { setFlipped(false) }
         }
-        .frame(width: 320, height: 196)
+        .frame(width: layout.cardSize.width, height: layout.cardSize.height)
         .shadow(color: .black.opacity(0.45), radius: 17, y: 10)
         .overlay(alignment: .bottomTrailing) {
             Label(flipped ? "Card front" : "Receiving details", systemImage: "arrow.triangle.2.circlepath")
@@ -74,7 +82,7 @@ struct CardDetailView: View {
                 .offset(y: 17)
                 .accessibilityHidden(true)
         }
-        .padding(.bottom, 18)
+        .padding(.bottom, layout.isShort ? 14 : 18)
         .accessibilityLabel(flipped ? "\(card.nick). Show card front" : "\(card.nick). Show receiving details")
     }
 

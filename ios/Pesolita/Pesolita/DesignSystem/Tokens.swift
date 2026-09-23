@@ -192,7 +192,7 @@ public enum Tokens {
     // MARK: - Layout
 
     public static let appMaxW: CGFloat = 480
-    public static let railW: CGFloat = 76
+    public static let railW: CGFloat = 82
     public static let paneGap: CGFloat = 20
     public static let contentMax: CGFloat = 720
 

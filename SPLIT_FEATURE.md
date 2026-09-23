@@ -288,3 +288,21 @@ and `BackupAttentionBanner` on Home for decisions found in the background.
 - **Out with friends** (`OwedStripView`) is one collapsible row; open state is
   `@AppStorage("home.owedExpanded")`.
 - Debug launch args: `--open-pro`, `--open-restore`, `--with-friends` (with `--demo-wallet`).
+
+## iPhone Duo / responsive layout (1.8)
+
+- One layout signal from the window size: `DesignSystem/LayoutMetrics.swift` →
+  `.compactShort` (height < 760: Duo folded 466×678, SE), `.compact` (today's iPhones, no change),
+  `.expanded` (width ≥ 600: Duo unfolded). `usesRail` when ≥ 860 wide (unfolded landscape).
+  Measured once in `RootView` and read via `@Environment(\.layout)`; set outermost so sheets see it.
+- Expanded Home = two panes (cards | Out with friends + activity). Card detail opens in the right
+  pane only when `detailInPane` (landscape); folding moves it back onto the navigation path.
+- Pushed screens and Insights/Search/Settings cap at `LayoutMetrics.readableWidth` (600);
+  keypad, slide track and success screen at `controlMaxWidth` (460); sheets at `sheetWidth` (560).
+- Short windows: Log-a-spend pins keypad + Log it and scrolls the details above; Paid-me sheet
+  sizes to its content; sprites scale by `spriteScale`.
+- Landscape only when unfolded: Info.plist allows portrait + landscape; `PesolitaAppDelegate`
+  returns `.portrait` unless the screen's short side ≥ 600 pt.
+- Simulator: the Duo's outer screen is display `LCD` (1398×2034); capture it with
+  `xcrun simctl io <udid> screenshot --display=<uuid from 'simctl io <udid> enumerate'>`.
+  Fold/unfold and rotate from Xcode 27.1's DeviceHub (Cmd+← rotates).

@@ -44,6 +44,8 @@ struct ProUpsellView: View {
             }
             .padding(.horizontal, 22)
             .padding(.bottom, 12)
+            .frame(maxWidth: LayoutMetrics.sheetWidth)
+            .frame(maxWidth: .infinity)
             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
         }
         .scrollBounceBehavior(.basedOnSize)

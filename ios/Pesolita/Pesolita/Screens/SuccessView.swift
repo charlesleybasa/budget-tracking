@@ -5,6 +5,7 @@ struct SuccessView: View {
     var onClose: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var burst = false
+    @Environment(\.layout) private var layout
 
     private let colors: [Color] = [Tokens.accent, Tokens.cream, Tokens.pink, .white]
 
@@ -17,9 +18,9 @@ struct SuccessView: View {
                 ZStack {
                     Circle()
                         .fill(.white.opacity(0.16))
-                        .frame(width: 172, height: 172)
+                        .frame(width: 172 * layout.spriteScale, height: 172 * layout.spriteScale)
                         .blur(radius: 18)
-                    SpriteAnimationView(spec: .celebrate, size: 168)
+                    SpriteAnimationView(spec: .celebrate, size: 168 * layout.spriteScale)
                 }
                 Text(success.head)
                     .font(AppFont.outfit(27, weight: .black, relativeTo: .title2))
@@ -40,10 +41,11 @@ struct SuccessView: View {
                     .frame(maxWidth: .infinity, minHeight: 56)
                     .background(Tokens.accent, in: Capsule())
                     .padding(.horizontal, 26)
-                    .padding(.bottom, 44)
+                    .padding(.bottom, layout.isShort ? 24 : 44)
                     .buttonStyle(PesolitaPressStyle())
                     .accessibilityIdentifier("close-success")
             }
+            .frame(maxWidth: LayoutMetrics.controlMaxWidth)
         }
         .onAppear {
             guard !reduceMotion else { return }

@@ -11,6 +11,7 @@ struct CardEditorView: View {
     /// Measured, so the panel always starts below the Templates/DIY switch whatever the text
     /// size — a fixed guess slid the "Choose a background" heading under it.
     @State private var headerHeight: CGFloat = 352
+    @Environment(\.layout) private var layout
 
     private var draft: CardEditorDraft? { store.editor }
     private var card: Card? { draft?.card }
@@ -63,7 +64,7 @@ struct CardEditorView: View {
     }
 
     private func editorHeader(_ draft: CardEditorDraft) -> some View {
-        VStack(spacing: 17) {
+        VStack(spacing: layout.isShort ? 12 : 17) {
             HStack {
                 Button {
                     store.editor = nil
@@ -93,7 +94,7 @@ struct CardEditorView: View {
             .foregroundStyle(Tokens.text)
 
             CardFaceView(card: draft.card, privateMode: false)
-                .frame(width: 320, height: 196)
+                .frame(width: layout.cardSize.width, height: layout.cardSize.height)
                 .id(draft.card.art)
                 .transition(.opacity.combined(with: .scale(scale: 0.98)))
                 .animation(Tokens.easeOut(0.26), value: draft.card.art)
