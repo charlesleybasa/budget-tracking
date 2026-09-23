@@ -11,7 +11,8 @@ import wave
 SR = 44100
 BPM = 120
 BEAT = 60 / BPM
-LENGTH = 19.0
+import sys
+LENGTH = float(sys.argv[1]) if len(sys.argv) > 1 else 19.0
 N = int(SR * LENGTH)
 random.seed(7)
 
@@ -88,7 +89,7 @@ CHORDS = [
 ]
 BAR = 4 * BEAT
 bars = int(math.ceil(LENGTH / BAR))
-DRUMS_END = 18.0
+DRUMS_END = LENGTH - 1.0
 
 k, c, h, ho = kick(), clap(), hat(), hat(True)
 for b in range(bars):
@@ -140,7 +141,7 @@ for i in range(N):
 
 peak = max(abs(v) for v in mix) or 1
 fade = int(0.35 * SR)
-with wave.open("music.wav", "w") as w:
+with wave.open(sys.argv[2] if len(sys.argv) > 2 else "music.wav", "w") as w:
     w.setnchannels(2)
     w.setsampwidth(2)
     w.setframerate(SR)

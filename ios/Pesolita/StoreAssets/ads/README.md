@@ -39,3 +39,40 @@ python3 compose.py recordings            # → pesolita-split-ad-9x16.mp4
 Edit the captions in `make_assets.py`, and scene timing and in-points in `compose.py`
 (`SCENES`). The demo hooks (`--demo-type`, `--demo-expand`, `--demo-slide`) exist only in
 Debug builds.
+
+---
+
+# App Store preview — `pesolita-app-preview-886x1920.mp4`
+
+886 × 1920, 30 fps, H.264 High, stereo AAC 256 kbps, 26 s. Upload it to the **iPhone 6.9"
+Display** preview slot. Apple scales it for smaller displays.
+
+| Time | Caption | Footage |
+|------|---------|---------|
+| 0–2.5 s | Every peso **gets a home.** | Home |
+| 2.5–7 s | Split any bill **in one tap.** | ₱3,600 typed, split five ways |
+| 7–10 s | Trips and nights out, **totalled for you.** | Day 1 Thailand |
+| 10–13.5 s | Know who **still owes you.** | Out with friends opens |
+| 13.5–18 s | Paid back? **Slide it home.** | Paid-me slide → Settled |
+| 18–21 s | See where **it all went.** | Insights |
+| 21–23.5 s | Light or dark. **Always lovely.** | Home in light mode |
+| 23.5–26 s | Pesolita · Split bills. Track every peso. | End card (no price, no call to action) |
+
+**Why it passes review:**
+- It uses app footage only, with no people, hands, AI scenes or phone hardware.
+- It shows no prices and no "download" wording.
+- It is 15–30 s long.
+
+**Poster frame:** in App Store Connect, set it to ~5 s (the split, ₱720 each). That's what
+shows before the preview plays.
+
+**Upload:** App Store Connect → the version → App Previews and Screenshots → iPhone 6.9"
+Display → drag the .mp4 into the preview spot (first position). Previews are reviewed with the
+version, so add it to 1.8 rather than the 1.7 already in review.
+
+```
+python3 make_music.py 26 music-preview.wav
+python3 compose_preview.py recordings ../raw
+```
+
+For the AI lifestyle ad, see `HIGGSFIELD-BRIEF.md`. That one is for social platforms only.

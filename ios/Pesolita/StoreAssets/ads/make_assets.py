@@ -140,12 +140,13 @@ def end_card():
     img.convert("RGB").save("end.png")
 
 
-background()
-phone_mask_and_bezel()
-caption("hook", "Dinner was ₱3,600.", "Who owes what?")
-caption("split", "Split it in one tap.", "₱720 each. Done.")
-caption("event", "Every trip,", "totalled for you.")
-caption("owed", "Know who", "still owes you.")
-caption("slide", "Paid back?", "Slide it home.")
-end_card()
-print("assets ready", PHONE_W, PHONE_H)
+if __name__ == "__main__":
+  background()
+  phone_mask_and_bezel()
+  caption("hook", "Dinner was ₱3,600.", "Who owes what?")
+  caption("split", "Split it in one tap.", "₱720 each. Done.")
+  caption("event", "Every trip,", "totalled for you.")
+  caption("owed", "Know who", "still owes you.")
+  caption("slide", "Paid back?", "Slide it home.")
+  end_card()
+  print("assets ready", PHONE_W, PHONE_H)
