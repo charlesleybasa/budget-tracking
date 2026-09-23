@@ -421,12 +421,14 @@ struct ProUpsellView: View {
     @ViewBuilder
     private var debugControls: some View {
         #if DEBUG
+        if !StoreCapture.active {
         HStack(spacing: 16) {
             Button("Debug: grant Pro") { storeManager.debugSetPro(true) }
             Button("Debug: reset Pro") { storeManager.debugSetPro(false) }
         }
         .font(AppFont.outfit(11, relativeTo: .caption2))
         .foregroundStyle(Tokens.textTertiary)
+        }
         #endif
     }
 

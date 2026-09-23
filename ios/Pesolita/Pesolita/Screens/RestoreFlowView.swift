@@ -680,6 +680,16 @@ struct GoogleButton: View {
 
 /// Buys Pesolita Pro through the App Store — the real purchase, with the App Store's price.
 struct ProPurchaseButton: View {
+    /// Store screenshots leave the price out: it differs by country, and the simulator's is a
+    /// test price.
+    static var captureLabel: String? {
+        #if DEBUG
+        StoreCapture.active ? "Get Pesolita Pro" : nil
+        #else
+        nil
+        #endif
+    }
+
     @EnvironmentObject private var storeManager: StoreManager
     @State private var buying = false
     @State private var failed: String?
@@ -708,7 +718,7 @@ struct ProPurchaseButton: View {
                     if buying || storeManager.products.isEmpty {
                         ProgressView().tint(Tokens.onAccent)
                     } else {
-                        Text("Get Pesolita Pro — \(storeManager.products.first?.displayPrice ?? "") once")
+                        Text(Self.captureLabel ?? "Get Pesolita Pro — \(storeManager.products.first?.displayPrice ?? "") once")
                     }
                 }
                 .font(AppFont.outfit(16, weight: .bold, relativeTo: .body))

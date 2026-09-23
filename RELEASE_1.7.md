@@ -53,6 +53,11 @@ In the sidebar, click **＋** next to iOS App and enter **1.7**, then fill in:
 
 **Build:** choose **1.7 (13)**.
 
+**Screenshots:** under App Previews and Screenshots, delete the old ones, then drag in
+`ios/Pesolita/StoreAssets/AppStore-v2/iphone-6.9/01…09.png` (6.9" slot) and
+`…/iphone-6.5/01…09.png` (6.5" slot), in number order. Details and the reasoning behind each
+rule are in `StoreAssets/SCREENSHOTS-V2.md`.
+
 **App Review Information → Notes:** keep the 1.6 notes and add:
 
 ```

@@ -7,7 +7,15 @@ import SwiftUI
 /// Splitwise is that adding an expense costs several screens every single time.
 struct SplitBlockView: View {
     @Bindable var store: WalletStore
-    @State private var isOpen = false
+    @State private var isOpen = Self.startsOpen
+    /// Store screenshots show the split opened, so the people and shares are visible.
+    private static var startsOpen: Bool {
+        #if DEBUG
+        StoreCapture.active && ProcessInfo.processInfo.arguments.contains("--split-open")
+        #else
+        false
+        #endif
+    }
     @State private var addingPerson = false
     @State private var draftName = ""
     @State private var addingEvent = false

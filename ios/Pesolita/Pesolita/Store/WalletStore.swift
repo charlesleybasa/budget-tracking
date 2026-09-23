@@ -175,7 +175,12 @@ final class WalletStore {
         let launchArguments = ProcessInfo.processInfo.arguments
         if launchArguments.contains("--demo-wallet") {
             try? await repository.erase()
-            snapshot = launchArguments.contains("--showcase") ? .simulatorShowcase : .simulatorDemo
+            snapshot = launchArguments.contains("--store") ? .storeShowcase
+                : launchArguments.contains("--showcase") ? .simulatorShowcase : .simulatorDemo
+            StoreCapture.active = launchArguments.contains("--store")
+            if launchArguments.contains("--theme=light") { snapshot.appTheme = .light }
+            if launchArguments.contains("--theme=dark") { snapshot.appTheme = .dark }
+            UserDefaults.standard.set(launchArguments.contains("--owed-expanded"), forKey: "home.owedExpanded")
             if launchArguments.contains("--empty-activity") { snapshot.tx = [] }
             if launchArguments.contains("--with-friends"), let card = snapshot.cards.first?.id {
                 let now = Date().timeIntervalSince1970 * 1000
@@ -205,6 +210,19 @@ final class WalletStore {
                 path = [.transfer]
             } else if launchArguments.contains("--route=editor") {
                 openEditor(cardID: snapshot.activeId)
+            } else if launchArguments.contains("--route=event") {
+                path = [.event(snapshot.events.first?.id ?? "")]
+            } else if launchArguments.contains("--route=people") {
+                path = [.people]
+            }
+            if launchArguments.contains("--sheet=split") {
+                openTransaction(.withdraw)
+                amountDraft = "3600"
+                noteDraft = "Beach dinner"
+                categoryDraft = .food
+            }
+            if launchArguments.contains("--settle") {
+                askSettle(personID: "p-jr")
             }
             return
         }
