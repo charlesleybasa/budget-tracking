@@ -62,8 +62,7 @@ struct Panel {
 let panels: [Panel] = [
     Panel(eyebrow: "PESOLITA", headline: "Every peso\n{gets a home.}",
           body: "Cards, e-wallets and cash — one calm wallet you fill in yourself.",
-          shots: ["home-dark"],
-          chips: [Chip(symbol: "checkmark.shield.fill", tint: green, title: "₱1,955 safe to spend", detail: "today, on Main Account", x: 0.40, y: 2330)]),
+          shots: ["home-dark"]),
     Panel(eyebrow: "NEW  ·  SPLIT BILLS", headline: "Split the bill\n{in one tap.}",
           body: "Evenly, by shares or exact. Only your part counts as spent.",
           shots: ["split-sheet"], tilt: 0,
@@ -93,7 +92,9 @@ let panels: [Panel] = [
           chips: [Chip(symbol: "chart.bar.fill", tint: gold, title: "10 spends this week", detail: "Bills took the lead", x: 0.42, y: 2440)]),
     Panel(eyebrow: "HOME SCREEN WIDGET", headline: "Your balance,\n{at a glance.}",
           body: "Flick between cards and see what's safe to spend today.",
-          shots: ["people"], widget: true),
+          shots: [],
+          chips: [Chip(symbol: "square.grid.2x2.fill", tint: blue, title: "Three sizes", detail: "small, medium and large", x: 0.52, y: 900)],
+          widget: true),
 ]
 
 // MARK: - Drawing helpers (top-left origin)
@@ -204,6 +205,37 @@ func chip(_ c: Chip, panelX: CGFloat) {
     detail.draw(at: CGPoint(x: disc.maxX + 28, y: rect.minY + 98))
 }
 
+/// Pesolita's own widgets, cut from `raw/widget-home.png` (a 9:41 Home Screen with the store
+/// wallet): the small one and the large one.
+let widgetHome: CGImage = loadImage("widget-home")
+let smallWidget = widgetHome.cropping(to: CGRect(x: 96, y: 287, width: 520, height: 525))!
+let largeWidget = widgetHome.cropping(to: CGRect(x: 96, y: 934, width: 1128, height: 1182))!
+
+func floatWidget(_ image: CGImage, center: CGPoint, scale: CGFloat, radius: CGFloat, tilt: CGFloat) {
+    let size = CGSize(width: CGFloat(image.width) * scale, height: CGFloat(image.height) * scale)
+    let rect = CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height)
+    let r = radius * scale
+    ctx.saveGState()
+    ctx.translateBy(x: center.x, y: center.y)
+    ctx.rotate(by: tilt * .pi / 180)
+    ctx.saveGState()
+    ctx.setShadow(offset: CGSize(width: 0, height: 44), blur: 110, color: NSColor.black.withAlphaComponent(0.6).cgColor)
+    ctx.addPath(CGPath(roundedRect: rect, cornerWidth: r, cornerHeight: r, transform: nil))
+    ctx.setFillColor(rgb(0x161618).cgColor)
+    ctx.fillPath()
+    ctx.restoreGState()
+    ctx.saveGState()
+    ctx.addPath(CGPath(roundedRect: rect, cornerWidth: r, cornerHeight: r, transform: nil))
+    ctx.clip()
+    drawImage(image, in: rect)
+    ctx.restoreGState()
+    ctx.addPath(CGPath(roundedRect: rect.insetBy(dx: 2, dy: 2), cornerWidth: r - 2, cornerHeight: r - 2, transform: nil))
+    ctx.setStrokeColor(NSColor.white.withAlphaComponent(0.14).cgColor)
+    ctx.setLineWidth(4)
+    ctx.strokePath()
+    ctx.restoreGState()
+}
+
 // MARK: - Background: one continuous piece
 
 ctx.setFillColor(ink.cgColor)
@@ -303,29 +335,17 @@ for (index, panel) in panels.enumerated() {
         phone(loadImage(panel.shots[0]), center: CGPoint(x: px + W * 0.34, y: 0), width: 820, top: deviceTop + 120, tilt: -6)
         phone(loadImage(panel.shots[1]), center: CGPoint(x: px + W * 0.66, y: 0), width: 820, top: deviceTop + 40, tilt: 6)
     } else if panel.widget {
-        phone(loadImage(panel.shots[0]), center: CGPoint(x: px + W / 2, y: 0), width: 980, top: deviceTop + 330, tilt: 0)
-        // The real Pesolita widget, lifted off a Home Screen capture.
-        let source = NSImage(contentsOf: root.appendingPathComponent("build/13-widget-home.png"))!
-            .cgImage(forProposedRect: nil, context: nil, hints: nil)!
-        let crop = CGRect(x: 96, y: 290, width: 1128, height: 1164)
-        let widget = source.cropping(to: crop)!
-        let scale: CGFloat = 1.0
-        let rect = CGRect(x: px + (W - crop.width * scale) / 2, y: deviceTop - 20, width: crop.width * scale, height: crop.height * scale)
-        ctx.saveGState()
-        ctx.setShadow(offset: CGSize(width: 0, height: 50), blur: 120, color: NSColor.black.withAlphaComponent(0.65).cgColor)
-        ctx.addPath(CGPath(roundedRect: rect, cornerWidth: 118, cornerHeight: 118, transform: nil))
-        ctx.setFillColor(rgb(0x161618).cgColor)
-        ctx.fillPath()
-        ctx.restoreGState()
-        ctx.saveGState()
-        ctx.addPath(CGPath(roundedRect: rect, cornerWidth: 118, cornerHeight: 118, transform: nil))
-        ctx.clip()
-        drawImage(widget, in: rect)
-        ctx.restoreGState()
+        // The real widgets, lifted off a 9:41 Home Screen capture of the store wallet.
+        floatWidget(smallWidget, center: CGPoint(x: px + W * 0.29, y: deviceTop + 250), scale: 0.9, radius: 70, tilt: -6)
+        floatWidget(largeWidget, center: CGPoint(x: px + W / 2, y: deviceTop + 580 + CGFloat(largeWidget.height) * 0.97 / 2),
+                    scale: 0.97, radius: 72, tilt: 0)
     } else {
         phone(loadImage(panel.shots[0]), center: CGPoint(x: px + W / 2, y: 0), width: 1010, top: deviceTop, tilt: panel.tilt)
     }
 
+    if index == 0 {
+        floatWidget(smallWidget, center: CGPoint(x: px + W - 250, y: 2330), scale: 0.72, radius: 70, tilt: 7)
+    }
     for c in panel.chips { chip(c, panelX: px) }
 }
 

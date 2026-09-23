@@ -5,7 +5,7 @@ and blue glows, and a gold ribbon crossing every panel edge.
 
 | # | Headline | Screen | Feature |
 |---|----------|--------|---------|
-| 1 | Every peso **gets a home.** | Home (dark) | Wallet |
+| 1 | Every peso **gets a home.** | Home (dark) + small widget | Wallet, widget |
 | 2 | Split the bill **in one tap.** | Log a spend, Split with open | NEW: split bills |
 | 3 | Trips, **totalled for you.** | Day 1 Thailand event | NEW: events |
 | 4 | Know who **still owes you.** | Home, Out with friends open | Out with friends |
@@ -13,7 +13,7 @@ and blue glows, and a gold ribbon crossing every panel edge.
 | 6 | Back up **every peso.** | Pesolita Pro sheet | Pro (labelled IN-APP PURCHASE) |
 | 7 | Light or dark. **Always lovely.** | Home, light and dark | Themes |
 | 8 | See where **it all went.** | Insights | Insights |
-| 9 | Your balance, **at a glance.** | Widget + People | Widget |
+| 9 | Your balance, **at a glance.** | Large + small widget | Widget |
 
 The first three are the ones people see in search results, so they carry the new features.
 
@@ -57,5 +57,12 @@ swift render-v2.swift
   exists in Debug builds.
 - The capture hooks only exist in Debug builds: `--store`, `--theme=`, `--sheet=split`,
   `--split-open`, `--route=event|people`, `--settle`, `--owed-expanded`, `--open-pro`.
-- Panel 9's widget is cropped from the older `build/13-widget-home.png`. Recapture it if the
-  widget design changes.
+- The widgets in panels 1 and 9 are cut from `raw/widget-home.png`. `capture.sh` can't
+  produce it, because a widget has to be added to the Home Screen by hand. To redo it:
+  1. After `capture.sh`, launch the store wallet once on the iPhone 17 Pro Max simulator.
+  2. Go to the Home Screen, long-press an empty spot, then Edit → Add Widget → Pesolita.
+     Add the **small** one, then the **large** one.
+  3. Run `xcrun simctl io "iPhone 17 Pro Max" screenshot raw/widget-home.png`.
+
+  If the widgets land somewhere else on the Home Screen, adjust the two crop rectangles in
+  `render-v2.swift` (`smallWidget`, `largeWidget`).
