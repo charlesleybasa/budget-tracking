@@ -1,5 +1,5 @@
 import Foundation
-
+import SwiftUI
 enum CardArtStyle: String, Codable, CaseIterable, Sendable {
     case blob, wave, arc, grid, confetti, mesh, planes, metal, glyph, orbit, foil, irid, crest, photo
 }
@@ -106,7 +106,7 @@ struct CardTemplate: Identifiable, Hashable, Sendable {
 enum CardKind: String, Codable, CaseIterable, Identifiable, Sendable {
     case debit = "ATM / Debit"
     case credit = "Credit card"
-    case digitalBank = "Digital bank"
+    case digitalBank = "Digital wallet"
     case cash = "Cash on hand"
     case eWallet = "E-wallet"
     case membership = "Membership card"
@@ -118,9 +118,9 @@ enum CardKind: String, Codable, CaseIterable, Identifiable, Sendable {
     var id: String { rawValue }
     var label: String {
         switch self {
-        case .debit: "Bank account"
+        case .debit: "Debit"
         case .credit: "Credit card"
-        case .digitalBank: "Digital bank"
+        case .digitalBank: "Digital wallet"
         case .cash: "Cash on hand"
         case .eWallet: "E-wallet"
         case .membership: "Membership"
@@ -216,6 +216,57 @@ enum CategoryName: String, Codable, CaseIterable, Identifiable, Sendable {
     }
 }
 
+/// Someone a spend can be split with. Local to the device — no account behind it, no invite
+/// and no network call, which is what lets splitting exist in an offline wallet.
+struct Person: Codable, Identifiable, Hashable, Sendable {
+    var id: String
+    var name: String
+    /// Avatar colour, paired with the initial so nobody has to upload a photo.
+    var color: String
+    /// GCash number or handle. Only ever used to prefill a reminder message.
+    var handle: String?
+    var photoSrc: String?
+    var archived: Bool = false
+}
+
+/// A trip, a night out, a shared household month — the container a spend can belong to.
+struct EventGroup: Codable, Identifiable, Hashable, Sendable {
+    var id: String
+    var name: String
+    var emoji: String
+    var startedAt: Double
+    /// Nil while the event is still running.
+    var endedAt: Double?
+    /// Pre-selected on every spend logged while this event is open.
+    var memberIds: [String] = []
+}
+
+enum SplitMode: String, Codable, Sendable { case even, shares, exact, theirs }
+
+/// One person's slice of one spend.
+struct SplitPart: Codable, Identifiable, Hashable, Sendable {
+    var personId: String
+    /// The person's name as it was when the split was saved. A snapshot rather than a lookup,
+    /// because deleting a person must never rewrite what a night actually cost.
+    var name: String
+    /// What they owe, in pesos. Always stored resolved — never a ratio or a percentage.
+    var amount: Double
+    var shares: Int?
+    var settledAt: Double?
+    /// The top-up that settling created, so un-settling can reverse exactly that.
+    var settledTxId: String?
+    var id: String { personId }
+}
+
+/// The split carried by a transaction. `mine` is stored rather than derived so the rounding
+/// remainder is decided once, at save time, instead of drifting between call sites.
+struct Split: Codable, Hashable, Sendable {
+    var mode: SplitMode = .even
+    /// The wallet owner's own share. This, not `amount`, is what spend analytics count.
+    var mine: Double
+    var parts: [SplitPart] = []
+}
+
 struct Transaction: Codable, Identifiable, Hashable, Sendable {
     var id: String
     var cardId: String
@@ -225,12 +276,23 @@ struct Transaction: Codable, Identifiable, Hashable, Sendable {
     var at: Double
     var note: String
     var receipt: String?
+    /// The event this belongs to, when it was logged inside one.
+    var eventId: String?
+    /// Set when part of this spend was other people's. `amount` stays the full figure — the
+    /// card really did lose that much — and `split.mine` is what every spend analytic counts.
+    var split: Split?
+    /// Set on a settlement top-up, pointing back at the spend it repays.
+    var repaysTxId: String?
 }
 
 struct WalletSnapshot: Codable, Sendable, Equatable {
-    var schemaVersion = 1
+    /// 2 adds people, events and splits. Older snapshots decode with the new collections
+    /// simply empty, so a Pro device syncing from an older build still loads cleanly.
+    var schemaVersion = 2
     var cards: [Card] = []
     var tx: [Transaction] = []
+    var people: [Person] = []
+    var events: [EventGroup] = []
     var dismissedNotices: [String] = []
     var activeId = ""
     var userName = ""
@@ -241,12 +303,24 @@ struct WalletSnapshot: Codable, Sendable, Equatable {
     var nudgeDailyLog = false
     var haptics = true
     var sfx = true
+    var userPhotoSrc: String?
+    var appTheme: AppTheme = .system
+    /// Stamped only on the copy written to the cloud: when it was saved, in epoch ms, and on
+    /// which device. The local wallet never carries these — setting them locally would itself
+    /// count as a change and trigger another upload.
+    var savedAt: Double?
+    var savedOn: String?
 
     static let empty = WalletSnapshot()
 
+    /// True when there is nothing in it worth protecting — used so an empty wallet is never
+    /// allowed to overwrite a real one in the cloud.
+    var isEffectivelyEmpty: Bool { cards.isEmpty && tx.isEmpty && people.isEmpty && events.isEmpty }
+
     enum CodingKeys: String, CodingKey {
-        case schemaVersion, cards, tx, dismissedNotices, activeId, userName, privacy, widgetPrivacy
-        case homeLayout, onboarded, nudgeDailyLog, haptics, sfx
+        case schemaVersion, cards, tx, people, events, dismissedNotices, activeId, userName, privacy, widgetPrivacy
+        case homeLayout, onboarded, nudgeDailyLog, haptics, sfx, userPhotoSrc, appTheme
+        case savedAt, savedOn
     }
 
     init() {}
@@ -256,6 +330,8 @@ struct WalletSnapshot: Codable, Sendable, Equatable {
         schemaVersion = try box.decodeIfPresent(Int.self, forKey: .schemaVersion) ?? 1
         cards = try box.decodeIfPresent([Card].self, forKey: .cards) ?? []
         tx = try box.decodeIfPresent([Transaction].self, forKey: .tx) ?? []
+        people = try box.decodeIfPresent([Person].self, forKey: .people) ?? []
+        events = try box.decodeIfPresent([EventGroup].self, forKey: .events) ?? []
         dismissedNotices = try box.decodeIfPresent([String].self, forKey: .dismissedNotices) ?? []
         activeId = try box.decodeIfPresent(String.self, forKey: .activeId) ?? cards.first?.id ?? ""
         userName = try box.decodeIfPresent(String.self, forKey: .userName) ?? ""
@@ -266,9 +342,39 @@ struct WalletSnapshot: Codable, Sendable, Equatable {
         nudgeDailyLog = try box.decodeIfPresent(Bool.self, forKey: .nudgeDailyLog) ?? false
         haptics = try box.decodeIfPresent(Bool.self, forKey: .haptics) ?? true
         sfx = try box.decodeIfPresent(Bool.self, forKey: .sfx) ?? true
+        userPhotoSrc = try box.decodeIfPresent(String.self, forKey: .userPhotoSrc)
+        appTheme = try box.decodeIfPresent(AppTheme.self, forKey: .appTheme) ?? .system
+        savedAt = try box.decodeIfPresent(Double.self, forKey: .savedAt)
+        savedOn = try box.decodeIfPresent(String.self, forKey: .savedOn)
         let valid = Set(cards.map(\.id))
         tx.removeAll { !valid.contains($0.cardId) }
         if !valid.contains(activeId) { activeId = cards.first?.id ?? "" }
+
+        // A split whose parts no longer add up would quietly misreport what the user spent,
+        // so it is dropped rather than trusted. The transaction survives at its full amount:
+        // wrong about who owed what, never wrong about the money.
+        let knownEvents = Set(events.map(\.id))
+        for i in tx.indices {
+            if let eventId = tx[i].eventId, !knownEvents.contains(eventId) { tx[i].eventId = nil }
+            guard let split = tx[i].split else { continue }
+            let others = split.parts.reduce(0) { $0 + max(0, $1.amount) }
+            if split.parts.isEmpty || others + split.mine > abs(tx[i].amount) + 0.5 {
+                tx[i].split = nil
+            }
+        }
+    }
+}
+
+enum AppTheme: String, Codable, CaseIterable, Identifiable, Sendable {
+    case system, light, dark
+    var id: String { rawValue }
+    var title: String { rawValue.capitalized }
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
     }
 }
 
@@ -300,6 +406,7 @@ enum SearchFilter: String, CaseIterable, Identifiable, Sendable {
     case all = "All"
     case moneyIn = "Money in"
     case moneyOut = "Money out"
+    case split = "Split"
     case food = "Food"
     case transport = "Transport"
     case bills = "Bills"
@@ -324,6 +431,14 @@ enum AppRoute: Hashable, Sendable {
     case detail(String)
     case editor(String?)
     case transfer
+    case people
+    case events
+    case event(String)
+}
+
+extension String {
+    /// Nil for an empty string, so an untouched optional field stays absent rather than "".
+    var nilIfEmpty: String? { isEmpty ? nil : self }
 }
 
 enum EditorMode: String, CaseIterable, Identifiable, Sendable {

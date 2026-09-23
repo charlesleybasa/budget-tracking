@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 actor WalletRepository {
     enum RepositoryError: LocalizedError {
@@ -60,10 +61,45 @@ actor MediaStore {
         self.directory = base.appendingPathComponent("Media", isDirectory: true)
     }
 
-    func write(_ data: Data, extension fileExtension: String = "jpg") throws -> String {
+    func write(_ data: Data, existingReference: String? = nil, extension fileExtension: String = "jpg") throws -> String {
         try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
-        let name = "\(UUID().uuidString.lowercased()).\(fileExtension)"
-        try data.write(to: directory.appendingPathComponent(name), options: [.atomic])
+        
+        var optimizedData = data
+        if let image = UIImage(data: data) {
+            let maxDimension: CGFloat = 1080
+            var size = image.size
+            if size.width > maxDimension || size.height > maxDimension {
+                let ratio = min(maxDimension / size.width, maxDimension / size.height)
+                size = CGSize(width: size.width * ratio, height: size.height * ratio)
+                
+                UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
+                image.draw(in: CGRect(origin: .zero, size: size))
+                let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
+                UIGraphicsEndImageContext()
+                
+                if let resizedData = resizedImage?.jpegData(compressionQuality: 0.7) {
+                    optimizedData = resizedData
+                }
+            } else {
+                if let compressedData = image.jpegData(compressionQuality: 0.7) {
+                    optimizedData = compressedData
+                }
+            }
+        }
+        
+        let name: String
+        if let existing = existingReference, existing.hasPrefix("file:") {
+            let parsedName = String(existing.dropFirst(5))
+            if !parsedName.contains("/") && !parsedName.contains("..") {
+                name = parsedName
+            } else {
+                name = "\(UUID().uuidString.lowercased()).\(fileExtension)"
+            }
+        } else {
+            name = "\(UUID().uuidString.lowercased()).\(fileExtension)"
+        }
+        
+        try optimizedData.write(to: directory.appendingPathComponent(name), options: [.atomic])
         return "file:\(name)"
     }
 

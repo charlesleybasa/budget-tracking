@@ -5,11 +5,31 @@ struct ResourceViewer: View {
     var subtitle: String
     var reference: String
     var onClose: () -> Void
+    var shareItems: [Any]? = nil
     @State private var appeared = false
+
+    private func presentShareSheet(items: [Any]) {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first,
+              let rootVC = window.rootViewController else { return }
+        
+        var topVC = rootVC
+        while let presented = topVC.presentedViewController {
+            topVC = presented
+        }
+        
+        let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        // For iPad support
+        activityVC.popoverPresentationController?.sourceView = window
+        activityVC.popoverPresentationController?.sourceRect = CGRect(x: window.bounds.midX, y: window.bounds.midY, width: 0, height: 0)
+        activityVC.popoverPresentationController?.permittedArrowDirections = []
+        
+        topVC.present(activityVC, animated: true)
+    }
 
     var body: some View {
         ZStack {
-            Tokens.ink.ignoresSafeArea()
+            Tokens.background.ignoresSafeArea()
             VStack(spacing: 20) {
                 HStack {
                     Button(action: onClose) {
@@ -24,12 +44,20 @@ struct ResourceViewer: View {
                             .lineLimit(1)
                         Text(subtitle)
                             .font(AppFont.outfit(10.5, relativeTo: .caption2))
-                            .foregroundStyle(.white.opacity(0.42))
+                            .foregroundStyle(Tokens.text.opacity(0.42))
                     }
                     Spacer()
-                    Color.clear.frame(width: 48, height: 48)
+                    if let shareItems = shareItems {
+                        Button(action: { presentShareSheet(items: shareItems) }) {
+                            Image(systemName: "square.and.arrow.up")
+                                .frame(width: 48, height: 48)
+                                .background(Tokens.dark2, in: Circle())
+                        }
+                    } else {
+                        Color.clear.frame(width: 48, height: 48)
+                    }
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(Tokens.text)
                 .padding(.horizontal, 20)
 
                 ResourceImage(reference: reference, contentMode: .fit)
@@ -37,12 +65,11 @@ struct ResourceViewer: View {
                     .opacity(appeared ? 1 : 0)
                     .padding(20)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(.white, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+                    .background(Tokens.background, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
                     .padding(.horizontal, 20)
                     .padding(.bottom, 20)
             }
         }
-        .preferredColorScheme(.dark)
         .onAppear { withAnimation(Tokens.easeSpring(0.42)) { appeared = true } }
     }
 }

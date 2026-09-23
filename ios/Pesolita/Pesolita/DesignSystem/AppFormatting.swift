@@ -111,8 +111,8 @@ struct CardTheme {
                 ?? (Self.hexLuminance(art.c1) > 0.43)
         }
         useDarkText = useDark
-        foreground = useDark ? Tokens.ink : .white
-        dimmed = useDark ? Tokens.ink.opacity(0.55) : .white.opacity(0.62)
+        foreground = useDark ? .black : .white
+        dimmed = useDark ? .black.opacity(0.55) : .white.opacity(0.62)
     }
 
     private static func hexLuminance(_ hex: String) -> Double {

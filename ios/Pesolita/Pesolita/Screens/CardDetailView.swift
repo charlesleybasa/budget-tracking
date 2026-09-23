@@ -5,13 +5,15 @@ struct CardDetailView: View {
     @Bindable var store: WalletStore
     var cardID: String
     @State private var flipped = false
+    @State private var editingLimit = false
+    @State private var draftLimit = ""
 
     private var card: Card? { store.snapshot.cards.first { $0.id == cardID } }
     private var transactions: [Transaction] { store.snapshot.tx.filter { $0.cardId == cardID }.sorted { $0.at > $1.at } }
 
     var body: some View {
         ZStack {
-            Tokens.ink.ignoresSafeArea()
+            Tokens.background.ignoresSafeArea()
             if let card {
                 VStack(spacing: 0) {
                     navigation(card)
@@ -21,7 +23,6 @@ struct CardDetailView: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
-        .preferredColorScheme(.dark)
     }
 
     private func navigation(_ card: Card) -> some View {
@@ -34,7 +35,7 @@ struct CardDetailView: View {
             Spacer()
             circleButton("pencil", label: "Redesign \(card.nick)") { store.openEditor(cardID: card.id) }
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(Tokens.text)
         .padding(.horizontal, 20)
         .padding(.top, 2)
         .padding(.bottom, 14)
@@ -69,7 +70,7 @@ struct CardDetailView: View {
         .overlay(alignment: .bottomTrailing) {
             Label(flipped ? "Card front" : "Receiving details", systemImage: "arrow.triangle.2.circlepath")
                 .font(AppFont.outfit(9.5, weight: .medium, relativeTo: .caption2))
-                .foregroundStyle(.white.opacity(0.42))
+                .foregroundStyle(Tokens.text.opacity(0.42))
                 .offset(y: 17)
                 .accessibilityHidden(true)
         }
@@ -85,12 +86,12 @@ struct CardDetailView: View {
 
     private func cardBack(_ card: Card) -> some View {
         ZStack {
-            LinearGradient(colors: [Color(hex: "#17171b"), Tokens.ink], startPoint: .topLeading, endPoint: .bottomTrailing)
+            LinearGradient(colors: [Color(hex: "#17171b"), .black], startPoint: .topLeading, endPoint: .bottomTrailing)
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
                     Text("RECEIVE MONEY").font(AppFont.outfit(10.5, weight: .semibold, relativeTo: .caption2)).tracking(1.25).foregroundStyle(.white.opacity(0.5))
                     Spacer()
-                    Image(systemName: "xmark").font(.system(size: 12, weight: .semibold)).frame(width: 28, height: 28).background(.white.opacity(0.1), in: Circle())
+                    Image(systemName: "xmark").font(.system(size: 12, weight: .semibold)).frame(width: 28, height: 28).background(.white.opacity(0.15), in: Circle())
                 }
                 if let qr = card.qr {
                     Button { store.qrViewerCardID = card.id } label: {
@@ -138,7 +139,7 @@ struct CardDetailView: View {
                 spendingSummary(card)
                 actionRow(card)
                 Text("History")
-                    .font(AppFont.outfit(15, weight: .bold, relativeTo: .headline)).foregroundStyle(Tokens.ink).tracking(-0.2)
+                    .font(AppFont.outfit(15, weight: .bold, relativeTo: .headline)).foregroundStyle(Tokens.text).tracking(-0.2)
                     .padding(.top, 24)
                 if transactions.isEmpty { emptyHistory }
                 else { transactionHistory(card) }
@@ -149,9 +150,8 @@ struct CardDetailView: View {
         }
         .scrollIndicators(.hidden)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.white, in: UnevenRoundedRectangle(topLeadingRadius: 26, topTrailingRadius: 26))
+        .background(Tokens.background, in: UnevenRoundedRectangle(topLeadingRadius: 26, topTrailingRadius: 26))
         .ignoresSafeArea(.container, edges: .bottom)
-        .preferredColorScheme(.light)
     }
 
     private func spendingSummary(_ card: Card) -> some View {
@@ -166,7 +166,7 @@ struct CardDetailView: View {
                     .font(AppFont.outfit(11, weight: .medium, relativeTo: .caption)).tracking(1).foregroundStyle(Tokens.muted2)
                 (Text(MoneyFormat.balance(card.goal == nil ? spent : card.bal)).font(AppFont.outfit(20, weight: .bold, relativeTo: .title3)) +
                  Text(" of \(MoneyFormat.balance(limit))").font(AppFont.outfit(13, weight: .medium, relativeTo: .caption)).foregroundColor(Tokens.muted2))
-                    .foregroundStyle(Tokens.ink).padding(.top, 6).lineLimit(1).minimumScaleFactor(0.65)
+                    .foregroundStyle(Tokens.text).padding(.top, 6).lineLimit(1).minimumScaleFactor(0.65)
                 Text(progress < 0.8 ? "On track for the month." : "Getting close to the limit.")
                     .font(AppFont.outfit(11.5, relativeTo: .caption)).foregroundStyle(Tokens.muted1).padding(.top, 6)
             }
@@ -174,14 +174,35 @@ struct CardDetailView: View {
         }
         .padding(.horizontal, 16).padding(.vertical, 15)
         .frame(maxWidth: .infinity, minHeight: 106, alignment: .leading)
-        .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if card.goal == nil {
+                draftLimit = card.limit > 0 ? String(Int(card.limit)) : ""
+                editingLimit = true
+            }
+        }
+        .alert("Edit Monthly Limit", isPresented: $editingLimit) {
+            TextField("Limit amount", text: $draftLimit)
+                .keyboardType(.decimalPad)
+            Button("Cancel", role: .cancel) { }
+            Button("Save") {
+                if let newLimit = Double(draftLimit) {
+                    store.setCardLimit(cardID: card.id, value: newLimit)
+                } else if draftLimit.isEmpty {
+                    store.setCardLimit(cardID: card.id, value: 0)
+                }
+            }
+        } message: {
+            Text("Set how much you want to spend this month.")
+        }
     }
 
     private func actionRow(_ card: Card) -> some View {
         HStack(spacing: 8) {
-            actionButton("Log spend", icon: "arrow.down.to.line", background: Tokens.ink, foreground: .white) { store.openTransaction(.withdraw, cardID: card.id) }
-            actionButton("Top up", icon: "arrow.up.to.line", background: Tokens.accent, foreground: Tokens.ink) { store.openTransaction(.deposit, cardID: card.id) }
-            actionButton("Move money", icon: "arrow.left.arrow.right", background: Tokens.sand1, foreground: Tokens.ink) { store.openTransfer(from: card.id) }
+            actionButton("Log spend", icon: "arrow.down.to.line", background: Tokens.text, foreground: Tokens.background) { store.openTransaction(.withdraw, cardID: card.id) }
+            actionButton("Top up", icon: "arrow.up.to.line", background: Tokens.accent, foreground: Tokens.onAccent) { store.openTransaction(.deposit, cardID: card.id) }
+            actionButton("Move money", icon: "arrow.left.arrow.right", background: Tokens.dark1, foreground: Tokens.text) { store.openTransfer(from: card.id) }
         }
         .padding(.top, 14)
     }
@@ -199,13 +220,13 @@ struct CardDetailView: View {
     private var emptyHistory: some View {
         VStack(spacing: 0) {
             SpriteAnimationView(spec: .flyingIdle, size: 118).frame(width: 118, height: 118).padding(.bottom, 4)
-            Text("Nothing on this card yet.").font(AppFont.outfit(15, weight: .bold, relativeTo: .subheadline)).foregroundStyle(Tokens.ink)
+            Text("Nothing on this card yet.").font(AppFont.outfit(15, weight: .bold, relativeTo: .subheadline)).foregroundStyle(Tokens.text)
             Text("Log a spend or a top up and it shows up here immediately.")
                 .font(AppFont.outfit(12.5, relativeTo: .caption)).foregroundStyle(Tokens.muted2).multilineTextAlignment(.center).lineSpacing(3).padding(.top, 7)
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 12).padding(.top, 22).padding(.bottom, 30)
-        .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .padding(.top, 26)
     }
 

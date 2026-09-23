@@ -30,7 +30,7 @@ extension View {
 struct AnimatedCurrencyText: View {
     var value: Double
     var font: Font
-    var color: Color = Tokens.ink
+    var color: Color = Tokens.text
     var prefix = "₱"
 
     var body: some View {
@@ -38,5 +38,55 @@ struct AnimatedCurrencyText: View {
             .font(font)
             .foregroundStyle(color)
             .contentTransition(.numericText(value: value))
+    }
+}
+
+// MARK: - Elevation
+
+enum ElevationLevel {
+    /// Tiles and panels resting on the page.
+    case resting
+    /// Things that float above scrolling content: the tab bar, overlays.
+    case floating
+}
+
+/// Depth that works in both appearances.
+///
+/// A soft black shadow is how light mode says "this floats"; on a near-black page it is
+/// invisible, and the first theming pass left every floating surface flat against the page.
+/// Dark mode takes its depth from light instead — a hairline brighter along the top edge,
+/// where a real object would catch it — with a deeper shadow underneath for separation.
+struct PesolitaElevation<S: InsettableShape>: ViewModifier {
+    var level: ElevationLevel
+    var shape: S
+    @Environment(\.colorScheme) private var scheme
+
+    private var radius: CGFloat { level == .floating ? 18 : 10 }
+    private var drop: CGFloat { level == .floating ? 8 : 4 }
+
+    func body(content: Content) -> some View {
+        if scheme == .dark {
+            content
+                .overlay(
+                    shape.strokeBorder(
+                        LinearGradient(
+                            colors: [.white.opacity(level == .floating ? 0.16 : 0.09), .white.opacity(0.02)],
+                            startPoint: .top, endPoint: .bottom
+                        ),
+                        lineWidth: 1
+                    )
+                )
+                .shadow(color: .black.opacity(0.55), radius: radius, y: drop)
+        } else {
+            content
+                .overlay(shape.strokeBorder(Tokens.hairline, lineWidth: level == .floating ? 0.5 : 0))
+                .shadow(color: .black.opacity(level == .floating ? 0.12 : 0.06), radius: radius, y: drop)
+        }
+    }
+}
+
+extension View {
+    func pesolitaElevation<S: InsettableShape>(_ level: ElevationLevel = .resting, in shape: S) -> some View {
+        modifier(PesolitaElevation(level: level, shape: shape))
     }
 }

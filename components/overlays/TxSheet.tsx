@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 
 import { CardArtFor } from "@/components/CardArt";
 import { CardPicker } from "@/components/CardPicker";
+import { SplitBlock } from "@/components/overlays/SplitBlock";
 import { SpriteAnimation, preloadSprite } from "@/components/SpriteAnimation";
 import { CELEBRATE, NO_NO_NO, SAD } from "@/lib/sprites";
 import { Keypad } from "@/components/Keypad";
@@ -325,6 +326,9 @@ export function TxSheet() {
                   </span>
                 </button>
               ) : null}
+
+              {/* Only a spend can be split — money coming in was never anybody else's. */}
+              {sheet === "withdraw" ? <SplitBlock total={typed} /> : null}
 
               <div className={styles.extras}>
                 <button

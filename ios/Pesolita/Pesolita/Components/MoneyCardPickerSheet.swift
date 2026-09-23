@@ -29,7 +29,7 @@ struct MoneyCardPickerSheet: View {
                 Text(title)
                     .font(AppFont.outfit(17, weight: .bold, relativeTo: .headline))
                     .tracking(-0.25)
-                    .foregroundStyle(Tokens.ink)
+                    .foregroundStyle(Tokens.text)
                 Spacer()
                 Button {
                     FeedbackCenter.closed()
@@ -37,9 +37,9 @@ struct MoneyCardPickerSheet: View {
                 } label: {
                     Image(systemName: "xmark")
                         .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(Tokens.ink)
+                        .foregroundStyle(Tokens.text)
                         .frame(width: 44, height: 44)
-                        .background(Tokens.sand2, in: Circle())
+                        .background(Tokens.dark2, in: Circle())
                 }
                 .buttonStyle(PesolitaPressStyle())
                 .accessibilityLabel("Close")
@@ -73,9 +73,8 @@ struct MoneyCardPickerSheet: View {
             .scrollBounceBehavior(.basedOnSize)
         }
         .font(AppFont.outfit(15))
-        .background(Tokens.paper)
-        .preferredColorScheme(.light)
-        .presentationBackground(Tokens.paper)
+        .background(Tokens.background)
+        .presentationBackground(Tokens.bgBase)
         .presentationDragIndicator(.hidden)
         .presentationDetents([.height(compactHeight), .large])
         .presentationCornerRadius(28)
@@ -104,7 +103,7 @@ private struct MoneyCardPickerRow: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(card.nick)
                         .font(AppFont.outfit(14, weight: .semibold, relativeTo: .subheadline))
-                        .foregroundStyle(Tokens.ink)
+                        .foregroundStyle(Tokens.text)
                         .lineLimit(1)
                     Text(disabled ? "Other side of this move" : "\(card.kind.rawValue) · \(cardMask)")
                         .font(AppFont.outfit(11.5, relativeTo: .caption))
@@ -115,7 +114,7 @@ private struct MoneyCardPickerRow: View {
 
                 Text(MoneyFormat.balance(card.bal, privateMode: privateMode))
                     .font(AppFont.outfit(14, weight: .bold, relativeTo: .subheadline))
-                    .foregroundStyle(Tokens.ink)
+                    .foregroundStyle(Tokens.text)
                     .monospacedDigit()
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
@@ -123,19 +122,19 @@ private struct MoneyCardPickerRow: View {
                 if selected {
                     Image(systemName: "checkmark")
                         .font(.system(size: 11, weight: .bold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Tokens.text)
                         .frame(width: 22, height: 22)
-                        .background(Tokens.ink, in: Circle())
+                        .background(Tokens.background, in: Circle())
                         .transition(.scale.combined(with: .opacity))
                 }
             }
             .padding(.leading, 9)
             .padding(.trailing, 12)
             .frame(minHeight: 65)
-            .background(selected ? Tokens.sand2 : Tokens.sand1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .background(selected ? Tokens.dark2 : Tokens.dark1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .stroke(selected ? Tokens.ink : .clear, lineWidth: 1.5)
+                    .stroke(selected ? Tokens.text : .clear, lineWidth: 1.5)
             }
             .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         }

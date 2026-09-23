@@ -8,14 +8,18 @@ import { Toast } from "@/components/Toast";
 import { CardDeleteDialog } from "@/components/overlays/CardDeleteDialog";
 import { EraseDialog } from "@/components/overlays/EraseDialog";
 import { QrViewer } from "@/components/overlays/QrViewer";
+import { SettleSlider } from "@/components/overlays/SettleSlider";
 import { SuccessOverlay } from "@/components/overlays/SuccessOverlay";
 import { TxEditSheet } from "@/components/overlays/TxEditSheet";
 import { TxSheet } from "@/components/overlays/TxSheet";
 import { CardDetail } from "@/components/screens/CardDetail";
 import { CardEditor } from "@/components/screens/CardEditor";
+import { EventDetail } from "@/components/screens/EventDetail";
+import { EventsScreen } from "@/components/screens/EventsScreen";
 import { Home } from "@/components/screens/Home";
 import { Insights } from "@/components/screens/Insights";
 import { Onboarding } from "@/components/screens/Onboarding";
+import { PeopleScreen } from "@/components/screens/PeopleScreen";
 import { SearchScreen } from "@/components/screens/SearchScreen";
 import { SettingsScreen } from "@/components/screens/SettingsScreen";
 import { Transfer } from "@/components/screens/Transfer";
@@ -44,13 +48,27 @@ function CurrentScreen() {
       return <Transfer />;
     case "settings":
       return <SettingsScreen />;
+    case "people":
+      return <PeopleScreen />;
+    case "events":
+      return <EventsScreen />;
+    case "event":
+      return <EventDetail />;
     default:
       return <Home />;
   }
 }
 
 /** Screens that are a task rather than a destination — Escape backs out of them. */
-const DISMISSABLE: readonly Screen[] = ["detail", "editor", "transfer", "search"];
+const DISMISSABLE: readonly Screen[] = [
+  "detail",
+  "editor",
+  "transfer",
+  "search",
+  "people",
+  "events",
+  "event",
+];
 
 export function AppShell() {
   const { state, actions } = useWallet();
@@ -62,11 +80,13 @@ export function AppShell() {
     !!state.success ||
     !!state.editingTxId ||
     state.cardDeleteOpen ||
+    !!state.pendingSettle ||
     !!state.qrCardId;
   useBackNavigation(!away, () => {
     // Unwound top layer first: the QR sits above everything, so back closes it before it
     // touches the screen underneath.
     if (state.qrCardId) actions.patch({ qrCardId: null });
+    else if (state.pendingSettle) actions.cancelSettle();
     else if (state.cardDeleteOpen) actions.patch({ cardDeleteOpen: false });
     else if (state.success) actions.closeSuccess();
     else if (state.editingTxId) actions.closeTxEdit();
@@ -123,6 +143,7 @@ export function AppShell() {
       {state.hydrated ? <EraseDialog /> : null}
       {state.hydrated ? <CardDeleteDialog /> : null}
       {state.hydrated ? <QrViewer /> : null}
+      {state.hydrated ? <SettleSlider /> : null}
     </main>
   );
 }

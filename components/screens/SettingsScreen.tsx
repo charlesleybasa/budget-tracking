@@ -6,6 +6,8 @@ import { downloadText } from "@/lib/backup";
 import { useBackup } from "@/lib/useBackup";
 import { useRestore } from "@/lib/useRestore";
 import { transactionsToCsv } from "@/lib/csv";
+import { peso0 } from "@/lib/format";
+import { totalOwedToYou } from "@/lib/split";
 import { useWallet } from "@/lib/store";
 
 import styles from "./SettingsScreen.module.css";
@@ -73,13 +75,15 @@ export function SettingsScreen() {
     // The BOM keeps spreadsheet apps from mangling the peso sign.
     downloadText(
       "pesolita-transactions.csv",
-      `\ufeff${transactionsToCsv(state.tx, state.cards)}`,
+      `\ufeff${transactionsToCsv(state.tx, state.cards, state.events)}`,
       "text/csv;charset=utf-8",
     );
     actions.toast(`Exported ${state.tx.length} rows.`);
   };
 
   const backup = useBackup();
+
+  const owed = totalOwedToYou(state.tx);
 
 
   const groups: ReadonlyArray<{ title: string; rows: Row[] }> = [
@@ -114,6 +118,42 @@ export function SettingsScreen() {
           ),
           onClick: () =>
             state.cards.length > 0 ? actions.openEditor(state.activeId) : actions.toast("Add a card first."),
+        },
+      ],
+    },
+    {
+      title: "Splitting",
+      rows: [
+        {
+          label: "People",
+          sub:
+            owed > 0
+              ? `₱${peso0(owed)} still out with ${state.people.length === 1 ? "1 person" : `${state.people.length} people`}`
+              : state.people.length > 0
+                ? "Everyone is settled up"
+                : "Nobody added yet",
+          bg: "#0b8f6a33",
+          icon: (
+            <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="#0b8f6a" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20M10 11.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M20 20v-1.5a3.5 3.5 0 0 0-2.6-3.4M15.4 4.6a3.5 3.5 0 0 1 0 6.8" />
+            </svg>
+          ),
+          onClick: () => actions.go("people"),
+        },
+        {
+          label: "Events",
+          sub:
+            state.events.length > 0
+              ? `${state.events.length === 1 ? "1 event" : `${state.events.length} events`}`
+              : "Group a trip or a night out",
+          bg: "#7c3aed33",
+          icon: (
+            <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z" />
+              <circle cx="12" cy="10" r="2.6" />
+            </svg>
+          ),
+          onClick: () => actions.go("events"),
         },
       ],
     },

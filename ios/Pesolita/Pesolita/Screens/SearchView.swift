@@ -12,7 +12,7 @@ struct SearchView: View {
 
     var body: some View {
         ZStack {
-            Tokens.ink.ignoresSafeArea()
+            Tokens.background.ignoresSafeArea()
             VStack(spacing: 0) {
                 searchHeader
                 ScrollView {
@@ -28,16 +28,16 @@ struct SearchView: View {
                             if hasFilters {
                                 Button("Reset", action: reset)
                                     .font(AppFont.outfit(12, weight: .semibold, relativeTo: .caption))
-                                    .foregroundStyle(Tokens.ink)
-                                    .padding(.horizontal, 13).frame(minHeight: 36).background(Tokens.sand2, in: Capsule())
+                                    .foregroundStyle(Tokens.text)
+                                    .padding(.horizontal, 13).frame(minHeight: 36).background(Tokens.dark2, in: Capsule())
                                     .buttonStyle(PesolitaPressStyle())
                             }
                         }
 
                         if !results.isEmpty {
                             HStack(spacing: 9) {
-                                totalTile("Money out", amount: moneyOut, icon: "arrow.down", tint: Tokens.ink, background: Tokens.sand1)
-                                totalTile("Money in", amount: moneyIn, icon: "arrow.up", tint: Tokens.green, background: Color(hex: "#edf8f3"))
+                                totalTile("Money out", amount: moneyOut, icon: "arrow.down", tint: Tokens.text, background: Tokens.dark1)
+                                totalTile("Money in", amount: moneyIn, icon: "arrow.up", tint: Tokens.positive, background: Tokens.greenTint)
                             }
                             .padding(.top, 16)
                         }
@@ -57,35 +57,34 @@ struct SearchView: View {
                                     }
                                 }
                                 .padding(.horizontal, 14)
-                                .background(.white, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                                .overlay(RoundedRectangle(cornerRadius: 18).stroke(Tokens.line3))
+                                .background(Tokens.background, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                                .overlay(RoundedRectangle(cornerRadius: 18).stroke(Tokens.text.opacity(0.12), lineWidth: 1))
                             }
                             .padding(.top, 21)
                         }
 
                         if results.isEmpty { emptyState }
                     }
-                    .foregroundStyle(Tokens.ink)
+                    .foregroundStyle(Tokens.text)
                     .padding(.horizontal, 20)
                     .padding(.top, 19)
                     .padding(.bottom, 112)
                 }
-                .background(.white)
+                .background(Tokens.background)
                 .scrollDismissesKeyboard(.interactively)
                 .scrollIndicators(.hidden)
             }
         }
-        .preferredColorScheme(.light)
     }
 
     private var searchHeader: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("ACTIVITY")
-                .font(AppFont.outfit(10.5, weight: .bold, relativeTo: .caption2)).tracking(1.25).foregroundStyle(Tokens.accent)
+                .font(AppFont.outfit(10.5, weight: .bold, relativeTo: .caption2)).tracking(1.25).foregroundStyle(Tokens.accentText)
             Text("Find a transaction")
-                .font(AppFont.outfit(23, weight: .bold, relativeTo: .title2)).tracking(-0.8).foregroundStyle(.white).padding(.top, 8)
+                .font(AppFont.outfit(23, weight: .bold, relativeTo: .title2)).tracking(-0.8).foregroundStyle(Tokens.text).padding(.top, 8)
             Text("Search by merchant, note, or category.")
-                .font(AppFont.outfit(12.5, relativeTo: .caption)).foregroundStyle(.white.opacity(0.52)).padding(.top, 6)
+                .font(AppFont.outfit(12.5, relativeTo: .caption)).foregroundStyle(Tokens.text.opacity(0.52)).padding(.top, 6)
 
             HStack(spacing: 10) {
                 Image(systemName: "magnifyingglass")
@@ -93,7 +92,7 @@ struct SearchView: View {
                 TextField("Coffee, load, last Tuesday…", text: $store.searchQuery)
                     .focused($focused)
                     .font(AppFont.outfit(14, weight: .medium, relativeTo: .subheadline))
-                    .foregroundStyle(Tokens.ink)
+                    .foregroundStyle(Tokens.text)
                     .submitLabel(.search)
                 if !store.searchQuery.isEmpty {
                     Button {
@@ -101,7 +100,7 @@ struct SearchView: View {
                         FeedbackCenter.tap()
                     } label: {
                         Image(systemName: "xmark").font(.system(size: 13, weight: .semibold)).foregroundStyle(Tokens.muted1)
-                            .frame(width: 34, height: 34).background(Tokens.sand2, in: Circle())
+                            .frame(width: 34, height: 34).background(Tokens.dark2, in: Circle())
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel("Clear search")
@@ -110,7 +109,7 @@ struct SearchView: View {
             .padding(.leading, 15)
             .padding(.trailing, 10)
             .frame(height: 50)
-            .background(.white, in: RoundedRectangle(cornerRadius: 17, style: .continuous))
+            .background(Tokens.background, in: RoundedRectangle(cornerRadius: 17, style: .continuous))
             .shadow(color: .black.opacity(0.18), radius: 15, y: 8)
             .overlay(RoundedRectangle(cornerRadius: 17).stroke(focused ? Tokens.accent.opacity(0.5) : .clear, lineWidth: 3))
             .padding(.top, 17)
@@ -124,10 +123,10 @@ struct SearchView: View {
                         } label: {
                             Text(filter.rawValue)
                                 .font(AppFont.outfit(12, weight: .semibold, relativeTo: .caption))
-                                .foregroundStyle(store.searchFilter == filter ? Tokens.ink : .white.opacity(0.75))
+                                .foregroundStyle(store.searchFilter == filter ? Tokens.onAccent : Tokens.text)
                                 .padding(.horizontal, 14)
                                 .frame(height: 44)
-                                .background(store.searchFilter == filter ? Tokens.accent : .white.opacity(0.1), in: Capsule())
+                                .background(store.searchFilter == filter ? Tokens.accent : Tokens.dark1, in: Capsule())
                         }
                         .buttonStyle(PesolitaPressStyle())
                     }
@@ -141,7 +140,7 @@ struct SearchView: View {
         .padding(.horizontal, 20)
         .padding(.top, 8)
         .padding(.bottom, 16)
-        .background(Tokens.ink, in: UnevenRoundedRectangle(bottomLeadingRadius: 28, bottomTrailingRadius: 28))
+        .background(Tokens.background, in: UnevenRoundedRectangle(bottomLeadingRadius: 28, bottomTrailingRadius: 28))
     }
 
     private func totalTile(_ title: String, amount: Double, icon: String, tint: Color, background: Color) -> some View {
@@ -169,12 +168,12 @@ struct SearchView: View {
             } else {
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: 25, weight: .medium)).foregroundStyle(Tokens.muted1)
-                    .frame(width: 50, height: 50).background(.white, in: RoundedRectangle(cornerRadius: 17)).shadow(color: .black.opacity(0.06), radius: 10, y: 5)
+                    .frame(width: 50, height: 50).background(Tokens.background, in: RoundedRectangle(cornerRadius: 17)).shadow(color: .black.opacity(0.06), radius: 10, y: 5)
                     .padding(.bottom, 16)
             }
             Text(store.snapshot.tx.isEmpty ? "Your activity will show up here" : !store.searchQuery.isEmpty ? "No matches for “\(store.searchQuery.trimmingCharacters(in: .whitespaces))”" : "No transactions in this filter")
                 .font(AppFont.outfit(17, weight: .bold, relativeTo: .headline))
-                .foregroundStyle(Tokens.ink)
+                .foregroundStyle(Tokens.text)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
             Text(store.snapshot.tx.isEmpty ? "Log your first spend or top up to start building your history." : "Try another word or reset the filters to see everything again.")
@@ -183,14 +182,14 @@ struct SearchView: View {
             Button(store.snapshot.tx.isEmpty ? "Log a spend" : "Show all activity") {
                 store.snapshot.tx.isEmpty ? store.openTransaction(.withdraw) : reset()
             }
-            .font(AppFont.outfit(13, weight: .semibold, relativeTo: .subheadline)).foregroundStyle(.white)
-            .padding(.horizontal, 18).frame(minHeight: 44).background(Tokens.ink, in: Capsule()).buttonStyle(PesolitaPressStyle()).padding(.top, 18)
+            .font(AppFont.outfit(13, weight: .semibold, relativeTo: .subheadline)).foregroundStyle(Tokens.text)
+            .padding(.horizontal, 18).frame(minHeight: 44).background(Tokens.background, in: Capsule()).buttonStyle(PesolitaPressStyle()).padding(.top, 18)
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 22)
         .padding(.top, store.snapshot.tx.isEmpty ? 24 : 42)
         .padding(.bottom, 42)
-        .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
         .padding(.top, 22)
     }
 

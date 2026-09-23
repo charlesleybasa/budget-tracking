@@ -1,0 +1,180 @@
+/*
+ * "Out with friends" — the money the user has lent without meaning to. Derived from the
+ * wallet rather than seeded, like the notices beside it, so it only exists while something
+ * is genuinely owed.
+ */
+
+.strip {
+  border-radius: 22px;
+  background: var(--dark-2);
+  color: var(--paper);
+  padding: 16px 17px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cap {
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.total {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  margin-top: 6px;
+}
+
+.sub {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--muted-3);
+  margin-top: 2px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--dark-hover);
+  border-radius: 14px;
+  padding: 9px 10px;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 100px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--paper);
+  flex: none;
+}
+
+.meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.where {
+  font-weight: 500;
+  font-size: 10.5px;
+  line-height: 1.3;
+  color: var(--muted-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+
+.due {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+
+.paid {
+  flex: none;
+  border-radius: 100px;
+  background: var(--accent);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 1;
+  padding: 8px 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 32px;
+  transition: transform 0.16s var(--ease-spring);
+}
+
+.paid:active {
+  transform: scale(0.94);
+}
+
+@media (pointer: coarse) {
+  .paid {
+    min-height: 36px;
+    padding: 10px 13px;
+  }
+}
+
+.nudge {
+  flex: none;
+  width: 32px;
+  min-height: 32px;
+  border-radius: 100px;
+  background: transparent;
+  border: 1px solid var(--dark-hover);
+  color: var(--muted-3);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nudge:hover {
+    color: var(--paper);
+    border-color: var(--muted-1);
+  }
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.footNote {
+  font-weight: 500;
+  font-size: 10.5px;
+  line-height: 1.35;
+  color: var(--muted-2);
+}
+
+.more {
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1;
+  color: var(--accent);
+  cursor: pointer;
+  background: transparent;
+  padding: 4px 0;
+  white-space: nowrap;
+}

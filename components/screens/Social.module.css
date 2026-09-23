@@ -1,0 +1,599 @@
+/*
+ * Shared chrome for the three screens splitting adds: People, Events and one Event.
+ * They are reached from the owed strip and from Insights — never from the tab bar, because
+ * an event is a filter on the wallet rather than a fifth destination in it.
+ */
+
+.screen {
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex: none;
+  background: var(--ink);
+  padding: var(--screen-top) 20px 22px;
+  border-radius: 0 0 26px 26px;
+  color: var(--paper);
+}
+
+.headerInner {
+  max-width: var(--app-max-w);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.navTitle {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.roundBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 100px;
+  background: var(--dark-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+  transition: background 0.2s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .roundBtn:hover {
+    background: var(--dark-hover);
+  }
+}
+
+.navSpacer {
+  width: 36px;
+  flex: none;
+}
+
+.hero {
+  margin-top: 18px;
+}
+
+.heroEmoji {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.heroTitle {
+  margin-top: 6px;
+  font-weight: 700;
+  font-size: 27px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.heroSub {
+  margin-top: 4px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--muted-3);
+}
+
+.stats {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+}
+
+.stat {
+  flex: 1;
+  min-width: 0;
+  background: var(--dark-hover);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+.statKey {
+  font-weight: 700;
+  font-size: 9.5px;
+  line-height: 1;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.statValue {
+  margin-top: 4px;
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+
+.statAccent {
+  color: var(--accent);
+}
+
+/* body */
+
+.scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 18px 20px var(--nav-clearance);
+}
+
+.scrollInner {
+  max-width: var(--app-max-w);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sectionTitle {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.section {
+  margin-top: 22px;
+}
+
+.section:first-child {
+  margin-top: 0;
+}
+
+/* per-person bars */
+
+.bars {
+  margin-top: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.bar {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.barLabel {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.barName {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--ink);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.barValue {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--muted-1);
+  white-space: nowrap;
+}
+
+.barTrack {
+  height: 8px;
+  border-radius: 100px;
+  background: var(--sand-3);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.7s var(--ease-out);
+}
+
+/* list rows */
+
+.rows {
+  margin-top: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  background: var(--sand-1);
+  border-radius: 16px;
+  padding: 11px 13px;
+  width: 100%;
+  text-align: left;
+}
+
+.rowButton {
+  cursor: pointer;
+  transition: background 0.2s var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .rowButton:hover {
+    background: var(--sand-hover);
+  }
+}
+
+.rowButton:active {
+  transform: scale(0.99);
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 100px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--paper);
+  flex: none;
+}
+
+.avatarEmoji {
+  background: var(--sand-3);
+  font-size: 16px;
+}
+
+.rowMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowName {
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.2;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowSub {
+  margin-top: 2px;
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--muted-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowValue {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+  text-align: right;
+}
+
+.rowValueMuted {
+  color: var(--muted-2);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+.pill {
+  border-radius: 100px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  font-size: 11.5px;
+  line-height: 1;
+  padding: 9px 12px;
+  min-height: 34px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.16s var(--ease-spring);
+}
+
+.pill:active {
+  transform: scale(0.94);
+}
+
+.pillQuiet {
+  background: var(--sand-3);
+  color: var(--muted-1);
+}
+
+.pillDanger {
+  background: transparent;
+  color: var(--red-deep);
+  padding: 9px 4px;
+}
+
+@media (pointer: coarse) {
+  .pill {
+    min-height: 40px;
+    padding: 12px 14px;
+  }
+}
+
+/* settled state */
+
+.settled {
+  opacity: 0.6;
+}
+
+.tick {
+  width: 20px;
+  height: 20px;
+  border-radius: 100px;
+  background: var(--green);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+/* the add form */
+
+.addRow {
+  margin-top: 11px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.addInput {
+  flex: 1;
+  min-width: 0;
+  border: 1.5px solid var(--line-4);
+  background: var(--paper);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-weight: 500;
+  font-size: 13.5px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.addInput:focus-visible {
+  outline: none;
+  border-color: var(--ink);
+}
+
+.addGo {
+  flex: none;
+  border-radius: 14px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
+  padding: 14px 16px;
+  cursor: pointer;
+}
+
+.addGo:disabled {
+  background: var(--sand-3);
+  color: var(--muted-3);
+  cursor: default;
+}
+
+/* empty states */
+
+.empty {
+  margin-top: 26px;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.emptyTitle {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.emptyBody {
+  margin-top: 6px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted-1);
+  max-width: 34ch;
+  margin-inline: auto;
+  text-wrap: pretty;
+}
+
+.emptyArt {
+  margin: 0 auto 12px;
+  display: block;
+}
+
+/* transaction rows inside an event */
+
+.txRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 2px;
+  border-top: 1px solid var(--line-3);
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.txRow:first-child {
+  border-top: 0;
+}
+
+.txMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.txName {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.txSub {
+  margin-top: 2px;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--muted-2);
+}
+
+.stack {
+  display: flex;
+  flex: none;
+}
+
+.stackAvatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 100px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 9.5px;
+  line-height: 1;
+  color: var(--paper);
+  border: 1.5px solid var(--paper);
+}
+
+.stackAvatar + .stackAvatar {
+  margin-left: -8px;
+}
+
+.txValue {
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1.1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+
+.txShare {
+  font-weight: 500;
+  font-size: 10.5px;
+  line-height: 1.2;
+  color: var(--muted-2);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  margin-top: 2px;
+}
+
+/* the share button */
+
+.shareRow {
+  margin-top: 20px;
+  display: flex;
+  gap: 8px;
+}
+
+.share {
+  flex: 1;
+  border-radius: 16px;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1;
+  padding: 14px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    background 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .share:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+}
+
+.share:active {
+  transform: scale(0.99);
+}
+
+.danger {
+  margin-top: 26px;
+  display: flex;
+  justify-content: center;
+}
+
+.dangerBtn {
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
+  color: var(--red-deep);
+  cursor: pointer;
+  background: transparent;
+  padding: 12px 14px;
+  border-radius: 100px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dangerBtn:hover {
+    background: var(--sand-1);
+  }
+}
+
+/* two-pane: the app gets a rail from 760px, so these screens get a reading column */
+
+@media (min-width: 1280px) {
+  .scrollInner {
+    max-width: 620px;
+  }
+
+  .headerInner {
+    max-width: 620px;
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "identifier" : "2F1C2D3A",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "50",
+      "familyShareable" : false,
+      "internalID" : "1E099C07",
+      "localizations" : [
+        {
+          "description" : "Securely back up your cards and history to the cloud.",
+          "displayName" : "Pesolita Pro",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.pesolita.pro",
+      "referenceName" : "Pesolita Pro",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_defaultStorefront" : "PHL",
+    "_storefront" : "PHL"
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}

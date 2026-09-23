@@ -144,6 +144,7 @@ export const SEARCH_FILTERS = [
   "All",
   "Money out",
   "Money in",
+  "Split",
   "Food",
   "Transport",
   "Bills",
@@ -153,6 +154,12 @@ export const SEARCH_FILTERS = [
   "Health",
   "Fun",
 ] as const;
+
+/**
+ * Where a shared summary points people who do not have the app. One constant, because it
+ * appears in Settings, the About page and every summary sent to a group chat.
+ */
+export const APP_STORE_URL = "https://apps.apple.com/ph/app/pesolita/id6805788143";
 
 /** Card geometry the art engine is authored against; every size scales off this width. */
 export const CARD_W = 320;

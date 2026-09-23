@@ -201,6 +201,13 @@ private struct PesolitaWidgetView: View {
                 .tracking(1)
                 .foregroundStyle(.white.opacity(0.35))
             Spacer()
+            Link(destination: WidgetRoute.url("qr", cardID: card.id)) {
+                Image(systemName: "qrcode")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.6))
+                    .frame(width: 30, height: 30)
+                    .background(.white.opacity(0.1), in: Circle())
+            }
             Button(intent: TogglePrivacyIntent()) {
                 Image(systemName: entry.payload.privacyEnabled ? "eye.slash.fill" : "eye.fill")
                     .font(.system(size: 13, weight: .semibold))

@@ -43,7 +43,7 @@ struct PersistenceTests {
             exp: "—",
             bal: 1000,
             limit: 0,
-            art: CardTemplates.byID["banks/deep-blue-wave"]!.art,
+            art: CardTemplates.all[0].art,
             frozen: false
         )]
         snapshot.activeId = "card"
@@ -59,7 +59,7 @@ struct PersistenceTests {
 
         let restored = try await BackupCodec.restore(data, media: media)
         #expect(restored.cards.first?.nick == "Main Account")
-        #expect(restored.cards.first?.art.photo?.src == "template:banks/deep-blue-wave.webp")
+        #expect(restored.cards.first?.art.photo?.src == "template:\(CardTemplates.all[0].resourcePath)")
         #expect(restored.haptics == false)
         #expect(restored.sfx == false)
         try? FileManager.default.removeItem(at: root)
@@ -73,7 +73,8 @@ struct PersistenceTests {
         let restored = try await BackupCodec.restore(data, media: media)
         #expect(restored.cards.isEmpty)
         #expect(restored.homeLayout == .deck)
-        #expect(restored.nudgeDailyLog)
+        // Off by default since the App Store launch build.
+        #expect(!restored.nudgeDailyLog)
         #expect(restored.haptics)
         #expect(restored.sfx)
         try? FileManager.default.removeItem(at: root)

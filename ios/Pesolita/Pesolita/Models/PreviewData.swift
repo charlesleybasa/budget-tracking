@@ -11,7 +11,7 @@ extension WalletSnapshot {
             exp: "12 / 30",
             bal: 8_425.50,
             limit: 15_000,
-            art: CardTemplates.byID["banks/deep-blue-wave"]!.art,
+            art: CardTemplates.byID["banks/template_007"]!.art,
             frozen: false,
             accountNumber: "0012 4821 7700"
         )
@@ -23,7 +23,7 @@ extension WalletSnapshot {
             exp: "—",
             bal: 2_180,
             limit: 5_000,
-            art: CardTemplates.byID["e-wallets/azure-ripple"]!.art,
+            art: CardTemplates.byID["e-wallets/template_047"]!.art,
             frozen: false,
             accountNumber: "0917 555 1128"
         )
@@ -68,7 +68,7 @@ extension WalletSnapshot {
             exp: "08 / 29",
             bal: 26_400,
             limit: 40_000,
-            art: CardTemplates.byID["credit-cards/slate-facet"]!.art,
+            art: CardTemplates.byID["credit-cards/template_032"]!.art,
             frozen: false
         )
         let savings = Card(
@@ -79,7 +79,7 @@ extension WalletSnapshot {
             exp: "—",
             bal: 54_120.75,
             limit: 0,
-            art: CardTemplates.byID["digital-banks/obsidian-pulse"]!.art,
+            art: CardTemplates.byID["digital-banks/template_042"]!.art,
             frozen: false
         )
         value.cards.insert(credit, at: 1)

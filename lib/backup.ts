@@ -1,8 +1,12 @@
-import { migrateCards, migrateTransactions } from "@/lib/migrate";
-import type { Card, HomeLayout, Transaction } from "@/lib/types";
+import { migrateCards, migrateEvents, migratePeople, migrateTransactions } from "@/lib/migrate";
+import type { Card, EventGroup, HomeLayout, Person, Transaction } from "@/lib/types";
 
 const FORMAT = "pesolita.backup";
-const VERSION = 1;
+/**
+ * 2 adds people, events and splits. A v1 file still restores — the new collections simply
+ * come back empty — so the reader accepts anything at or below this.
+ */
+const VERSION = 2;
 
 export interface WalletBackup {
   format: typeof FORMAT;
@@ -10,6 +14,8 @@ export interface WalletBackup {
   exportedAt: string;
   cards: Card[];
   tx: Transaction[];
+  people: Person[];
+  events: EventGroup[];
   dismissedNotices: string[];
   userName: string;
   privacy: boolean;
@@ -56,6 +62,8 @@ export function parseBackup(text: string): BackupPayload {
   return {
     cards,
     tx: migrateTransactions(data.tx, cards),
+    people: migratePeople(data.people),
+    events: migrateEvents(data.events),
     dismissedNotices: Array.isArray(data.dismissedNotices) ? data.dismissedNotices.filter((v) => typeof v === "string") : [],
     userName: typeof data.userName === "string" ? data.userName : "",
     privacy: !!data.privacy,

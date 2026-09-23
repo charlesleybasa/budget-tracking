@@ -22,8 +22,43 @@ final class WalletStore {
     var transactionEditor: TransactionEditorDraft?
     var searchQuery = ""
     var searchFilter: SearchFilter = .all
+    var isScrolledDown = false
+
+    // Split draft — part of the transaction sheet, not a screen of its own.
+    /// People this spend is being split with. Empty means "just me", the default.
+    var splitWith: [String] = []
+    var splitMode: SplitMode = .even
+    var splitShares: [String: Int] = [:]
+    /// Exact mode, held as typed text so a half-typed "12." survives a keystroke.
+    var splitExact: [String: String] = [:]
+    /// Event this spend will be tagged with, or nil.
+    var sheetEventID: String?
+    /// The event open on the event detail screen.
+    var openEventID: String?
+
+    /// The settlement waiting on slide-to-confirm, or nil. Getting paid back moves real money
+    /// into a real card, so it asks for a deliberate gesture rather than a tap that can happen
+    /// by accident in a pocket. An empty `txID` means "everything this person owes".
+    var pendingSettle: PendingSettle?
     var qrViewerCardID: String?
     var receiptViewerTransactionID: String?
+    var activeTransaction: Transaction? = nil
+    var isPro: Bool = UserDefaults.standard.bool(forKey: "isPro") {
+        didSet {
+            UserDefaults.standard.set(isPro, forKey: "isPro")
+        }
+    }
+    var showProUpsell: Bool = false
+    /// The Continue-with-Google restore flow. One sheet, opened from onboarding, Settings, the
+    /// Home banner and the Pro sheet, so every entry point handles every case the same way.
+    var restoreFlowOpen = false
+    /// Whether the flow should go straight to Google rather than offering the choice first.
+    var restoreFlowStartsSignIn = false
+
+    func openRestoreFlow(startSignIn: Bool = false) {
+        restoreFlowStartsSignIn = startSignIn
+        restoreFlowOpen = true
+    }
     var cardDeleteOpen = false
     var eraseOpen = false
     var toast: String?
@@ -69,6 +104,48 @@ final class WalletStore {
     }
 
     var typedAmount: Double { Double(amountDraft) ?? 0 }
+
+    /// The people currently selected, in the order the user picked them.
+    var selectedPeople: [Person] {
+        splitWith.compactMap { id in snapshot.people.first { $0.id == id } }
+    }
+
+    /// The split the current draft describes, or nil when the spend is just the user's.
+    /// Built on demand rather than kept in state, so the keypad and the people picker can
+    /// never disagree about what the split currently is.
+    var draftSplit: Split? {
+        guard sheet == .withdraw else { return nil }
+        let amounts = splitExact.compactMapValues { Double($0) }
+        return SplitMath.build(mode: splitMode, total: typedAmount, people: selectedPeople,
+                               shares: splitShares, amounts: amounts)
+    }
+
+    var debts: [PersonDebt] { SplitMath.debts(transactions: snapshot.tx, people: snapshot.people) }
+    var totalOwed: Double { SplitMath.totalOwed(snapshot.tx) }
+    var openEvent: EventGroup? { EventMetrics.find(snapshot.events, id: openEventID) }
+
+    /// The debt the pending gesture would clear, scoped to exactly what it covers so the
+    /// figure on screen matches the money that will move.
+    var pendingDebt: PersonDebt? {
+        guard let pendingSettle else { return nil }
+        let scoped = pendingSettle.txID.isEmpty
+            ? snapshot.tx
+            : snapshot.tx.filter { $0.id == pendingSettle.txID }
+        return SplitMath.debts(transactions: scoped, people: snapshot.people)
+            .first { $0.personId == pendingSettle.personID }
+    }
+
+    /// The card a pending settlement would land in.
+    var pendingSettleCard: Card? {
+        guard let pendingSettle else { return nil }
+        let scoped = pendingSettle.txID.isEmpty
+            ? snapshot.tx
+            : snapshot.tx.filter { $0.id == pendingSettle.txID }
+        let source = scoped.first {
+            $0.split?.parts.contains { $0.personId == pendingSettle.personID && $0.settledAt == nil } ?? false
+        }
+        return snapshot.cards.first { $0.id == source?.cardId }
+    }
     var spendOverage: Double {
         guard sheet == .withdraw, let card = sheetCard else { return 0 }
         return max(0, typedAmount - card.bal)
@@ -104,6 +181,7 @@ final class WalletStore {
             if launchArguments.contains("--tab=insights") { selectedTab = .insights }
             if launchArguments.contains("--tab=search") { selectedTab = .search }
             if launchArguments.contains("--tab=settings") { selectedTab = .settings }
+            if launchArguments.contains("--open-pro") { selectedTab = .settings; showProUpsell = true }
             synchronizeEndpoints()
             if launchArguments.contains("--route=detail") {
                 path = [.detail(snapshot.activeId)]
@@ -175,6 +253,22 @@ final class WalletStore {
             if let validCardID { showCardDetail(validCardID) }
         case "add-card":
             if snapshot.onboarded { openEditor(cardID: nil) }
+        case "qr":
+            if let validCardID { qrViewerCardID = validCardID }
+        case "people":
+            path.append(.people)
+        case "events":
+            path.append(.events)
+        case "event":
+            let eventID = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                .queryItems?
+                .first(where: { $0.name == "id" })?
+                .value
+            if let eventID, snapshot.events.contains(where: { $0.id == eventID }) {
+                openEventDetail(eventID)
+            } else {
+                path.append(.events)
+            }
         default:
             break
         }
@@ -246,6 +340,12 @@ final class WalletStore {
         FeedbackCenter.selectionChanged()
     }
 
+    func moveCard(from source: IndexSet, to destination: Int) {
+        snapshot.cards.move(fromOffsets: source, toOffset: destination)
+        persist()
+        FeedbackCenter.selectionChanged()
+    }
+
     func selectTab(_ tab: MainTab) {
         guard selectedTab != tab else { return }
         path.removeAll()
@@ -292,6 +392,14 @@ final class WalletStore {
         receiptDraft = nil
         sheetCardID = cardID ?? snapshot.activeId
         moveToCardID = snapshot.cards.first { $0.id != sheetCardID }?.id ?? ""
+        clearSplitDraft()
+        // A spend logged while an event is running belongs to it unless the user says
+        // otherwise — the alternative is tagging every row by hand on a trip. The event
+        // carries its members, so the usual crowd is pre-selected on arrival.
+        if kind == .withdraw, let running = EventMetrics.running(snapshot.events) {
+            sheetEventID = running.id
+            splitWith = running.memberIds.filter { id in snapshot.people.contains { $0.id == id } }
+        }
         sheet = kind
         FeedbackCenter.opened()
     }
@@ -337,7 +445,7 @@ final class WalletStore {
 
     func attachReceipt(_ data: Data, fileExtension: String = "jpg") async {
         do {
-            receiptDraft = try await mediaStore.write(data, extension: fileExtension)
+            receiptDraft = try await mediaStore.write(data, existingReference: receiptDraft, extension: fileExtension)
             showToast("Receipt attached.")
         } catch {
             showToast("Could not attach that photo.")
@@ -379,9 +487,9 @@ final class WalletStore {
             ), at: 0)
             sheet = nil
             success = SuccessState(
-                kind: .moved,
-                head: "Moved.",
-                body: "₱\(MoneyFormat.amount(typedAmount)) from \(card.nick) to \(destination.nick). No fees, because no bank was involved."
+                kind: .funded,
+                head: "Money received.",
+                body: "₱\(MoneyFormat.amount(typedAmount)) from \(card.nick) to \(destination.nick). No fees, because everything is offline."
             )
             persist()
             FeedbackCenter.moved()
@@ -401,26 +509,40 @@ final class WalletStore {
         }
 
         let sign = kind == .deposit ? 1.0 : -1.0
+        // Only a spend can be split — money coming in was never anybody else's.
+        let split = kind == .withdraw ? draftSplit : nil
+        let owed = split?.parts.reduce(0) { $0 + $1.amount } ?? 0
+
         snapshot.cards[cardIndex].bal += sign * typedAmount
         let transaction = Transaction(
             id: "tx_\(UUID().uuidString.lowercased())",
             cardId: card.id,
             merchant: noteDraft.isEmpty ? (kind == .deposit ? "Top up" : categoryDraft.rawValue) : noteDraft,
             cat: categoryDraft,
+            // The card really lost the whole bill, so this stays the full figure. What the
+            // user actually spent lives in `split.mine`, and that is what analytics read.
             amount: sign * typedAmount,
             at: Date().timeIntervalSince1970 * 1000,
             note: noteDraft,
-            receipt: receiptDraft
+            receipt: receiptDraft,
+            eventId: kind == .withdraw ? sheetEventID : nil,
+            split: split
         )
         snapshot.tx.insert(transaction, at: 0)
         sheet = nil
         receiptDraft = nil
+        clearSplitDraft()
+
+        let splitBody: String? = split.map { split in
+            let who = split.parts.count == 1 ? split.parts[0].name : "\(split.parts.count) people"
+            return "₱\(MoneyFormat.amount(split.mine)) was yours. ₱\(MoneyFormat.amount(owed)) is coming back from \(who)."
+        }
         success = SuccessState(
             kind: kind == .deposit ? .funded : .logged,
-            head: kind == .deposit ? "Funded." : "Logged it.",
+            head: kind == .deposit ? "Funded." : (split != nil ? "Logged and split." : "Logged it."),
             body: kind == .deposit
                 ? "₱\(MoneyFormat.amount(typedAmount)) added to \(card.nick). Look at you, being responsible."
-                : "₱\(MoneyFormat.amount(typedAmount)) off \(card.nick). That took four seconds."
+                : splitBody ?? "₱\(MoneyFormat.amount(typedAmount)) off \(card.nick). That took four seconds."
         )
         persist()
         if kind == .deposit { FeedbackCenter.moneyIn() }
@@ -464,8 +586,8 @@ final class WalletStore {
         path.removeAll()
         success = SuccessState(
             kind: .moved,
-            head: "Moved.",
-            body: "₱\(MoneyFormat.amount(amount)) from \(source.nick) to \(destination.nick). No fees, because no bank was involved."
+            head: "Money moved.",
+            body: "₱\(MoneyFormat.amount(amount)) from \(source.nick) to \(destination.nick). No fees, because everything is offline."
         )
         persist()
         FeedbackCenter.moved()
@@ -567,7 +689,8 @@ final class WalletStore {
 
     func attachEditorImage(_ data: Data, asQR: Bool = false, fileExtension: String = "jpg") async {
         do {
-            let reference = try await mediaStore.write(data, extension: fileExtension)
+            let existing = asQR ? editor?.card.qr : editor?.card.art.photo?.src
+            let reference = try await mediaStore.write(data, existingReference: existing, extension: fileExtension)
             if asQR {
                 updateEditorCard { $0.qr = reference }
                 showToast("Receiving QR attached.")
@@ -579,6 +702,22 @@ final class WalletStore {
                 showToast("Photo added.")
             }
             FeedbackCenter.success()
+        } catch {
+            showToast("Could not save that image.")
+            FeedbackCenter.warning()
+        }
+    }
+
+    func attachQRToCard(cardID: String, data: Data, fileExtension: String = "jpg") async {
+        do {
+            let existing = snapshot.cards.first(where: { $0.id == cardID })?.qr
+            let reference = try await mediaStore.write(data, existingReference: existing, extension: fileExtension)
+            if let index = snapshot.cards.firstIndex(where: { $0.id == cardID }) {
+                snapshot.cards[index].qr = reference
+                persist()
+                showToast("Receiving QR attached.")
+                FeedbackCenter.success()
+            }
         } catch {
             showToast("Could not save that image.")
             FeedbackCenter.warning()
@@ -676,7 +815,7 @@ final class WalletStore {
 
     func attachTransactionEditorReceipt(_ data: Data, fileExtension: String = "jpg") async {
         do {
-            let reference = try await mediaStore.write(data, extension: fileExtension)
+            let reference = try await mediaStore.write(data, existingReference: transactionEditor?.receipt, extension: fileExtension)
             transactionEditor?.receipt = reference
             showToast("Receipt attached.")
             FeedbackCenter.success()
@@ -711,6 +850,22 @@ final class WalletStore {
         snapshot.userName = trimmed
         persist()
         FeedbackCenter.success()
+    }
+
+    func attachUserPhoto(_ data: Data) async {
+        do {
+            let ref = try await mediaStore.write(data, extension: "jpg")
+            await MainActor.run {
+                snapshot.userPhotoSrc = ref
+                persist()
+                FeedbackCenter.success()
+            }
+        } catch {
+            await MainActor.run {
+                showToast("Failed to save photo")
+                FeedbackCenter.warning()
+            }
+        }
     }
 
     func toggleDailyReminder() async {
@@ -771,7 +926,7 @@ final class WalletStore {
     }
 
     func csvData() -> Data {
-        Data(("\u{feff}" + WalletMetrics.csv(transactions: snapshot.tx, cards: snapshot.cards)).utf8)
+        Data(("\u{feff}" + WalletMetrics.csv(transactions: snapshot.tx, cards: snapshot.cards, events: snapshot.events)).utf8)
     }
 
     func guessCategory() -> CategoryName? {
@@ -790,19 +945,31 @@ final class WalletStore {
     }
 
     @discardableResult
+    /// Replaces the whole wallet — from a backup file or from the cloud — and resets the
+    /// navigation around it, so nothing on screen still points at the old wallet.
+    func apply(_ restored: WalletSnapshot) {
+        var restored = restored
+        // Cloud-only stamps never live in the local wallet; see `WalletSnapshot.savedAt`.
+        restored.savedAt = nil
+        restored.savedOn = nil
+        restored.onboarded = restored.onboarded || !restored.cards.isEmpty
+        snapshot = restored
+        onboarding = OnboardingDraft()
+        path.removeAll()
+        editor = nil
+        transactionEditor = nil
+        selectedTab = .home
+        synchronizeEndpoints()
+        persist()
+        WidgetSnapshotPublisher.publish(snapshot)
+        FeedbackCenter.configure(haptics: snapshot.haptics, sounds: snapshot.sfx)
+    }
+
     func restoreBackup(_ data: Data) async -> Bool {
         do {
             let restored = try await BackupCodec.restore(data, media: mediaStore)
             try await repository?.save(restored)
-            snapshot = restored
-            onboarding = OnboardingDraft()
-            path.removeAll()
-            editor = nil
-            transactionEditor = nil
-            selectedTab = .home
-            synchronizeEndpoints()
-            WidgetSnapshotPublisher.publish(snapshot)
-            FeedbackCenter.configure(haptics: snapshot.haptics, sounds: snapshot.sfx)
+            apply(restored)
             showToast("Backup restored.")
             FeedbackCenter.success()
             return true
@@ -811,6 +978,275 @@ final class WalletStore {
             FeedbackCenter.warning()
             return false
         }
+    }
+
+    // MARK: - People
+
+    /// Clears who the spend is split with. Deliberately leaves `sheetEventID` alone: saying
+    /// "it was just me" is a statement about the people, not about which trip the spend
+    /// belongs to, and dropping the event with them silently untagged the row.
+    func clearSplitPeople() {
+        splitWith = []
+        splitMode = .even
+        splitShares = [:]
+        splitExact = [:]
+    }
+
+    /// The full reset, for opening or finishing a sheet — the event goes too.
+    func clearSplitDraft() {
+        clearSplitPeople()
+        sheetEventID = nil
+    }
+
+    @discardableResult
+    func addPerson(_ rawName: String, handle: String? = nil) -> String? {
+        let name = rawName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { return nil }
+
+        // Adding a name that is already there selects it instead of making a duplicate, which
+        // is what the user meant and stops two "Migo"s owing separate halves of the same bill.
+        if let existing = snapshot.people.first(where: { $0.name.lowercased() == name.lowercased() }) {
+            if let i = snapshot.people.firstIndex(where: { $0.id == existing.id }) {
+                snapshot.people[i].archived = false
+            }
+            if !splitWith.contains(existing.id) { splitWith.append(existing.id) }
+            persist()
+            return existing.id
+        }
+
+        let person = Person(
+            id: "person_\(UUID().uuidString.lowercased())",
+            name: name,
+            color: SplitMath.nextColor(existing: snapshot.people),
+            handle: handle?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
+        )
+        snapshot.people.append(person)
+        // Someone added from inside the sheet is there to be split with — select them.
+        if sheet != nil { splitWith.append(person.id) }
+        persist()
+        FeedbackCenter.selectionChanged()
+        return person.id
+    }
+
+    func updatePerson(_ id: String, newName: String) {
+        let name = newName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty, let i = snapshot.people.firstIndex(where: { $0.id == id }) else { return }
+        
+        let oldName = snapshot.people[i].name
+        guard oldName != name else { return }
+        
+        snapshot.people[i].name = name
+        
+        // Retroactively update history
+        for txIndex in snapshot.tx.indices {
+            if snapshot.tx[txIndex].split != nil {
+                for partIndex in snapshot.tx[txIndex].split!.parts.indices {
+                    if snapshot.tx[txIndex].split!.parts[partIndex].personId == id {
+                        snapshot.tx[txIndex].split!.parts[partIndex].name = name
+                    }
+                }
+            }
+        }
+        
+        persist()
+        FeedbackCenter.success()
+    }
+
+    func attachPersonPhoto(personId: String, data: Data) async {
+        do {
+            let ref = try await mediaStore.write(data, extension: "jpg")
+            await MainActor.run {
+                guard let i = snapshot.people.firstIndex(where: { $0.id == personId }) else { return }
+                snapshot.people[i].photoSrc = ref
+                persist()
+                FeedbackCenter.success()
+            }
+        } catch {
+            await MainActor.run {
+                showToast("Failed to save photo")
+                FeedbackCenter.warning()
+            }
+        }
+    }
+
+
+    func deletePerson(_ id: String) {
+        guard let person = snapshot.people.first(where: { $0.id == id }) else { return }
+        // History is not rewritten: every split part carries its own name snapshot, so past
+        // spends keep reading correctly after the person is gone.
+        snapshot.people.removeAll { $0.id == id }
+        splitWith.removeAll { $0 == id }
+        for i in snapshot.events.indices {
+            snapshot.events[i].memberIds.removeAll { $0 == id }
+        }
+        persist()
+        showToast("\(person.name) removed. Their history stays.")
+    }
+
+    // MARK: - Split draft
+
+    func toggleSplitPerson(_ id: String) {
+        if let i = splitWith.firstIndex(of: id) { splitWith.remove(at: i) } else { splitWith.append(id) }
+        FeedbackCenter.selectionChanged()
+    }
+
+    func setSplitShare(_ id: String, _ shares: Int) {
+        splitShares[id] = max(0, shares)
+    }
+
+    // MARK: - Settling up
+
+    /// Getting paid back is real money arriving, not a bookkeeping entry — this is the thing a
+    /// shared-ledger app structurally cannot do. It tops up an actual card, and the top-up
+    /// carries `repaysTxId` so a repayment is never mistaken for new income.
+    ///
+    /// One settlement can cover several spends at once, because that is how people actually pay
+    /// each other back: one transfer for the whole night, not one per dish. Every part it covers
+    /// points at the same settlement id, so undoing it reverses the lot as a unit.
+    /// Opens the slide-to-confirm. An empty `transactionID` means everything they owe.
+    func askSettle(personID: String, transactionID: String = "") {
+        pendingSettle = PendingSettle(personID: personID, txID: transactionID)
+        FeedbackCenter.opened()
+    }
+
+    func cancelSettle() {
+        pendingSettle = nil
+        FeedbackCenter.closed()
+    }
+
+    func settle(personID: String, transactionID: String? = nil, into cardID: String? = nil) {
+        pendingSettle = nil
+        let covered = snapshot.tx.filter { transaction in
+            (transactionID == nil || transaction.id == transactionID) &&
+            (transaction.split?.parts.contains { $0.personId == personID && $0.settledAt == nil } ?? false)
+        }
+        guard !covered.isEmpty else { return }
+
+        let total = SplitMath.centavos(covered.reduce(0) { sum, transaction in
+            sum + (transaction.split?.parts.first { $0.personId == personID }?.amount ?? 0)
+        })
+        guard total > 0 else { return }
+
+        let name = covered[0].split?.parts.first { $0.personId == personID }?.name ?? "They"
+        let targetID = cardID ?? covered[0].cardId
+        guard let cardIndex = snapshot.cards.firstIndex(where: { $0.id == targetID }) else {
+            showToast("Pick a card for it to land in.")
+            return
+        }
+        let card = snapshot.cards[cardIndex]
+        let settlementID = "tx_\(UUID().uuidString.lowercased())"
+        let at = Date().timeIntervalSince1970 * 1000
+        let ids = Set(covered.map(\.id))
+
+        snapshot.cards[cardIndex].bal += total
+        for i in snapshot.tx.indices where ids.contains(snapshot.tx[i].id) {
+            guard var split = snapshot.tx[i].split else { continue }
+            for j in split.parts.indices where split.parts[j].personId == personID && split.parts[j].settledAt == nil {
+                split.parts[j].settledAt = at
+                split.parts[j].settledTxId = settlementID
+            }
+            snapshot.tx[i].split = split
+        }
+        snapshot.tx.insert(Transaction(
+            id: settlementID,
+            cardId: card.id,
+            merchant: "\(name) paid you back",
+            cat: covered[0].cat,
+            amount: total,
+            at: at,
+            note: covered.count == 1 ? covered[0].merchant : "\(covered.count) spends together",
+            eventId: covered[0].eventId,
+            repaysTxId: covered[0].id
+        ), at: 0)
+
+        success = SuccessState(
+            kind: .funded,
+            head: "Settled.",
+            body: "₱\(MoneyFormat.amount(total)) from \(name) landed in \(card.nick). That is one fewer awkward message."
+        )
+        persist()
+        FeedbackCenter.moneyIn()
+    }
+
+    /// Reverses a whole settlement: the top-up goes, and every part it covered reopens.
+    func unsettle(settlementID: String) {
+        guard let settlement = snapshot.tx.first(where: { $0.id == settlementID }),
+              settlement.repaysTxId != nil,
+              let cardIndex = snapshot.cards.firstIndex(where: { $0.id == settlement.cardId }) else { return }
+
+        snapshot.cards[cardIndex].bal -= settlement.amount
+        for i in snapshot.tx.indices {
+            guard var split = snapshot.tx[i].split else { continue }
+            var touched = false
+            for j in split.parts.indices where split.parts[j].settledTxId == settlementID {
+                split.parts[j].settledAt = nil
+                split.parts[j].settledTxId = nil
+                touched = true
+            }
+            if touched { snapshot.tx[i].split = split }
+        }
+        snapshot.tx.removeAll { $0.id == settlementID }
+        persist()
+        showToast("Undone. That ₱\(MoneyFormat.amount(settlement.amount)) is owed again.")
+    }
+
+    // MARK: - Events
+
+    @discardableResult
+    func createEvent(_ rawName: String, emoji: String = "📍") -> String? {
+        let name = rawName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else {
+            showToast("Give the event a name first.")
+            return nil
+        }
+        let event = EventGroup(
+            id: "event_\(UUID().uuidString.lowercased())",
+            name: name,
+            emoji: emoji.isEmpty ? "📍" : emoji,
+            startedAt: Date().timeIntervalSince1970 * 1000,
+            endedAt: nil,
+            // Whoever is selected in the sheet right now is who this trip is with.
+            memberIds: splitWith
+        )
+        snapshot.events.insert(event, at: 0)
+        sheetEventID = event.id
+        persist()
+        showToast("\(event.name) started. Spends will land in it.")
+        return event.id
+    }
+
+    func closeEvent(_ id: String) {
+        guard let i = snapshot.events.firstIndex(where: { $0.id == id }) else { return }
+        snapshot.events[i].endedAt = Date().timeIntervalSince1970 * 1000
+        if sheetEventID == id { sheetEventID = nil }
+        persist()
+        showToast("\(snapshot.events[i].name) closed. Nothing new lands in it.")
+    }
+
+    func reopenEvent(_ id: String) {
+        guard let i = snapshot.events.firstIndex(where: { $0.id == id }) else { return }
+        snapshot.events[i].endedAt = nil
+        persist()
+    }
+
+    func deleteEvent(_ id: String) {
+        guard let event = snapshot.events.first(where: { $0.id == id }) else { return }
+        // Only the grouping goes. The spends are real money and stay in the wallet — dropping
+        // them with the event would silently change the user's balances.
+        snapshot.events.removeAll { $0.id == id }
+        for i in snapshot.tx.indices where snapshot.tx[i].eventId == id {
+            snapshot.tx[i].eventId = nil
+        }
+        if sheetEventID == id { sheetEventID = nil }
+        if openEventID == id { openEventID = nil }
+        if !path.isEmpty { path.removeLast() }
+        persist()
+        showToast("\(event.name) removed. The spends stayed.")
+    }
+
+    func openEventDetail(_ id: String) {
+        openEventID = id
+        path.append(.event(id))
     }
 
     func showToast(_ message: String) {
@@ -831,6 +1267,11 @@ final class WalletStore {
             do { try await repository.save(value) }
             catch { showToast("Could not save this change on your device.") }
         }
+    }
+
+    func setAppTheme(_ theme: AppTheme) {
+        snapshot.appTheme = theme
+        persist()
     }
 
     private func synchronizeEndpoints() {

@@ -18,12 +18,12 @@ struct MoneyKeypad: View {
                                 else { Text(key) }
                             }
                             .font(AppFont.outfit(22, weight: .semibold, relativeTo: .title2))
-                            .foregroundStyle(dark ? Color.white : Tokens.ink)
+                            .foregroundStyle(Tokens.textPrimary)
                             .frame(maxWidth: .infinity, minHeight: 48)
                             .contentShape(Rectangle())
                         }
                         .buttonStyle(PesolitaPressStyle())
-                        .background(dark ? Tokens.dark2 : Tokens.sand1, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .background(Tokens.fill, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                         .accessibilityLabel(key == "⌫" ? "Delete" : key)
                     }
                 }

@@ -15,6 +15,12 @@ struct CardTemplatePickerView: View {
 
     var body: some View {
         VStack(spacing: 10) {
+            Text("Visual style only. NOT connected to your Bank.")
+                .font(AppFont.outfit(11, weight: .bold, relativeTo: .caption))
+                .foregroundStyle(Tokens.muted1)
+                .textCase(.uppercase)
+                .kerning(0.5)
+
             ScrollView(.horizontal) {
                 LazyHStack(spacing: 14) {
                     ForEach(templates) { template in
@@ -29,19 +35,19 @@ struct CardTemplatePickerView: View {
                                         if template.id == selectedID {
                                             Image(systemName: "checkmark")
                                                 .font(.system(size: 14, weight: .bold))
-                                                .foregroundStyle(onDark ? Tokens.ink : .white)
+                                                .foregroundStyle(Tokens.bgBase)
                                                 .frame(width: 34, height: 34)
-                                                .background(onDark ? Color.white : Tokens.ink, in: Circle())
+                                                .background(Tokens.textPrimary, in: Circle())
                                                 .padding(10)
                                         }
                                     }
                                     .overlay {
                                         RoundedRectangle(cornerRadius: 17, style: .continuous)
-                                            .stroke(template.id == selectedID ? (onDark ? Color.white : Tokens.ink) : Color.clear, lineWidth: 3)
+                                            .stroke(template.id == selectedID ? Tokens.textPrimary : Color.clear, lineWidth: 3)
                                     }
                                 Text(template.name)
                                     .font(AppFont.outfit(14, weight: .bold, relativeTo: .subheadline))
-                                    .foregroundStyle(onDark ? .white : Tokens.ink)
+                                    .foregroundStyle(Tokens.textPrimary)
                                     .lineLimit(1)
                             }
                             .frame(width: 252, alignment: .leading)
@@ -73,7 +79,7 @@ struct CardTemplatePickerView: View {
 
             Text("Swipe or tap a card")
                 .font(AppFont.outfit(11, weight: .medium, relativeTo: .caption))
-                .foregroundStyle(onDark ? .white.opacity(0.42) : Tokens.muted2)
+                .foregroundStyle(Tokens.muted2)
         }
         .onAppear { focusedID = selectedID ?? templates.first?.id }
     }

@@ -5,7 +5,15 @@ import { useState, type CSSProperties } from "react";
 import { Mascot } from "@/components/Mascot";
 import { SpriteAnimation } from "@/components/SpriteAnimation";
 import { daysAgo, peso0 } from "@/lib/format";
-import { biggestHit, categoryTotals, periodInsight, periodLabel, type InsightPeriod } from "@/lib/selectors";
+import {
+  biggestHit,
+  categoryTotals,
+  eventTotals,
+  periodInsight,
+  periodLabel,
+  sortedEvents,
+  type InsightPeriod,
+} from "@/lib/selectors";
 import { IDLE_STEADY } from "@/lib/sprites";
 import { useWallet } from "@/lib/store";
 
@@ -26,6 +34,7 @@ export function Insights() {
   const hasData = state.tx.length > 0;
   const max = Math.max(1, ...cats.map((c) => c.amount));
   const loggedInPeriod = state.tx.filter((t) => days === undefined || daysAgo(t.at) < days).length;
+  const events = sortedEvents(state.events);
 
   return (
     <section
@@ -97,6 +106,43 @@ export function Insights() {
             </div>
           </div>
         </div>
+
+        {/* Events are a lens on spends that already exist, so they sit inside Insights
+            rather than taking a fifth seat in the navigation. */}
+        <section className={styles.eventSection}>
+          <div className={styles.eventHead}>
+            <h2 className={styles.sectionTitle}>Events</h2>
+            <button type="button" className={styles.eventAll} onClick={() => actions.go("events")}>
+              {events.length > 0 ? "See all" : "Start one"}
+            </button>
+          </div>
+          {events.length === 0 ? (
+            <p className={styles.eventEmpty}>
+              Group a trip or a night out and this shows what the whole thing cost.
+            </p>
+          ) : (
+            <div className={styles.eventRow}>
+              {events.slice(0, 5).map((event) => {
+                const totals = eventTotals(state.tx, event.id);
+                return (
+                  <button
+                    key={event.id}
+                    type="button"
+                    className={styles.eventCard}
+                    onClick={() => actions.openEvent(event.id)}
+                  >
+                    <span className={styles.eventEmoji} aria-hidden="true">{event.emoji}</span>
+                    <span className={styles.eventName}>{event.name}</span>
+                    <span className={styles.eventTotal}>₱{peso0(totals.total)}</span>
+                    <span className={styles.eventSub}>
+                      {totals.owed > 0 ? `₱${peso0(totals.owed)} owed` : `₱${peso0(totals.mine)} yours`}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </section>
 
         <section>
         <h2 className={styles.sectionTitle}>Where it went</h2>

@@ -3,6 +3,7 @@
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
 import { Mascot } from "@/components/Mascot";
+import { OwedStrip } from "@/components/OwedStrip";
 import { ReceiptViewer } from "@/components/ReceiptViewer";
 import { SpriteAnimation } from "@/components/SpriteAnimation";
 import { TxRow } from "@/components/TxRow";
@@ -150,6 +151,11 @@ export function ActivityPanel() {
             <div className={styles.safeCopy}>{pacingCopy(progress, safe)}</div>
           </button>
         ) : null}
+
+        {/* Above the notices: money that is owed back is more actionable than a nudge. */}
+        <div className={styles.owedSlot}>
+          <OwedStrip />
+        </div>
 
         {notices.length > 0 ? (
           <section className={styles.notifSection}>

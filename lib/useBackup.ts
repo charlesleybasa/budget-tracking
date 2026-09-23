@@ -26,6 +26,8 @@ export function useBackup(): () => boolean {
       buildBackup({
         cards: state.cards,
         tx: state.tx,
+        people: state.people,
+        events: state.events,
         dismissedNotices: state.dismissedNotices,
         userName: state.userName,
         privacy: state.privacy,

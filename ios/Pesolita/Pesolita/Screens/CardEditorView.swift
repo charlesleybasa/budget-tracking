@@ -8,6 +8,9 @@ struct CardEditorView: View {
     @State private var qrPhoto: PhotosPickerItem?
     @State private var detailsExpanded = true
     @State private var scrollOffset: CGFloat = 0
+    /// Measured, so the panel always starts below the Templates/DIY switch whatever the text
+    /// size — a fixed guess slid the "Choose a background" heading under it.
+    @State private var headerHeight: CGFloat = 352
 
     private var draft: CardEditorDraft? { store.editor }
     private var card: Card? { draft?.card }
@@ -21,13 +24,13 @@ struct CardEditorView: View {
             if let draft {
                 ScrollView {
                     VStack(spacing: 0) {
-                        Color.clear.frame(height: 310) // Tighter spacing to editorHeader
+                        Color.clear.frame(height: headerHeight)
                         
                         VStack(spacing: 0) {
                             controlsPanel(draft)
-                            Tokens.sand1.frame(height: 800) // Stretch white background forever
+                            Tokens.dark1.frame(height: 800) // Stretch white background forever
                         }
-                        .background(Tokens.sand1)
+                        .background(Tokens.dark1)
                         .clipShape(.rect(topLeadingRadius: 36, topTrailingRadius: 36))
                     }
                 }
@@ -40,12 +43,12 @@ struct CardEditorView: View {
                 }
                 
                 editorHeader(draft)
-                    .background(Tokens.ink.ignoresSafeArea(edges: .top))
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
+                    .background(Tokens.background.ignoresSafeArea(edges: .top))
             }
         }
-        .background(Tokens.ink.ignoresSafeArea())
+        .background(Tokens.background.ignoresSafeArea())
         .toolbar(.hidden, for: .navigationBar)
-        .preferredColorScheme(.dark)
         .onAppear {
             if let category = selectedTemplate?.category { templateCategory = category }
         }
@@ -76,18 +79,18 @@ struct CardEditorView: View {
                         .font(AppFont.outfit(19, weight: .black, relativeTo: .title3))
                     Text(draft.mode == .templates ? "Template" : "DIY")
                         .font(AppFont.outfit(10.5, relativeTo: .caption2))
-                        .foregroundStyle(.white.opacity(0.38))
+                        .foregroundStyle(Tokens.text.opacity(0.38))
                 }
                 Spacer()
                 Button { store.saveEditorCard() } label: {
                     Image(systemName: "checkmark")
                         .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(Tokens.ink)
+                        .foregroundStyle(Tokens.onAccent)
                         .frame(width: 48, height: 48)
                         .background(Tokens.accent, in: Circle())
                 }
             }
-            .foregroundStyle(.white)
+            .foregroundStyle(Tokens.text)
 
             CardFaceView(card: draft.card, privateMode: false)
                 .frame(width: 320, height: 196)
@@ -118,12 +121,11 @@ struct CardEditorView: View {
             detailsControls(draft)
             saveControls(draft)
         }
-        .foregroundStyle(Tokens.ink)
+        .foregroundStyle(Tokens.text)
         .padding(.horizontal, 22)
         .padding(.top, 26)
         .padding(.bottom, 58)
-        .background(.white, in: UnevenRoundedRectangle(topLeadingRadius: 30, topTrailingRadius: 30))
-        .preferredColorScheme(.light)
+        .background(Tokens.background, in: UnevenRoundedRectangle(topLeadingRadius: 30, topTrailingRadius: 30))
     }
 
     private func templateControls(_ draft: CardEditorDraft) -> some View {
@@ -140,13 +142,13 @@ struct CardEditorView: View {
                             HStack(spacing: 6) {
                                 Text(category.label)
                                 Text("\(count)")
-                                    .foregroundStyle(templateCategory == category ? .white.opacity(0.64) : Tokens.muted2)
+                                    .foregroundStyle(templateCategory == category ? Tokens.background.opacity(0.64) : Tokens.muted2)
                             }
                             .font(AppFont.outfit(11.5, weight: .bold, relativeTo: .caption))
-                            .foregroundStyle(templateCategory == category ? .white : Tokens.ink)
+                            .foregroundStyle(templateCategory == category ? Tokens.background : Tokens.text)
                             .padding(.horizontal, 12)
                             .frame(minHeight: 40)
-                            .background(templateCategory == category ? Tokens.ink : Tokens.sand1, in: Capsule())
+                            .background(templateCategory == category ? Tokens.text : Tokens.dark1, in: Capsule())
                         }
                         .buttonStyle(PesolitaPressStyle())
                     }
@@ -177,7 +179,7 @@ struct CardEditorView: View {
                         .font(AppFont.outfit(11.5, weight: .bold, relativeTo: .caption))
                         .padding(.horizontal, 12)
                         .frame(minHeight: 40)
-                        .background(Tokens.sand1, in: Capsule())
+                        .background(Tokens.dark1, in: Capsule())
                 }
                 .buttonStyle(PesolitaPressStyle())
             }
@@ -199,9 +201,9 @@ struct CardEditorView: View {
                                     .font(AppFont.outfit(10.5, weight: .bold, relativeTo: .caption2))
                                     .lineLimit(1)
                             }
-                            .foregroundStyle(Tokens.ink)
+                            .foregroundStyle(Tokens.text)
                             .padding(6)
-                            .background(draft.card.art.style == style ? Tokens.bluePale : Tokens.sand1, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+                            .background(draft.card.art.style == style ? Tokens.bluePale : Tokens.dark1, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
                             .overlay(RoundedRectangle(cornerRadius: 13).stroke(draft.card.art.style == style ? Tokens.blue : .clear, lineWidth: 2))
                         }
                         .buttonStyle(PesolitaPressStyle())
@@ -210,9 +212,9 @@ struct CardEditorView: View {
                 PhotosPicker(selection: $artworkPhoto, matching: .images) {
                     Label(draft.card.art.style == .photo ? "Replace personal photo" : "Use a personal photo", systemImage: "photo.on.rectangle.angled")
                         .font(AppFont.outfit(12.5, weight: .bold, relativeTo: .caption))
-                        .foregroundStyle(Tokens.ink)
+                        .foregroundStyle(Tokens.text)
                         .frame(maxWidth: .infinity, minHeight: 46)
-                        .background(Tokens.sand1, in: Capsule())
+                        .background(Tokens.dark1, in: Capsule())
                 }
                 if draft.card.art.style == .glyph {
                     textField("Big background letter", text: artGlyphBinding, icon: "textformat")
@@ -232,7 +234,7 @@ struct CardEditorView: View {
                                     Circle().fill(Color(hex: palette.1)).offset(x: 7)
                                 }
                                 .frame(width: 52, height: 44)
-                                .overlay(Capsule().stroke(draft.card.art.c1 == palette.0 && draft.card.art.c2 == palette.1 ? Tokens.ink : Tokens.line3, lineWidth: 2))
+                                .overlay(Capsule().stroke(draft.card.art.c1 == palette.0 && draft.card.art.c2 == palette.1 ? Tokens.text : Tokens.line3, lineWidth: 2))
                             }
                             .buttonStyle(PesolitaPressStyle())
                         }
@@ -310,7 +312,7 @@ struct CardEditorView: View {
             } label: {
                 Label("Auto-fix contrast", systemImage: "wand.and.stars")
                     .font(AppFont.outfit(12, weight: .bold, relativeTo: .caption))
-                    .foregroundStyle(Tokens.blueDeep)
+                    .foregroundStyle(Tokens.link)
                     .frame(maxWidth: .infinity, minHeight: 43)
                     .background(Tokens.bluePale, in: Capsule())
             }
@@ -347,7 +349,7 @@ struct CardEditorView: View {
                     .font(AppFont.outfit(13.5, weight: .bold, relativeTo: .subheadline))
                     .padding(.horizontal, 13)
                     .frame(minHeight: 48)
-                    .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+                    .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
 
                     HStack(spacing: 10) {
                         textField("Last 4", text: cardStringBinding(\.last4), icon: "number")
@@ -376,20 +378,20 @@ struct CardEditorView: View {
                         HStack {
                             Label(draft.card.qr == nil ? "Add receiving QR" : "Replace receiving QR", systemImage: "qrcode")
                             Spacer()
-                            if draft.card.qr != nil { Image(systemName: "checkmark.circle.fill").foregroundStyle(Tokens.green) }
+                            if draft.card.qr != nil { Image(systemName: "checkmark.circle.fill").foregroundStyle(Tokens.positive) }
                         }
                         .font(AppFont.outfit(12.5, weight: .bold, relativeTo: .caption))
-                        .foregroundStyle(Tokens.ink)
+                        .foregroundStyle(Tokens.text)
                         .padding(.horizontal, 14)
                         .frame(minHeight: 48)
-                        .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+                        .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                     }
                 }
                 .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
         .padding(18)
-        .background(Tokens.sand1.opacity(0.70), in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .background(Tokens.dark1.opacity(0.70), in: RoundedRectangle(cornerRadius: 24, style: .continuous))
     }
 
     private func saveControls(_ draft: CardEditorDraft) -> some View {
@@ -397,9 +399,9 @@ struct CardEditorView: View {
             Button { store.saveEditorCard() } label: {
                 Text(draft.isNew ? "Add this card" : "Save redesign")
                     .font(AppFont.outfit(16, weight: .bold, relativeTo: .body))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Tokens.text)
                     .frame(maxWidth: .infinity, minHeight: 55)
-                    .background(Tokens.ink, in: Capsule())
+                    .background(Tokens.background, in: Capsule())
             }
             .buttonStyle(PesolitaPressStyle())
             if !draft.isNew {
@@ -416,9 +418,9 @@ struct CardEditorView: View {
         return Button { store.setEditorMode(mode) } label: {
             Label(label, systemImage: icon)
                 .font(AppFont.outfit(12.5, weight: .bold, relativeTo: .caption))
-                .foregroundStyle(selected ? Tokens.ink : .white.opacity(0.55))
+                .foregroundStyle(selected ? Tokens.background : Tokens.text.opacity(0.55))
                 .frame(maxWidth: .infinity, minHeight: 44)
-                .background(selected ? .white : Tokens.dark2, in: Capsule())
+                .background(selected ? Tokens.text : Tokens.dark2, in: Capsule())
         }
         .buttonStyle(PesolitaPressStyle())
     }
@@ -442,17 +444,17 @@ struct CardEditorView: View {
             content()
         }
         .padding(16)
-        .background(Tokens.sand1.opacity(0.7), in: RoundedRectangle(cornerRadius: 21, style: .continuous))
+        .background(Tokens.dark1.opacity(0.7), in: RoundedRectangle(cornerRadius: 21, style: .continuous))
     }
 
     private func optionPill(_ title: String, selected: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(title)
                 .font(AppFont.outfit(11, weight: .bold, relativeTo: .caption))
-                .foregroundStyle(selected ? .white : Tokens.ink)
+                .foregroundStyle(selected ? Tokens.bgBase : Tokens.textPrimary)
                 .padding(.horizontal, 11)
                 .frame(maxWidth: .infinity, minHeight: 38)
-                .background(selected ? Tokens.ink : .white, in: Capsule())
+                .background(selected ? Tokens.textPrimary : Tokens.bgBase, in: Capsule())
                 .overlay(Capsule().stroke(selected ? .clear : Tokens.line3))
         }
         .buttonStyle(PesolitaPressStyle())
@@ -468,7 +470,7 @@ struct CardEditorView: View {
             .font(AppFont.outfit(11.5, weight: .semibold, relativeTo: .caption))
             .foregroundStyle(Tokens.muted1)
             Slider(value: value, in: range)
-                .tint(Tokens.ink)
+                .tint(Tokens.text)
         }
     }
 
@@ -488,7 +490,7 @@ struct CardEditorView: View {
         .padding(.horizontal, 13)
         .padding(.vertical, 8)
         .frame(minHeight: 52)
-        .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
     }
 
     private func numberField(_ placeholder: String, value: Binding<Double>, icon: String) -> some View {
@@ -525,7 +527,7 @@ struct CardEditorView: View {
         .padding(.horizontal, 13)
         .padding(.vertical, 8)
         .frame(minHeight: 52)
-        .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
     }
 
     private func previewArt(_ style: CardArtStyle) -> CardArt {

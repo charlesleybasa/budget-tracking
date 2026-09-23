@@ -18,8 +18,15 @@ import { peso } from "@/lib/format";
 import { autoTuneScrim } from "@/lib/legibility";
 import { newId } from "@/lib/ids";
 import type { BackupPayload } from "@/lib/backup";
-import { migrateCards, migrateTransactions } from "@/lib/migrate";
-import { LOW_BALANCE, cardIndex, findCard } from "@/lib/selectors";
+import { migrateCards, migrateEvents, migratePeople, migrateTransactions } from "@/lib/migrate";
+import { LOW_BALANCE, cardIndex, findCard, findEvent, runningEvent } from "@/lib/selectors";
+import {
+  makePerson,
+  resplitForTotal,
+  splitByExact,
+  splitByShares,
+  splitEvenly,
+} from "@/lib/split";
 import { clear as clearStorage } from "@/lib/storage";
 import { load, save } from "@/lib/storage";
 import type {
@@ -28,11 +35,15 @@ import type {
   CardDraft,
   CardKind,
   CategoryName,
+  EventGroup,
   HomeLayout,
+  Person,
   PhotoArt,
   Screen,
   SearchFilter,
   SheetKind,
+  Split,
+  SplitMode,
   SuccessState,
   Transaction,
 } from "@/lib/types";
@@ -54,6 +65,10 @@ export interface WalletState {
   // data
   cards: Card[];
   tx: Transaction[];
+  /** People a spend can be split with. Local chips, not accounts — nothing syncs. */
+  people: Person[];
+  /** Trips and nights out a spend can belong to. */
+  events: EventGroup[];
   /** Notices are derived from balances; only the dismissals are stored. */
   dismissedNotices: string[];
   activeId: string;
@@ -78,6 +93,28 @@ export interface WalletState {
   note: string;
   /** Attached receipt photo as a data URL, or null when none is attached. */
   receipt: string | null;
+
+  // split draft — part of the transaction sheet, not a screen of its own
+  /** People this spend is being split with. Empty means "just me", the default. */
+  splitWith: string[];
+  splitMode: SplitMode;
+  /** Shares mode, keyed by person id. */
+  splitShares: Record<string, number>;
+  /** Exact mode, keyed by person id, held as typed text so a half-typed "12." survives. */
+  splitExact: Record<string, string>;
+  /** Event this spend will be tagged with, or null. */
+  sheetEventId: string | null;
+
+  // events
+  /** The event open on the event detail screen. */
+  openEventId: string | null;
+
+  /**
+   * The settlement waiting on slide-to-confirm, or null. Getting paid back moves real money
+   * into a real card, so it asks for a deliberate gesture rather than a tap that can happen
+   * by accident in a pocket. `txId` empty means "everything this person owes".
+   */
+  pendingSettle: { personId: string; txId: string } | null;
 
   // transfer screen
   fromId: string;
@@ -140,6 +177,8 @@ function initialState(): WalletState {
     userName: "",
     cards: [],
     tx: [],
+    people: [],
+    events: [],
     dismissedNotices: [],
     activeId: "",
     // Deck is the guided view: one card plus the activity panel, which is where a new
@@ -159,6 +198,13 @@ function initialState(): WalletState {
     cat: "Food",
     note: "",
     receipt: null,
+    splitWith: [],
+    splitMode: "even",
+    splitShares: {},
+    splitExact: {},
+    sheetEventId: null,
+    openEventId: null,
+    pendingSettle: null,
     fromId: "",
     toId: "",
     swapRot: 0,
@@ -212,6 +258,9 @@ type UiPatch = Partial<
     | "cardDeleteOpen"
     | "eraseOpen"
     | "qrCardId"
+    | "sheetEventId"
+    | "openEventId"
+    | "pendingSettle"
   >
 >;
 
@@ -244,7 +293,23 @@ type Action =
   | { type: "finishOnboarding" }
   | { type: "closeSuccess" }
   | { type: "resetEverything" }
-  | { type: "restore"; payload: BackupPayload };
+  | { type: "restore"; payload: BackupPayload }
+  | { type: "addPerson"; name: string; handle?: string }
+  | { type: "editPerson"; id: string; patch: Partial<Person> }
+  | { type: "deletePerson"; id: string }
+  | { type: "toggleSplitPerson"; id: string }
+  | { type: "setSplitMode"; mode: SplitMode }
+  | { type: "setSplitShare"; id: string; shares: number }
+  | { type: "setSplitExact"; id: string; value: string }
+  | { type: "clearSplit" }
+  | { type: "settlePart"; txId: string; personId: string; cardId?: string }
+  | { type: "unsettlePart"; txId: string }
+  | { type: "createEvent"; name: string; emoji: string }
+  | { type: "editEvent"; id: string; patch: Partial<EventGroup> }
+  | { type: "closeEvent"; id: string }
+  | { type: "reopenEvent"; id: string }
+  | { type: "deleteEvent"; id: string }
+  | { type: "setTxEvent"; txId: string; eventId: string | null };
 
 /**
  * The card is the same object on both screens, so the move between them is explained by
@@ -269,6 +334,43 @@ function pruneDismissals(cards: readonly Card[], dismissed: readonly string[]): 
     return !!card && card.bal < LOW_BALANCE;
   });
 }
+
+/** The people currently selected in the split draft, in the order the user picked them. */
+function selectedPeople(state: WalletState): Person[] {
+  return state.splitWith.flatMap((id) => {
+    const person = state.people.find((p) => p.id === id);
+    return person ? [person] : [];
+  });
+}
+
+/**
+ * The split the current draft describes, or null when the spend is just the user's. Built
+ * from the draft on demand rather than kept in state, so the amount keypad and the people
+ * picker can never disagree about what the split currently is.
+ */
+function draftSplit(state: WalletState, total: number): Split | null {
+  const people = selectedPeople(state);
+  if (people.length === 0 || !(total > 0)) return null;
+
+  if (state.splitMode === "shares") {
+    return splitByShares(total, people, state.splitShares);
+  }
+  if (state.splitMode === "exact") {
+    const amounts = Object.fromEntries(
+      people.map((p) => [p.id, parseFloat(state.splitExact[p.id] ?? "") || 0]),
+    );
+    return splitByExact(total, people, amounts);
+  }
+  return splitEvenly(total, people);
+}
+
+/** Clears the split draft back to "just me". */
+const NO_SPLIT = {
+  splitWith: [] as string[],
+  splitMode: "even" as SplitMode,
+  splitShares: {} as Record<string, number>,
+  splitExact: {} as Record<string, string>,
+};
 
 function reducer(state: WalletState, action: Action): WalletState {
   switch (action.type) {
@@ -336,18 +438,26 @@ function reducer(state: WalletState, action: Action): WalletState {
       return { ...state, amt: a };
     }
 
-    case "openSheet":
+    case "openSheet": {
       // A silent no-op is worse than a refusal: say why nothing happened.
       if (state.cards.length === 0) return withToast(state, "Add a card first.");
+      // A spend logged while an event is running belongs to it unless the user says
+      // otherwise — the alternative is tagging every row by hand on a trip.
+      const running = action.kind === "withdraw" ? runningEvent(state.events) : undefined;
       return {
         ...state,
+        ...NO_SPLIT,
         sheet: action.kind,
         amt: "",
         note: "",
         cat: "Food",
         receipt: null,
         sheetCardId: action.cardId ?? state.activeId,
+        sheetEventId: running?.id ?? null,
+        // An event carries its members, so the usual crowd is pre-selected on arrival.
+        splitWith: running ? running.memberIds.filter((id) => state.people.some((p) => p.id === id)) : [],
       };
+    }
 
     case "saveTx": {
       const amount = parseFloat(state.amt);
@@ -401,9 +511,14 @@ function reducer(state: WalletState, action: Action): WalletState {
         return withToast(state, `That's ₱${peso(amount - from.bal)} more than ${from.nick} has.`);
       }
 
+      // Only a spend can be split — money coming in was never anybody else's.
+      const split = sign < 0 ? draftSplit(state, amount) : null;
+      const owed = split ? split.parts.reduce((sum, p) => sum + p.amount, 0) : 0;
+
       const nextCards = state.cards.map((c) => (c.id === from.id ? { ...c, bal: c.bal + sign * amount } : c));
       return {
         ...state,
+        ...NO_SPLIT,
         cards: nextCards,
         dismissedNotices: pruneDismissals(nextCards, state.dismissedNotices),
         tx: [
@@ -412,21 +527,29 @@ function reducer(state: WalletState, action: Action): WalletState {
             cardId: from.id,
             merchant: state.note || (sign > 0 ? "Top up" : state.cat),
             cat: state.cat,
+            // The card really lost the whole bill, so this stays the full figure. What the
+            // user actually spent lives in `split.mine`, and that is what analytics read.
             amount: sign * amount,
             at: Date.now(),
             note: state.note,
             ...(state.receipt ? { receipt: state.receipt } : {}),
+            eventId: state.sheetEventId,
+            split,
           },
           ...state.tx,
         ],
         sheet: null,
         success: {
           kind: sign > 0 ? "funded" : "logged",
-          head: sign > 0 ? "Funded." : "Logged it.",
+          head: sign > 0 ? "Funded." : split ? "Logged and split." : "Logged it.",
           body:
             sign > 0
               ? `₱${peso(amount)} added to ${from.nick}. Look at you, being responsible.`
-              : `₱${peso(amount)} off ${from.nick}. That took four seconds.`,
+              : split
+                ? `₱${peso(split.mine)} was yours. ₱${peso(owed)} is coming back from ${
+                    split.parts.length === 1 ? split.parts[0].name : `${split.parts.length} people`
+                  }.`
+                : `₱${peso(amount)} off ${from.nick}. That took four seconds.`,
         },
       };
     }
@@ -507,6 +630,9 @@ function reducer(state: WalletState, action: Action): WalletState {
         note: noteText,
         merchant: noteText || original.merchant,
         receipt: state.receipt ?? undefined,
+        // Editing the bill has to move the split with it, or the owner's share would still
+        // describe the old amount and every analytic reading it would be wrong.
+        split: original.split ? resplitForTotal(amount, original.split) : original.split,
       };
 
       const delta = newAmount - original.amount;
@@ -535,18 +661,29 @@ function reducer(state: WalletState, action: Action): WalletState {
     case "deleteTx": {
       const tx = state.tx.find((t) => t.id === action.id);
       if (!tx) return state;
-      // Reverses exactly what creating it did to its own card's balance — nothing else
-      // touched that entry, so nothing else needs undoing.
-      const nextCards = state.cards.map((c) => (c.id === tx.cardId ? { ...c, bal: c.bal - tx.amount } : c));
+
+      // A split spend that has been settled owns the top-ups that settled it. Leaving them
+      // behind would credit the user for repaying a bill that no longer exists.
+      const orphans = state.tx.filter((t) => t.repaysTxId === tx.id);
+      const doomed = new Set([tx.id, ...orphans.map((t) => t.id)]);
+
+      // Reverses exactly what creating each entry did to its own card's balance.
+      const nextCards = state.cards.map((c) => {
+        const delta = [tx, ...orphans]
+          .filter((t) => t.cardId === c.id)
+          .reduce((sum, t) => sum + t.amount, 0);
+        return delta ? { ...c, bal: c.bal - delta } : c;
+      });
+
       return withToast(
         {
           ...state,
           cards: nextCards,
           dismissedNotices: pruneDismissals(nextCards, state.dismissedNotices),
-          tx: state.tx.filter((t) => t.id !== action.id),
+          tx: state.tx.filter((t) => !doomed.has(t.id)),
           editingTxId: state.editingTxId === action.id ? null : state.editingTxId,
         },
-        "Deleted. Balance adjusted.",
+        orphans.length ? "Deleted, along with what was paid back." : "Deleted. Balance adjusted.",
       );
     }
 
@@ -737,6 +874,276 @@ function reducer(state: WalletState, action: Action): WalletState {
       };
     }
 
+    // ── people ───────────────────────────────────────────────────────────────
+
+    case "addPerson": {
+      const name = action.name.trim();
+      if (!name) return state;
+      const existing = state.people.find((p) => p.name.toLowerCase() === name.toLowerCase());
+      // Adding a name that is already there selects it instead of making a duplicate, which
+      // is what the user meant and stops two "Migo"s owing separate halves of the same bill.
+      if (existing) {
+        return {
+          ...state,
+          people: existing.archived
+            ? state.people.map((p) => (p.id === existing.id ? { ...p, archived: false } : p))
+            : state.people,
+          splitWith: state.splitWith.includes(existing.id)
+            ? state.splitWith
+            : [...state.splitWith, existing.id],
+        };
+      }
+      const person = makePerson(name, state.people, action.handle);
+      return {
+        ...state,
+        people: [...state.people, person],
+        // Someone added from inside the sheet is there to be split with — select them.
+        splitWith: state.sheet ? [...state.splitWith, person.id] : state.splitWith,
+      };
+    }
+
+    case "editPerson":
+      return {
+        ...state,
+        people: state.people.map((p) => (p.id === action.id ? { ...p, ...action.patch } : p)),
+      };
+
+    case "deletePerson": {
+      const person = state.people.find((p) => p.id === action.id);
+      if (!person) return state;
+      // History is not rewritten: every split part carries its own name snapshot, so past
+      // spends keep reading correctly after the person is gone.
+      return withToast(
+        {
+          ...state,
+          people: state.people.filter((p) => p.id !== action.id),
+          splitWith: state.splitWith.filter((id) => id !== action.id),
+          events: state.events.map((e) => ({
+            ...e,
+            memberIds: e.memberIds.filter((id) => id !== action.id),
+          })),
+        },
+        `${person.name} removed. Their history stays.`,
+      );
+    }
+
+    // ── split draft ──────────────────────────────────────────────────────────
+
+    case "toggleSplitPerson": {
+      const on = state.splitWith.includes(action.id);
+      return {
+        ...state,
+        splitWith: on
+          ? state.splitWith.filter((id) => id !== action.id)
+          : [...state.splitWith, action.id],
+      };
+    }
+
+    case "setSplitMode":
+      return { ...state, splitMode: action.mode };
+
+    case "setSplitShare":
+      return {
+        ...state,
+        splitShares: { ...state.splitShares, [action.id]: Math.max(0, Math.round(action.shares)) },
+      };
+
+    case "setSplitExact":
+      return { ...state, splitExact: { ...state.splitExact, [action.id]: action.value } };
+
+    case "clearSplit":
+      return { ...state, ...NO_SPLIT };
+
+    // ── settling up ──────────────────────────────────────────────────────────
+
+    /**
+     * Getting paid back is real money arriving, not a bookkeeping entry — this is the thing
+     * a shared-ledger app structurally cannot do. It tops up an actual card, and the top-up
+     * carries `repaysTxId` so income stats know it is recovered money rather than earnings.
+     *
+     * One settlement can cover several spends at once, because that is how people actually
+     * pay each other back: one transfer for the whole night, not one per dish. Every part it
+     * covers points at the same settlement id, so undoing it reverses the lot as a unit.
+     */
+    case "settlePart": {
+      // `txId` empty means "everything this person owes", which is what the owed strip asks
+      // for; a specific id settles just that one spend, from the event or card detail.
+      const covered = state.tx.filter(
+        (t) =>
+          (!action.txId || t.id === action.txId) &&
+          t.split?.parts.some((p) => p.personId === action.personId && !p.settledAt),
+      );
+      if (covered.length === 0) return state;
+
+      const total = Math.round(
+        covered.reduce(
+          (sum, t) =>
+            sum +
+            (t.split?.parts.find((p) => p.personId === action.personId)?.amount ?? 0) * 100,
+          0,
+        ),
+      ) / 100;
+      if (!(total > 0)) return state;
+
+      const name =
+        covered[0].split?.parts.find((p) => p.personId === action.personId)?.name ?? "They";
+      const into = findCard(state.cards, action.cardId ?? covered[0].cardId);
+      if (!into) return withToast(state, "Pick a card for it to land in.");
+
+      const settlementId = newId("tx");
+      const at = Date.now();
+      const ids = new Set(covered.map((t) => t.id));
+      const nextCards = state.cards.map((c) =>
+        c.id === into.id ? { ...c, bal: c.bal + total } : c,
+      );
+
+      return {
+        ...state,
+        pendingSettle: null,
+        cards: nextCards,
+        dismissedNotices: pruneDismissals(nextCards, state.dismissedNotices),
+        tx: [
+          {
+            id: settlementId,
+            cardId: into.id,
+            merchant: `${name} paid you back`,
+            cat: covered[0].cat,
+            amount: total,
+            at,
+            note:
+              covered.length === 1
+                ? covered[0].merchant
+                : `${covered.length} spends together`,
+            eventId: covered[0].eventId ?? null,
+            repaysTxId: covered[0].id,
+          },
+          ...state.tx.map((t) =>
+            !ids.has(t.id) || !t.split
+              ? t
+              : {
+                  ...t,
+                  split: {
+                    ...t.split,
+                    parts: t.split.parts.map((p) =>
+                      p.personId === action.personId && !p.settledAt
+                        ? { ...p, settledAt: at, settledTxId: settlementId }
+                        : p,
+                    ),
+                  },
+                },
+          ),
+        ],
+        success: {
+          kind: "funded",
+          head: "Settled.",
+          body: `₱${peso(total)} from ${name} landed in ${into.nick}. That is one fewer awkward message.`,
+        },
+      };
+    }
+
+    /** Reverses a whole settlement: the top-up goes, and every part it covered reopens. */
+    case "unsettlePart": {
+      const settlement = state.tx.find((t) => t.id === action.txId);
+      if (!settlement || !settlement.repaysTxId) return state;
+
+      const nextCards = state.cards.map((c) =>
+        c.id === settlement.cardId ? { ...c, bal: c.bal - settlement.amount } : c,
+      );
+
+      return withToast(
+        {
+          ...state,
+          cards: nextCards,
+          dismissedNotices: pruneDismissals(nextCards, state.dismissedNotices),
+          tx: state.tx
+            .filter((t) => t.id !== settlement.id)
+            .map((t) =>
+              !t.split || !t.split.parts.some((p) => p.settledTxId === settlement.id)
+                ? t
+                : {
+                    ...t,
+                    split: {
+                      ...t.split,
+                      parts: t.split.parts.map((p) =>
+                        p.settledTxId === settlement.id
+                          ? { ...p, settledAt: null, settledTxId: null }
+                          : p,
+                      ),
+                    },
+                  },
+            ),
+        },
+        `Undone. That ₱${peso(settlement.amount)} is owed again.`,
+      );
+    }
+
+    // ── events ───────────────────────────────────────────────────────────────
+
+    case "createEvent": {
+      const name = action.name.trim();
+      if (!name) return withToast(state, "Give the event a name first.");
+      const event: EventGroup = {
+        id: newId("event"),
+        name,
+        emoji: action.emoji || "📍",
+        startedAt: Date.now(),
+        endedAt: null,
+        // Whoever is selected in the sheet right now is who this trip is with.
+        memberIds: [...state.splitWith],
+      };
+      return withToast(
+        { ...state, events: [event, ...state.events], sheetEventId: event.id },
+        `${event.name} started. Spends will land in it.`,
+      );
+    }
+
+    case "editEvent":
+      return {
+        ...state,
+        events: state.events.map((e) => (e.id === action.id ? { ...e, ...action.patch } : e)),
+      };
+
+    case "closeEvent": {
+      const event = findEvent(state.events, action.id);
+      if (!event) return state;
+      return withToast(
+        {
+          ...state,
+          events: state.events.map((e) => (e.id === action.id ? { ...e, endedAt: Date.now() } : e)),
+          sheetEventId: state.sheetEventId === action.id ? null : state.sheetEventId,
+        },
+        `${event.name} closed. Nothing new lands in it.`,
+      );
+    }
+
+    case "reopenEvent":
+      return {
+        ...state,
+        events: state.events.map((e) => (e.id === action.id ? { ...e, endedAt: null } : e)),
+      };
+
+    case "deleteEvent": {
+      const event = findEvent(state.events, action.id);
+      if (!event) return state;
+      // Only the grouping goes. The spends are real money and stay in the wallet — dropping
+      // them with the event would silently change the user's balances.
+      return withToast(
+        {
+          ...reducer({ ...state, screen: "home" }, { type: "patch", patch: { openEventId: null } }),
+          events: state.events.filter((e) => e.id !== action.id),
+          tx: state.tx.map((t) => (t.eventId === action.id ? { ...t, eventId: null } : t)),
+          sheetEventId: state.sheetEventId === action.id ? null : state.sheetEventId,
+        },
+        `${event.name} removed. The spends stayed.`,
+      );
+    }
+
+    case "setTxEvent":
+      return {
+        ...state,
+        tx: state.tx.map((t) => (t.id === action.txId ? { ...t, eventId: action.eventId } : t)),
+      };
+
     // Everything lives on this device, so erasing it is a local operation and immediate.
     case "resetEverything": {
       clearStorage();
@@ -752,6 +1159,8 @@ function reducer(state: WalletState, action: Action): WalletState {
 interface Persisted {
   cards: Card[];
   tx: Transaction[];
+  people: Person[];
+  events: EventGroup[];
   dismissedNotices: string[];
   activeId: string;
   userName: string;
@@ -794,6 +1203,36 @@ export interface WalletActions {
   resetEverything: () => void;
   restore: (payload: BackupPayload) => void;
   toast: (message: string) => void;
+
+  // people
+  addPerson: (name: string, handle?: string) => void;
+  editPerson: (id: string, patch: Partial<Person>) => void;
+  deletePerson: (id: string) => void;
+
+  // split draft
+  toggleSplitPerson: (id: string) => void;
+  setSplitMode: (mode: SplitMode) => void;
+  setSplitShare: (id: string, shares: number) => void;
+  setSplitExact: (id: string, value: string) => void;
+  clearSplit: () => void;
+
+  // settling
+  /** Opens the slide-to-confirm. `txId` empty means everything this person owes. */
+  askSettle: (personId: string, txId?: string) => void;
+  cancelSettle: () => void;
+  /** `txId` empty settles everything this person owes; an id settles just that one spend. */
+  settlePart: (txId: string, personId: string, cardId?: string) => void;
+  /** Takes the id of the settlement top-up, and reverses the whole thing. */
+  unsettlePart: (settlementTxId: string) => void;
+
+  // events
+  createEvent: (name: string, emoji: string) => void;
+  editEvent: (id: string, patch: Partial<EventGroup>) => void;
+  closeEvent: (id: string) => void;
+  reopenEvent: (id: string) => void;
+  deleteEvent: (id: string) => void;
+  setTxEvent: (txId: string, eventId: string | null) => void;
+  openEvent: (id: string) => void;
 }
 
 const WalletContext = createContext<{ state: WalletState; actions: WalletActions } | null>(null);
@@ -819,6 +1258,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       state: {
         cards,
         tx: migrateTransactions(saved.tx, cards),
+        people: migratePeople(saved.people),
+        events: migrateEvents(saved.events),
         dismissedNotices: saved.dismissedNotices ?? [],
         activeId,
         stackOpenId: activeId || null,
@@ -843,6 +1284,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     const ok = save<Persisted>({
       cards: state.cards,
       tx: state.tx,
+      people: state.people,
+      events: state.events,
       dismissedNotices: state.dismissedNotices,
       activeId: state.activeId,
       userName: state.userName,
@@ -862,6 +1305,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     state.hydrated,
     state.cards,
     state.tx,
+    state.people,
+    state.events,
     state.dismissedNotices,
     state.activeId,
     state.userName,
@@ -936,6 +1381,33 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       resetEverything: () => dispatch({ type: "resetEverything" }),
       restore: (payload) => dispatch({ type: "restore", payload }),
       toast,
+
+      addPerson: (name, handle) => dispatch({ type: "addPerson", name, handle }),
+      editPerson: (id, patch) => dispatch({ type: "editPerson", id, patch }),
+      deletePerson: (id) => dispatch({ type: "deletePerson", id }),
+
+      toggleSplitPerson: (id) => dispatch({ type: "toggleSplitPerson", id }),
+      setSplitMode: (mode) => dispatch({ type: "setSplitMode", mode }),
+      setSplitShare: (id, shares) => dispatch({ type: "setSplitShare", id, shares }),
+      setSplitExact: (id, value) => dispatch({ type: "setSplitExact", id, value }),
+      clearSplit: () => dispatch({ type: "clearSplit" }),
+
+      askSettle: (personId, txId = "") =>
+        dispatch({ type: "patch", patch: { pendingSettle: { personId, txId } } }),
+      cancelSettle: () => dispatch({ type: "patch", patch: { pendingSettle: null } }),
+      settlePart: (txId, personId, cardId) => dispatch({ type: "settlePart", txId, personId, cardId }),
+      unsettlePart: (settlementTxId) => dispatch({ type: "unsettlePart", txId: settlementTxId }),
+
+      createEvent: (name, emoji) => dispatch({ type: "createEvent", name, emoji }),
+      editEvent: (id, patch) => dispatch({ type: "editEvent", id, patch }),
+      closeEvent: (id) => dispatch({ type: "closeEvent", id }),
+      reopenEvent: (id) => dispatch({ type: "reopenEvent", id }),
+      deleteEvent: (id) => dispatch({ type: "deleteEvent", id }),
+      setTxEvent: (txId, eventId) => dispatch({ type: "setTxEvent", txId, eventId }),
+      openEvent: (id) => {
+        dispatch({ type: "patch", patch: { openEventId: id } });
+        go("event");
+      },
     }),
     [go, toast],
   );

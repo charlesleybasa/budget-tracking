@@ -128,3 +128,17 @@
     transform: none;
   }
 }
+
+/*
+ * A split row's headline amount is the whole bill, because that is what left the card. This
+ * says what it actually cost the user, so the two numbers never look like a contradiction.
+ */
+.share {
+  margin-top: 2px;
+  font-weight: 500;
+  font-size: 10.5px;
+  line-height: 1.2;
+  color: var(--muted-2);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

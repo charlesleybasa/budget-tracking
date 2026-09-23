@@ -21,7 +21,7 @@ struct TransactionEditorView: View {
                     .font(AppFont.outfit(23, weight: .black, relativeTo: .title2))
                 Spacer()
                 Button { store.transactionEditor = nil } label: { Image(systemName: "xmark") }
-                    .buttonStyle(.bordered).buttonBorderShape(.circle).tint(Tokens.sand2)
+                    .buttonStyle(.bordered).buttonBorderShape(.circle).tint(Tokens.dark2)
             }
             .padding(.horizontal, 20)
             .padding(.top, 12)
@@ -33,7 +33,7 @@ struct TransactionEditorView: View {
                             Text(transaction.amount > 0 ? "MONEY IN" : "MONEY OUT")
                                 .font(AppFont.outfit(10, weight: .bold, relativeTo: .caption2))
                                 .tracking(1.2)
-                                .foregroundStyle(transaction.amount > 0 ? Tokens.green : Tokens.red)
+                                .foregroundStyle(transaction.amount > 0 ? Tokens.positive : Tokens.negative)
                             HStack(alignment: .firstTextBaseline, spacing: 3) {
                                 Text("₱")
                                 TextField("0.00", text: $amountField)
@@ -52,7 +52,7 @@ struct TransactionEditorView: View {
                                 .font(AppFont.outfit(14, weight: .medium, relativeTo: .body))
                                 .padding(.horizontal, 14)
                                 .frame(minHeight: 48)
-                                .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+                                .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                         }
 
                         VStack(alignment: .leading, spacing: 8) {
@@ -66,10 +66,10 @@ struct TransactionEditorView: View {
                                         } label: {
                                             Label(category.rawValue, systemImage: store.transactionEditor?.category == category ? "checkmark.circle.fill" : "circle.fill")
                                                 .font(AppFont.outfit(11.5, weight: .bold, relativeTo: .caption))
-                                                .foregroundStyle(store.transactionEditor?.category == category ? .white : Tokens.ink)
+                                                .foregroundStyle(store.transactionEditor?.category == category ? Tokens.background : Tokens.text)
                                                 .padding(.horizontal, 12)
                                                 .frame(minHeight: 38)
-                                                .background(store.transactionEditor?.category == category ? Tokens.ink : Tokens.sand1, in: Capsule())
+                                                .background(store.transactionEditor?.category == category ? Tokens.text : Tokens.dark1, in: Capsule())
                                         }
                                         .buttonStyle(PesolitaPressStyle())
                                     }
@@ -109,18 +109,18 @@ struct TransactionEditorView: View {
                             PhotosPicker(selection: $photoItem, matching: .images) {
                                 Label("Attach a receipt", systemImage: "camera.fill")
                                     .font(AppFont.outfit(12.5, weight: .bold, relativeTo: .caption))
-                                    .foregroundStyle(Tokens.ink)
+                                    .foregroundStyle(Tokens.text)
                                     .frame(maxWidth: .infinity, minHeight: 47)
-                                    .background(Tokens.sand1, in: Capsule())
+                                    .background(Tokens.dark1, in: Capsule())
                             }
                         }
 
                         Button { store.saveTransactionEditor() } label: {
                             Text("Save changes")
                                 .font(AppFont.outfit(16, weight: .bold, relativeTo: .body))
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Tokens.text)
                                 .frame(maxWidth: .infinity, minHeight: 54)
-                                .background(Tokens.ink, in: Capsule())
+                                .background(Tokens.background, in: Capsule())
                         }
                         .buttonStyle(PesolitaPressStyle())
 
@@ -140,9 +140,8 @@ struct TransactionEditorView: View {
                 .scrollIndicators(.hidden)
             }
         }
-        .background(.white)
-        .preferredColorScheme(.light)
-        .presentationDragIndicator(.hidden)
+        .background(Tokens.background)
+                .presentationDragIndicator(.hidden)
         .presentationDetents([.large])
         .presentationCornerRadius(30)
         .alert("Delete this entry?", isPresented: $deleteOpen) {

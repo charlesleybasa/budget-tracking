@@ -1,0 +1,582 @@
+/*
+ * The split row inside the transaction sheet. It is one row until the user opens it, which
+ * is the whole point: splitting is one tap deeper than logging, never a separate flow.
+ */
+
+.closed {
+  margin-top: 10px;
+  width: 100%;
+  border-radius: 16px;
+  background: var(--sand-1);
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s var(--ease-out);
+}
+
+.closed:active {
+  transform: scale(0.99);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .closed:hover {
+    background: var(--sand-hover);
+  }
+}
+
+.closedIcon {
+  width: 26px;
+  height: 26px;
+  border-radius: 100px;
+  background: var(--paper);
+  display: grid;
+  place-items: center;
+  flex: none;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.closedText {
+  flex: 1;
+  min-width: 0;
+}
+
+.closedTitle {
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.closedSub {
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--muted-2);
+  margin-top: 1px;
+}
+
+.open {
+  margin-top: 10px;
+  border-radius: 18px;
+  border: 1.5px solid var(--ink);
+  background: #fffdf3;
+  padding: 12px 13px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+/*
+ * The header is the collapse control. Making the whole row the target — rather than a small
+ * chevron — means the same place the eye lands is the place the finger can land.
+ */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  /* Padded out to a comfortable target, then pulled back so the block keeps its rhythm. */
+  padding: 6px 4px;
+  margin: -6px -4px;
+  border-radius: 10px;
+  color: var(--ink);
+}
+
+.headRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.headShare {
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.chevron {
+  color: var(--muted-2);
+  flex: none;
+  transition: transform 0.24s var(--ease-spring);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.modeRow {
+  display: flex;
+}
+
+/* the collapsed summary row */
+
+.closedActive {
+  background: #fffdf3;
+  border: 1.5px solid var(--line-4);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .closedActive:hover {
+    border-color: var(--ink);
+    background: #fffdf3;
+  }
+}
+
+.stack {
+  display: flex;
+  flex: none;
+}
+
+.stackAvatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 100px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--paper);
+  border: 1.5px solid #fffdf3;
+}
+
+.stackAvatar + .stackAvatar {
+  margin-left: -9px;
+}
+
+.headTitle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.modeTrack {
+  display: flex;
+  gap: 2px;
+  background: var(--sand-1);
+  border-radius: 100px;
+  padding: 2px;
+}
+
+.mode {
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1;
+  padding: 6px 10px;
+  border-radius: 100px;
+  cursor: pointer;
+  color: var(--muted-1);
+  transition:
+    background 0.18s var(--ease-out),
+    color 0.18s var(--ease-out);
+}
+
+.modeOn {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* people */
+
+.people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.person {
+  width: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 100px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--paper);
+  flex: none;
+  position: relative;
+  transition:
+    transform 0.18s var(--ease-spring),
+    box-shadow 0.18s var(--ease-out);
+}
+
+.avatarOff {
+  opacity: 0.38;
+}
+
+.avatarOn {
+  box-shadow: 0 0 0 2.5px #fffdf3, 0 0 0 4px var(--ink);
+}
+
+.person:active .avatar {
+  transform: scale(0.92);
+}
+
+.personName {
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 1.2;
+  color: var(--muted-1);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.personAmount {
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 1.2;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  /* Reserved even when blank, so adding an amount does not nudge every face upward. */
+  min-height: 12px;
+}
+
+.personMuted {
+  color: var(--muted-3);
+}
+
+.addPersonWrap {
+  width: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  background: transparent;
+  min-width: 0;
+}
+
+.addPerson {
+  width: 34px;
+  height: 34px;
+  border-radius: 100px;
+  border: 1.5px dashed var(--muted-3);
+  color: var(--muted-2);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  background: transparent;
+  flex: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .addPersonWrap:hover .addPerson {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+}
+
+.addPersonWrap:active .addPerson {
+  transform: scale(0.92);
+}
+
+/* the name field, shown when adding someone */
+
+.addRow {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.addInput {
+  flex: 1;
+  min-width: 0;
+  border: 1.5px solid var(--line-4);
+  background: var(--paper);
+  border-radius: 12px;
+  padding: 9px 12px;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.addInput:focus-visible {
+  outline: none;
+  border-color: var(--ink);
+}
+
+.addGo {
+  flex: none;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1;
+  padding: 11px 14px;
+  cursor: pointer;
+}
+
+.addGo:disabled {
+  background: var(--sand-3);
+  color: var(--muted-3);
+  cursor: default;
+}
+
+/* uneven editors */
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.rowDot {
+  width: 22px;
+  height: 22px;
+  border-radius: 100px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--paper);
+  flex: none;
+}
+
+.rowName {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--sand-1);
+  border-radius: 100px;
+  padding: 2px;
+}
+
+.step {
+  width: 26px;
+  height: 26px;
+  border-radius: 100px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--ink);
+  cursor: pointer;
+  background: transparent;
+}
+
+.step:disabled {
+  color: var(--muted-4);
+  cursor: default;
+}
+
+.stepValue {
+  min-width: 26px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.exactField {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--sand-1);
+  border-radius: 100px;
+  padding: 6px 11px;
+}
+
+.exactPeso {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--muted-2);
+}
+
+.exactInput {
+  width: 62px;
+  border: 0;
+  background: transparent;
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1;
+  color: var(--ink);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.exactInput:focus-visible {
+  outline: none;
+}
+
+/* the answer */
+
+.summary {
+  border-top: 1px solid var(--line-3);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.summaryRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.summaryLabel {
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 1.2;
+  color: var(--muted-1);
+}
+
+.summaryValue {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.back {
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--green);
+}
+
+.hint {
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--muted-2);
+}
+
+/*
+ * Clearing the people is a distinct action from collapsing the section, so it looks like a
+ * button rather than a sentence. It leaves the event tag alone — which trip a spend belongs
+ * to is a separate decision from who was in on it.
+ */
+.clear {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1;
+  color: var(--muted-1);
+  cursor: pointer;
+  background: var(--sand-1);
+  border-radius: 100px;
+  padding: 8px 12px;
+  min-height: 32px;
+  transition:
+    background 0.18s var(--ease-out),
+    color 0.18s var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .clear:hover {
+    background: var(--sand-3);
+    color: var(--ink);
+  }
+}
+
+@media (pointer: coarse) {
+  .clear {
+    min-height: 38px;
+  }
+}
+
+/* event chips */
+
+.events {
+  margin-top: 10px;
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.eventChip {
+  flex: none;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  background: var(--sand-1);
+  color: var(--ink);
+  transition:
+    background 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+}
+
+.eventChipOn {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.eventChip:active {
+  transform: scale(0.95);
+}
+
+.eventNew {
+  border: 1.5px dashed var(--muted-3);
+  background: transparent;
+  color: var(--muted-1);
+}

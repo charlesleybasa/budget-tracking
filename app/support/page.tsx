@@ -51,16 +51,30 @@ export default function SupportPage() {
           during setup or from Settings. Restoring replaces the wallet on that phone rather
           than merging, so two histories can never double up.
         </p>
+        <p className={styles.body}>
+          With <strong>Pesolita Pro</strong> on iPhone, it is simpler: on the new phone tap{" "}
+          <strong>Been here before? Restore your wallet</strong> and continue with the same
+          Google account. If you already started a wallet on that phone, Pesolita asks whether
+          to combine the two, keep your backup, or keep the phone&apos;s — nothing is replaced
+          without asking.
+        </p>
+
+        <h2 className={styles.h2}>Deleting your Pesolita Pro backup</h2>
+        <p className={styles.body}>
+          Email us from the Google address you signed in with and we will delete your backup
+          and account within 30 days. Your wallet on your phone is not affected.
+        </p>
 
         <h2 className={styles.h2}>I deleted something by accident</h2>
         <p className={styles.body}>
-          There is no server and no cloud copy, so nothing can be recovered unless you have a
-          backup file. Backing up now and then is worth the ten seconds.
+          Without Pesolita Pro backup there is no cloud copy, so nothing can be recovered
+          unless you have a backup file. Backing up now and then is worth the ten seconds.
         </p>
 
         <h2 className={styles.h2}>Is my data private?</h2>
         <p className={styles.body}>
-          Completely. Nothing is collected and nothing is transmitted. See the{" "}
+          Yes. Without Pesolita Pro backup nothing is collected or transmitted. With it, your
+          wallet is stored only so you can restore it — no ads, no tracking. See the{" "}
           <Link href="/privacy">Privacy Policy</Link> for the details.
         </p>
 
@@ -71,7 +85,7 @@ export default function SupportPage() {
         </p>
 
         <div className={styles.footer}>
-          Pesolita — a manual budget wallet. Your numbers never leave your device.
+          Pesolita — a manual budget wallet. Your numbers stay on your device unless you back them up.
           <br />
           <Link href="/privacy" className={styles.back}>
             Privacy Policy →

@@ -15,16 +15,18 @@ struct WalletStoreTests {
         let store = WalletStore(repository: nil)
         store.onboarding.name = "Rli"
         store.selectKind(.debit)
-        let template = CardTemplates.byID["banks/deep-blue-wave"]!
+        // Read from the catalogue rather than hard-coding ids and names, which change when
+        // the artwork is refreshed.
+        let template = CardTemplates.all[0]
         store.selectTemplate(template)
         store.onboarding.balance = "2500"
         store.finishOnboarding()
 
         #expect(store.snapshot.onboarded)
         #expect(store.snapshot.cards.count == 1)
-        #expect(store.snapshot.cards[0].nick == "Deep Blue Wave")
+        #expect(store.snapshot.cards[0].nick == template.name)
         #expect(store.snapshot.cards[0].bal == 2500)
-        #expect(store.snapshot.cards[0].art.photo?.src == "template:banks/deep-blue-wave.webp")
+        #expect(store.snapshot.cards[0].art.photo?.src == "template:\(template.resourcePath)")
     }
 
     @Test func spendingExactlyTheBalanceIsAllowed() {
@@ -95,15 +97,17 @@ struct WalletStoreTests {
     }
 
     @Test func changingBundledTemplateUpdatesTheFollowedName() {
+        let previous = CardTemplates.all[0]
+        let next = CardTemplates.all[1]
         var value = snapshot(balance: 100)
-        value.cards[0].nick = "Crimson Wave"
-        value.cards[0].art = CardTemplates.byID["banks/crimson-wave"]!.art
+        value.cards[0].nick = previous.name
+        value.cards[0].art = previous.art
         let store = WalletStore(snapshot: value, repository: nil)
         store.openEditor(cardID: "card")
-        store.applyTemplate(CardTemplates.byID["banks/deep-blue-wave"]!)
+        store.applyTemplate(next)
 
-        #expect(store.editor?.card.nick == "Deep Blue Wave")
-        #expect(store.editor?.card.art.photo?.src == "template:banks/deep-blue-wave.webp")
+        #expect(store.editor?.card.nick == next.name)
+        #expect(store.editor?.card.art.photo?.src == "template:\(next.resourcePath)")
     }
 
     @Test func deletingCardAlsoDeletesItsActivity() {
@@ -199,7 +203,7 @@ struct WalletStoreTests {
         let payload = WidgetWalletPayload(snapshot: value, now: Date(timeIntervalSince1970: 1_000))
 
         #expect(payload.cards.count == 1)
-        #expect(payload.cards[0].templatePath == "banks/navy-wave.webp")
+        #expect(payload.cards[0].templatePath == CardTemplates.all[0].resourcePath)
         #expect(payload.cards[0].balance == 1_200)
         #expect(payload.transactions.first?.merchant == "Coffee")
         #expect(payload.privacyEnabled)

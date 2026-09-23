@@ -18,7 +18,7 @@ struct SpendSheetView: View {
                 Button { store.dismissSheet() } label: { Image(systemName: "xmark") }
                     .buttonStyle(.bordered)
                     .buttonBorderShape(.circle)
-                    .tint(Tokens.sand2)
+                    .tint(Tokens.dark2)
             }
             .padding(.horizontal, 20)
             .padding(.top, 12)
@@ -35,30 +35,33 @@ struct SpendSheetView: View {
             .padding(.horizontal, 20)
             .padding(.top, 14)
 
+            amountHeader
+                .padding(.top, 18)
+
             ScrollView {
                 VStack(spacing: 14) {
-                    amountHeader
                     if store.spendOverage > 0 { overageNotice }
                     if mode == .move { moveCardPicker }
                     else { sourcePicker }
                     if mode != .move {
                         categoryPicker
                         noteField
+                        // Only a spend can be split — money coming in was never anybody else's.
+                        if mode == .withdraw { SplitBlockView(store: store) }
                         receiptPicker
                     }
                     MoneyKeypad(onKey: store.pressKey)
                     submitButton
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 18)
+                .padding(.top, 14)
                 .padding(.bottom, 24)
             }
             .scrollIndicators(.hidden)
         }
         .font(AppFont.outfit(15))
-        .background(.white)
+        .background(Tokens.background)
         .blur(radius: picking == nil ? 0 : 3)
-        .preferredColorScheme(.light)
         .presentationDragIndicator(.hidden)
         .presentationDetents([.large])
         .presentationCornerRadius(30)
@@ -103,7 +106,7 @@ struct SpendSheetView: View {
                 Text(mode == .withdraw ? "−₱" : mode == .deposit ? "+₱" : "₱")
                     .foregroundStyle(amountAccent)
                 Text(store.amountDraft.isEmpty ? "0.00" : MoneyFormat.grouped(draft: store.amountDraft))
-                    .foregroundStyle(store.spendOverage > 0 ? Tokens.redDeep : Tokens.ink)
+                    .foregroundStyle(store.spendOverage > 0 ? Tokens.negative : Tokens.text)
             }
             .font(AppFont.outfit(46, weight: .black, relativeTo: .largeTitle))
             .minimumScaleFactor(0.64)
@@ -123,14 +126,14 @@ struct SpendSheetView: View {
                     .font(AppFont.outfit(13.5, weight: .bold, relativeTo: .subheadline))
                 Text("Short by ₱\(MoneyFormat.amount(store.spendOverage)).")
                     .font(AppFont.outfit(12, relativeTo: .caption))
-                    .foregroundStyle(Tokens.redDeep)
+                    .foregroundStyle(Tokens.negative)
             }
             Spacer()
             Button("Spend all") { store.spendAll() }
                 .font(AppFont.outfit(11, weight: .bold, relativeTo: .caption))
         }
         .padding(12)
-        .background(Color(hex: "#fff0ef"), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .background(Tokens.redTint, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     private var sourcePicker: some View {
@@ -158,12 +161,12 @@ struct SpendSheetView: View {
                         .font(.system(size: 10, weight: .bold))
                 }
                 .font(AppFont.outfit(11.5, weight: .semibold, relativeTo: .caption))
-                .foregroundStyle(Tokens.blue)
+                .foregroundStyle(Tokens.link)
             }
-            .foregroundStyle(Tokens.ink)
+            .foregroundStyle(Tokens.text)
             .padding(.horizontal, 13)
             .frame(minHeight: 49)
-            .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
         .buttonStyle(PesolitaPressStyle())
         .accessibilityIdentifier("money-card-picker-source")
@@ -182,10 +185,10 @@ struct SpendSheetView: View {
                             Text(category.rawValue)
                         }
                         .font(AppFont.outfit(11.5, weight: .semibold, relativeTo: .caption))
-                        .foregroundStyle(store.categoryDraft == category ? .white : Tokens.ink)
+                        .foregroundStyle(store.categoryDraft == category ? Tokens.background : Tokens.text)
                         .padding(.horizontal, 12)
                         .frame(minHeight: 36)
-                        .background(store.categoryDraft == category ? Tokens.ink : Tokens.sand1, in: Capsule())
+                        .background(store.categoryDraft == category ? Tokens.text : Tokens.dark1, in: Capsule())
                     }
                     .buttonStyle(.plain)
                 }
@@ -206,7 +209,7 @@ struct SpendSheetView: View {
             } label: {
                 Image(systemName: "arrow.up.arrow.down")
                     .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(Tokens.ink)
+                    .foregroundStyle(Tokens.onAccent)
                     .frame(width: 36, height: 36)
                     .background(Tokens.accent, in: Circle())
             }
@@ -228,7 +231,7 @@ struct SpendSheetView: View {
                 Text(label.uppercased())
                     .font(AppFont.outfit(10, weight: .bold, relativeTo: .caption2))
                     .tracking(1)
-                    .foregroundStyle(Tokens.blue)
+                    .foregroundStyle(Tokens.link)
                 HStack(spacing: 8) {
                     if let card {
                         CardArtView(art: card.art, cornerRadius: 7)
@@ -241,7 +244,7 @@ struct SpendSheetView: View {
                     VStack(alignment: .leading, spacing: 3) {
                         Text(card?.nick ?? "Pick a card")
                             .font(AppFont.outfit(12, weight: .bold, relativeTo: .caption))
-                            .foregroundStyle(Tokens.ink)
+                            .foregroundStyle(Tokens.text)
                             .lineLimit(1)
                         Text(card.map { "₱\(MoneyFormat.amount($0.bal)) available" } ?? "Destination")
                             .font(AppFont.outfit(9.5, weight: .medium, relativeTo: .caption2))
@@ -253,7 +256,7 @@ struct SpendSheetView: View {
             }
             .padding(10)
             .frame(maxWidth: .infinity, minHeight: 76, alignment: .leading)
-            .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
         .buttonStyle(PesolitaPressStyle())
@@ -297,14 +300,14 @@ struct SpendSheetView: View {
             }
             .padding(.horizontal, 13)
             .frame(minHeight: 46)
-            .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             if let guess = store.guessCategory(), guess != store.categoryDraft {
                 Button {
                     store.categoryDraft = guess
                 } label: {
                     Label("Looks like \(guess.rawValue) — tap to use it", systemImage: "checkmark.circle.fill")
                         .font(AppFont.outfit(11.5, weight: .semibold, relativeTo: .caption))
-                        .foregroundStyle(Tokens.green)
+                        .foregroundStyle(Tokens.positive)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .buttonStyle(.plain)
@@ -317,10 +320,10 @@ struct SpendSheetView: View {
         return PhotosPicker(selection: $photoItem, matching: .images) {
             Label(attached ? "Replace receipt" : "Attach receipt", systemImage: "camera")
                 .font(AppFont.outfit(12, weight: .semibold, relativeTo: .caption))
-                .foregroundStyle(attached ? Color.white : Tokens.muted1)
+                .foregroundStyle(attached ? Tokens.background : Tokens.text.opacity(0.6))
                 .padding(.horizontal, 13)
                 .frame(minHeight: 42)
-                .background(attached ? Tokens.ink : Tokens.sand1, in: Capsule())
+                .background(attached ? Tokens.text : Tokens.dark1, in: Capsule())
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
@@ -331,9 +334,9 @@ struct SpendSheetView: View {
         } label: {
             Text(mode == .deposit ? "Add it" : mode == .move ? "Move it" : "Log it")
                 .font(AppFont.outfit(16, weight: .bold, relativeTo: .body))
-                .foregroundStyle(.white)
+                .foregroundStyle(store.canSubmitTransaction ? Tokens.background : Tokens.text)
                 .frame(maxWidth: .infinity, minHeight: 54)
-                .background(store.canSubmitTransaction ? Tokens.ink : Tokens.sand4, in: Capsule())
+                .background(store.canSubmitTransaction ? Tokens.text : Tokens.sand4, in: Capsule())
         }
         .buttonStyle(.plain)
         .disabled(!store.canSubmitTransaction)

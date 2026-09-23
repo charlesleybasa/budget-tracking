@@ -1,7 +1,8 @@
 "use client";
 
 import { categoryColor } from "@/lib/constants";
-import { merchantInitial, signedPeso } from "@/lib/format";
+import { merchantInitial, peso0, signedPeso } from "@/lib/format";
+import { spendOf } from "@/lib/selectors";
 import type { Transaction } from "@/lib/types";
 
 import styles from "./TxRow.module.css";
@@ -21,8 +22,18 @@ export function TxRow({ tx, cardNick, variant, index = 0, onClick, onViewReceipt
   const incoming = tx.amount > 0;
   const color = categoryColor(tx.cat);
 
-  const meta =
-    variant === "search"
+  // A split row names the people rather than repeating the note — who was in on it is the
+  // fact that explains why the amount and the user's own share disagree.
+  const split = tx.split;
+  const withWhom = split
+    ? split.parts.length <= 2
+      ? split.parts.map((p) => p.name).join(" & ")
+      : `${split.parts.length} others`
+    : null;
+
+  const meta = split
+    ? [tx.cat, `with ${withWhom}`, variant === "search" ? cardNick : ""].filter(Boolean).join(" · ")
+    : variant === "search"
       ? [tx.cat, cardNick, tx.note].filter(Boolean).join(" · ")
       : [tx.cat, tx.note].filter(Boolean).join(" · ");
 
@@ -79,7 +90,11 @@ export function TxRow({ tx, cardNick, variant, index = 0, onClick, onViewReceipt
         <div className={styles.amount} style={{ color: incoming ? "#0b8f6a" : "#0b0b0c" }}>
           {signedPeso(tx.amount)}
         </div>
-        {variant === "home" ? <div className={styles.cardNick}>{cardNick}</div> : null}
+        {split ? (
+          <div className={styles.share}>₱{peso0(spendOf(tx))} yours</div>
+        ) : variant === "home" ? (
+          <div className={styles.cardNick}>{cardNick}</div>
+        ) : null}
       </div>
     </button>
   );

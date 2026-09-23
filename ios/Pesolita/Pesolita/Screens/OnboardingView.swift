@@ -11,7 +11,7 @@ struct OnboardingView: View {
 
     var body: some View {
         ZStack {
-            Tokens.ink.ignoresSafeArea()
+            Tokens.background.ignoresSafeArea()
             VStack(spacing: 0) {
                 brandHeader
                 Group {
@@ -28,9 +28,8 @@ struct OnboardingView: View {
             }
             .padding(.top, 8)
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(Tokens.text)
         .font(AppFont.outfit(16))
-        .preferredColorScheme(.dark)
         .fileImporter(isPresented: $showImporter, allowedContentTypes: [.json, .data]) { result in
             guard case let .success(url) = result else { return }
             let accessed = url.startAccessingSecurityScopedResource()
@@ -76,9 +75,9 @@ struct OnboardingView: View {
                     .font(AppFont.outfit(38, weight: .black, relativeTo: .largeTitle))
                     .tracking(-1.25)
                     .lineSpacing(-2)
-                Text("Make a card for each pocket of your money — bank, e-wallet, the cash in your actual wallet. You type it in, nothing snoops your bank.")
+                Text("Make a card for each pocket of your money — debit, e-wallets, or the cash in your actual wallet. You type it in. Private, and it works offline.")
                     .font(AppFont.outfit(14.5, relativeTo: .body))
-                    .foregroundStyle(.white.opacity(0.55))
+                    .foregroundStyle(Tokens.text.opacity(0.55))
                     .lineSpacing(5)
                     .padding(.top, 14)
 
@@ -88,10 +87,17 @@ struct OnboardingView: View {
                 }
                 .padding(.top, 25)
 
-                Button("Been here before? Restore a backup") { showImporter = true }
-                    .font(AppFont.outfit(12, weight: .semibold, relativeTo: .caption))
-                    .foregroundStyle(.white.opacity(0.48))
-                    .frame(maxWidth: .infinity, minHeight: 44)
+                // Opens Welcome back: Continue with Google for Pesolita Pro, or a backup file.
+                // The one place a returning user looks, so it offers both ways home.
+                Button { store.openRestoreFlow() } label: {
+                    (Text("Been here before? ")
+                        .foregroundStyle(Tokens.textSecondary)
+                     + Text("Restore your wallet")
+                        .foregroundStyle(Tokens.textPrimary)
+                        .underline())
+                        .font(AppFont.outfit(13, weight: .semibold, relativeTo: .caption))
+                }
+                .frame(maxWidth: .infinity, minHeight: 44)
             }
             .padding(.horizontal, 30)
             .padding(.bottom, 8)
@@ -108,7 +114,7 @@ struct OnboardingView: View {
                 .lineSpacing(-2)
             Text("Just a first name is fine. It stays on this phone with everything else.")
                 .font(AppFont.outfit(13.5, relativeTo: .subheadline))
-                .foregroundStyle(.white.opacity(0.50))
+                .foregroundStyle(Tokens.text.opacity(0.50))
                 .lineSpacing(3)
                 .padding(.top, 9)
 
@@ -124,7 +130,7 @@ struct OnboardingView: View {
 
             Text(store.onboarding.name.trimmingCharacters(in: .whitespaces).isEmpty ? "Nice to meet you." : "Hi, \(store.onboarding.name.split(separator: " ").first ?? "").")
                 .font(AppFont.outfit(15, weight: .semibold, relativeTo: .subheadline))
-                .foregroundStyle(Tokens.accent)
+                .foregroundStyle(Tokens.accentText)
                 .padding(.top, 16)
             Spacer()
             primaryButton("Continue") {
@@ -151,7 +157,7 @@ struct OnboardingView: View {
                 .tracking(-0.8)
             Text("Pick a category, then a look. You can refine it later.")
                 .font(AppFont.outfit(13.5, relativeTo: .subheadline))
-                .foregroundStyle(.white.opacity(0.5))
+                .foregroundStyle(Tokens.text.opacity(0.5))
                 .lineSpacing(3)
                 .padding(.top, 8)
 
@@ -187,7 +193,7 @@ struct OnboardingView: View {
                             .font(.system(size: 12.5, weight: .semibold))
                             .frame(width: 23, height: 23)
                             .background(
-                                selected ? Color.black.opacity(0.12) : Color.white.opacity(0.10),
+                                selected ? Color.black.opacity(0.12) : Tokens.paper.opacity(0.10),
                                 in: RoundedRectangle(cornerRadius: 8, style: .continuous)
                             )
                         Text(kind.label)
@@ -196,10 +202,10 @@ struct OnboardingView: View {
                     .padding(.leading, 6)
                     .padding(.trailing, 13)
                     .frame(height: 44)
-                    .foregroundStyle(selected ? Tokens.ink : .white)
+                    .foregroundStyle(selected ? Tokens.onAccent : Tokens.paper)
                     .background(selected ? Tokens.accent : Tokens.dark1, in: Capsule())
                     .overlay {
-                        Capsule().stroke(selected ? .clear : .white.opacity(0.10), lineWidth: 1)
+                        Capsule().stroke(selected ? .clear : Tokens.paper.opacity(0.10), lineWidth: 1)
                     }
                 }
                 .buttonStyle(PesolitaPressStyle())
@@ -235,7 +241,7 @@ struct OnboardingView: View {
                         .font(AppFont.outfit(13.5, weight: .semibold, relativeTo: .subheadline))
                     Text("Name it and count it on the next step.")
                         .font(AppFont.outfit(11.5, relativeTo: .caption))
-                        .foregroundStyle(.white.opacity(0.42))
+                        .foregroundStyle(Tokens.text.opacity(0.42))
                 }
                 .padding(.vertical, 22)
                 .transition(.opacity)
@@ -243,10 +249,10 @@ struct OnboardingView: View {
                 VStack(spacing: 9) {
                     Image(systemName: "hand.tap")
                         .font(.system(size: 22, weight: .regular))
-                        .foregroundStyle(.white.opacity(0.34))
+                        .foregroundStyle(Tokens.text.opacity(0.34))
                     Text("Pick a category to see cards.")
                         .font(AppFont.outfit(12.5, relativeTo: .footnote))
-                        .foregroundStyle(.white.opacity(0.42))
+                        .foregroundStyle(Tokens.text.opacity(0.42))
                 }
                 .padding(.vertical, 46)
             }
@@ -257,7 +263,7 @@ struct OnboardingView: View {
                 .fill(Tokens.dark1)
                 .overlay {
                     RoundedRectangle(cornerRadius: 24, style: .continuous)
-                        .stroke(.white.opacity(0.07), lineWidth: 1)
+                        .stroke(Tokens.paper.opacity(0.07), lineWidth: 1)
                 }
         }
         .animation(Tokens.easeOut(0.3), value: store.onboarding.kind)
@@ -317,7 +323,7 @@ struct OnboardingView: View {
                 .accessibilityIdentifier("create-card")
                 Text("You can redesign the card any time.")
                     .font(AppFont.outfit(11, relativeTo: .caption))
-                    .foregroundStyle(.white.opacity(0.38))
+                    .foregroundStyle(Tokens.text.opacity(0.38))
                     .frame(maxWidth: .infinity)
                     .padding(.top, 10)
             }
@@ -347,7 +353,7 @@ struct OnboardingView: View {
         HStack(spacing: 7) {
             ForEach(0..<4, id: \.self) { index in
                 Capsule()
-                    .fill(index == store.onboarding.step ? Tokens.accent : Color.white.opacity(0.22))
+                    .fill(index == store.onboarding.step ? Tokens.accent : Tokens.paper.opacity(0.22))
                     .frame(width: index == store.onboarding.step ? 22 : 4, height: 4)
             }
         }
@@ -368,7 +374,7 @@ struct OnboardingView: View {
             Text(label)
                 .font(AppFont.outfit(10.5, weight: .medium, relativeTo: .caption2))
                 .tracking(1.0)
-                .foregroundStyle(.white.opacity(0.38))
+                .foregroundStyle(Tokens.text.opacity(0.38))
             content().tint(Tokens.accent)
         }
         .padding(.horizontal, 16)
@@ -383,7 +389,7 @@ struct OnboardingView: View {
                 if let symbol { Image(systemName: symbol) }
             }
             .font(AppFont.outfit(16, weight: .bold, relativeTo: .body))
-            .foregroundStyle(Tokens.ink)
+            .foregroundStyle(Tokens.onAccent)
             .frame(maxWidth: .infinity, minHeight: 56)
             .background(Tokens.accent, in: Capsule())
             .shadow(color: Tokens.accent.opacity(0.28), radius: 15, y: 12)
@@ -394,10 +400,10 @@ struct OnboardingView: View {
     private func smallChangeButton(_ title: String, action: @escaping () -> Void) -> some View {
         Button(title, action: action)
             .font(AppFont.outfit(10.5, weight: .semibold, relativeTo: .caption2))
-            .foregroundStyle(.white.opacity(0.66))
+            .foregroundStyle(Tokens.text.opacity(0.66))
             .multilineTextAlignment(.center)
             .padding(.horizontal, 12)
             .frame(minHeight: 36)
-            .background(.white.opacity(0.08), in: Capsule())
+            .background(Tokens.background.opacity(0.08), in: Capsule())
     }
 }

@@ -11,7 +11,7 @@ struct TransferView: View {
 
     var body: some View {
         ZStack {
-            Tokens.ink.ignoresSafeArea()
+            Tokens.background.ignoresSafeArea()
             ScrollView {
                 VStack(spacing: 18) {
                     header
@@ -21,8 +21,8 @@ struct TransferView: View {
                     MoneyKeypad(onKey: store.pressKey, dark: true)
                     moveButton
                     Text("Nothing leaves your phone. This only moves the balance between your own Pesolita cards.")
-                        .font(AppFont.outfit(11.5, relativeTo: .caption))
-                        .foregroundStyle(.white.opacity(0.34))
+                        .font(AppFont.outfit(14, weight: .bold, relativeTo: .caption))
+                        .foregroundStyle(Tokens.text.opacity(0.34))
                         .multilineTextAlignment(.center)
                         .lineSpacing(3)
                         .padding(.horizontal, 26)
@@ -34,7 +34,6 @@ struct TransferView: View {
         }
         .toolbar(.hidden, for: .navigationBar)
         .blur(radius: picking == nil ? 0 : 3)
-        .preferredColorScheme(.dark)
         .sheet(item: $picking) { target in
             MoneyCardPickerSheet(
                 title: target == .from ? "Move money from" : "Move money to",
@@ -63,13 +62,13 @@ struct TransferView: View {
                     .font(AppFont.outfit(20, weight: .black, relativeTo: .title3))
                 Text("Pick where from and where to")
                     .font(AppFont.outfit(10.5, relativeTo: .caption2))
-                    .foregroundStyle(.white.opacity(0.38))
+                    .foregroundStyle(Tokens.text.opacity(0.38))
             }
             Spacer()
             Color.clear.frame(width: 48, height: 48)
         }
-        .foregroundStyle(.white)
-        .padding(.top, 6)
+        .foregroundStyle(Tokens.text)
+        .padding(.horizontal, 22)
     }
 
     private var routePicker: some View {
@@ -78,10 +77,10 @@ struct TransferView: View {
             Button { store.swapTransferCards() } label: {
                 Image(systemName: "arrow.up.arrow.down")
                     .font(.system(size: 15, weight: .bold))
-                    .foregroundStyle(Tokens.ink)
+                    .foregroundStyle(Tokens.onAccent)
                     .frame(width: 42, height: 42)
                     .background(Tokens.accent, in: Circle())
-                    .overlay(Circle().stroke(Tokens.ink, lineWidth: 5))
+                    .overlay(Circle().stroke(Tokens.text, lineWidth: 5))
             }
             .buttonStyle(PesolitaPressStyle())
             .padding(.vertical, -15)
@@ -89,8 +88,8 @@ struct TransferView: View {
             cardPicker(caption: "To", selected: store.transferToCard, target: .to)
         }
         .padding(8)
-        .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 25, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 25, style: .continuous).stroke(.white.opacity(0.06)))
+        .background(Tokens.dark2, in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 25, style: .continuous).stroke(Tokens.paper.opacity(0.06)))
     }
 
     private func cardPicker(caption: String, selected: Card?, target: TransferCardPicker) -> some View {
@@ -108,19 +107,18 @@ struct TransferView: View {
     private var amount: some View {
         VStack(spacing: 5) {
             Text("AMOUNT TO MOVE")
-                .font(AppFont.outfit(10, weight: .semibold, relativeTo: .caption2))
-                .tracking(1.25)
-                .foregroundStyle(.white.opacity(0.38))
+                .font(AppFont.outfit(12, weight: .semibold, relativeTo: .caption))
+                .foregroundStyle(Tokens.text.opacity(0.38))
             Text("₱\(store.amountDraft.isEmpty ? "0.00" : MoneyFormat.grouped(draft: store.amountDraft))")
-                .font(AppFont.outfit(48, weight: .black, relativeTo: .largeTitle))
-                .foregroundStyle(store.transferFromCard.map { store.typedAmount > $0.bal } == true ? Tokens.red : .white)
+                .font(AppFont.outfit(32, weight: .bold, relativeTo: .largeTitle)).tracking(-1)
+                .foregroundStyle(store.transferFromCard.map { store.typedAmount > $0.bal } == true ? Tokens.negative : Tokens.paper)
                 .lineLimit(1)
                 .minimumScaleFactor(0.62)
                 .contentTransition(.numericText())
             if let from = store.transferFromCard, store.typedAmount > from.bal {
                 Text("\(from.nick) is short by ₱\(MoneyFormat.amount(store.typedAmount - from.bal))")
                     .font(AppFont.outfit(11.5, weight: .semibold, relativeTo: .caption))
-                    .foregroundStyle(Tokens.red)
+                    .foregroundStyle(Tokens.negative)
                     .transition(.opacity.combined(with: .scale))
             }
         }
@@ -135,8 +133,8 @@ struct TransferView: View {
                     store.amountDraft = String(format: "%.2f", value)
                     FeedbackCenter.selectionChanged()
                 }
-                .font(AppFont.outfit(11.5, weight: .bold, relativeTo: .caption))
-                .foregroundStyle(.white.opacity(0.72))
+                .font(AppFont.outfit(11.5, weight: .semibold, relativeTo: .caption2))
+                .foregroundStyle(Tokens.text.opacity(0.38))
                 .frame(maxWidth: .infinity, minHeight: 38)
                 .background(Tokens.dark2, in: Capsule())
                 .buttonStyle(PesolitaPressStyle())
@@ -147,7 +145,7 @@ struct TransferView: View {
                     FeedbackCenter.selectionChanged()
                 }
                 .font(AppFont.outfit(11.5, weight: .bold, relativeTo: .caption))
-                .foregroundStyle(Tokens.accent)
+                .foregroundStyle(Tokens.accentText)
                 .frame(maxWidth: .infinity, minHeight: 38)
                 .background(Tokens.dark2, in: Capsule())
                 .buttonStyle(PesolitaPressStyle())
@@ -162,9 +160,9 @@ struct TransferView: View {
                 Text("Move it")
             }
             .font(AppFont.outfit(16, weight: .bold, relativeTo: .body))
-            .foregroundStyle(canMove ? Tokens.ink : .white.opacity(0.34))
-            .frame(maxWidth: .infinity, minHeight: 56)
-            .background(canMove ? Tokens.accent : Tokens.dark2, in: Capsule())
+            .foregroundStyle(canMove ? Tokens.background : Tokens.text.opacity(0.34))
+            .frame(maxWidth: .infinity, minHeight: 60)
+            .background(canMove ? Tokens.text : Tokens.dark3, in: Capsule())
         }
         .buttonStyle(PesolitaPressStyle())
         .disabled(!canMove)

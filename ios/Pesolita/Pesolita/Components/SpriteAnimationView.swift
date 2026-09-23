@@ -14,14 +14,19 @@ struct SpriteSpec: Hashable, Sendable {
     static let celebrate = SpriteSpec(resource: "celebrate", columns: 8, rows: 4, frames: 32, fps: 24, stillFrame: 19)
     static let peekaboo = SpriteSpec(resource: "peekaboo", columns: 9, rows: 6, frames: 54, fps: 24, stillFrame: 30, loops: false, replayDelay: 3)
     static let flyingIdle = SpriteSpec(resource: "flying-idle", columns: 10, rows: 6, frames: 60, fps: 24, stillFrame: 7)
+    /// Holding an empty bag — for "couldn't reach your backup", where nothing was lost.
+    static let sad = SpriteSpec(resource: "sad", columns: 10, rows: 6, frames: 60, fps: 24, stillFrame: 55, loops: false, replayDelay: 3)
     static let noNoNo = SpriteSpec(resource: "nonono", columns: 10, rows: 6, frames: 60, fps: 24, stillFrame: 36, loops: false, replayDelay: 2.4)
     // This atlas is 10 × 3 (30 frames). Treating it as 10 × 6 crops every
     // character frame in half, which is why the Search mascot appeared headless.
     static let idleSteady = SpriteSpec(resource: "bee-idle-steady-30fps-v2-spritesheet", columns: 10, rows: 3, frames: 30, fps: 30, stillFrame: 15)
+    /// Scrubbed by the settle gesture rather than played: frame 0 is a calm smile and frame 7
+    /// is wide-eyed with sparkles, so dragging the thumb builds the reaction.
+    static let settleSlider = SpriteSpec(resource: "settle-slider", columns: 4, rows: 2, frames: 8, fps: 8, stillFrame: 0, loops: false)
 }
 
 @MainActor
-private enum SpriteFrameCache {
+enum SpriteFrameCache {
     static var cache: [SpriteSpec: [UIImage]] = [:]
 
     static func frames(for spec: SpriteSpec) -> [UIImage] {

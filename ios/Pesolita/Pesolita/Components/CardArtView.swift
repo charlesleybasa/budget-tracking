@@ -349,22 +349,22 @@ private struct CardChip: View {
 
                 Image(systemName: "wave.3.right")
                     .font(.system(size: 18 * scale, weight: .medium))
-                    .foregroundStyle(darkText ? Tokens.ink.opacity(0.5) : .white.opacity(0.55))
+                    .foregroundStyle(darkText ? .black.opacity(0.5) : .white.opacity(0.55))
                 Spacer()
                 HStack(spacing: 5 * scale) {
                     ZStack {
-                        Circle().fill(darkText ? Tokens.ink : .white).opacity(0.85).offset(x: -3 * scale)
-                        Circle().fill(darkText ? Tokens.ink : .white).opacity(0.42).offset(x: 3 * scale)
+                        Circle().fill(darkText ? .black : .white).opacity(0.85).offset(x: -3 * scale)
+                        Circle().fill(darkText ? .black : .white).opacity(0.42).offset(x: 3 * scale)
                     }
                     .frame(width: 17 * scale, height: 11 * scale)
                     Text("DEBIT")
                         .font(AppFont.outfit(9.5 * scale, weight: .bold, relativeTo: .caption2))
                         .tracking(1.2 * scale)
                 }
-                .foregroundStyle(darkText ? Tokens.ink : .white)
+                .foregroundStyle(darkText ? Tokens.text : .white)
                 .padding(.horizontal, 8 * scale)
                 .frame(height: 22 * scale)
-                .background((darkText ? Color.white.opacity(0.90) : Tokens.ink.opacity(0.70)), in: Capsule())
+                .background((darkText ? Color.white.opacity(0.90) : .black.opacity(0.70)), in: Capsule())
             }
             .padding(.horizontal, 19 * scale)
             Spacer()
@@ -405,11 +405,11 @@ struct CardFaceView: View {
                         Spacer()
                         if showFreeze {
                             Capsule()
-                                .fill(theme.useDarkText ? Color.white.opacity(0.92) : Tokens.ink)
+                                .fill(theme.useDarkText ? Color.white.opacity(0.92) : .black)
                                 .frame(width: 44 * scale, height: 25 * scale)
                                 .overlay(alignment: card.frozen ? .leading : .trailing) {
                                     Circle()
-                                        .fill(card.frozen ? (theme.useDarkText ? .white : Tokens.ink) : (theme.useDarkText ? Tokens.ink : Tokens.accent))
+                                        .fill(card.frozen ? (theme.useDarkText ? .white : .black) : (theme.useDarkText ? .black : Tokens.accent))
                                         .padding(3 * scale)
                                 }
                         }

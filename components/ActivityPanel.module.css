@@ -128,6 +128,15 @@
 }
 
 /* ── notices ── */
+/*
+ * The owed strip renders nothing when nobody owes anything, so the gap has to come from the
+ * strip's own presence rather than from a margin on an empty wrapper.
+ */
+.owedSlot:not(:empty) {
+  margin-top: 22px;
+  display: block;
+}
+
 .notifSection {
   margin-top: 22px;
 }

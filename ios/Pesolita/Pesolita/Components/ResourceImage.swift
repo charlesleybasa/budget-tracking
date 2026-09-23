@@ -39,12 +39,20 @@ struct ResourceImage: View {
     var contentMode: ContentMode = .fill
 
     var body: some View {
-        if let image = ResourceImageLoader.image(reference: reference) {
+        if reference.hasPrefix("http://") || reference.hasPrefix("https://") {
+            AsyncImage(url: URL(string: reference)) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: contentMode)
+            } placeholder: {
+                Tokens.fill
+            }
+        } else if let image = ResourceImageLoader.image(reference: reference) {
             Image(uiImage: image)
                 .resizable()
                 .aspectRatio(contentMode: contentMode)
         } else {
-            Color(hex: "#16161a")
+            Tokens.fill
         }
     }
 }

@@ -12,13 +12,15 @@ struct WebBackup: Codable, Sendable {
     var userName: String
     var privacy: Bool
     var homeLayout: HomeLayout
+    var people: [Person]?
+    var events: [EventGroup]?
     var nudgeDailyLog: Bool
     var haptics: Bool
     var sfx: Bool
 
     enum CodingKeys: String, CodingKey {
         case format, version, exportedAt, cards, tx, dismissedNotices, userName, privacy
-        case homeLayout, nudgeDailyLog, haptics, sfx
+        case homeLayout, nudgeDailyLog, haptics, sfx, people, events
     }
 
     init(
@@ -31,6 +33,8 @@ struct WebBackup: Codable, Sendable {
         userName: String,
         privacy: Bool,
         homeLayout: HomeLayout,
+        people: [Person]?,
+        events: [EventGroup]?,
         nudgeDailyLog: Bool,
         haptics: Bool,
         sfx: Bool
@@ -44,6 +48,8 @@ struct WebBackup: Codable, Sendable {
         self.userName = userName
         self.privacy = privacy
         self.homeLayout = homeLayout
+        self.people = people
+        self.events = events
         self.nudgeDailyLog = nudgeDailyLog
         self.haptics = haptics
         self.sfx = sfx
@@ -62,6 +68,8 @@ struct WebBackup: Codable, Sendable {
         userName = (try? box.decode(String.self, forKey: .userName)) ?? ""
         privacy = (try? box.decode(Bool.self, forKey: .privacy)) ?? false
         homeLayout = (try? box.decode(HomeLayout.self, forKey: .homeLayout)) ?? .deck
+        people = try box.decodeIfPresent([Person].self, forKey: .people)
+        events = try box.decodeIfPresent([EventGroup].self, forKey: .events)
         nudgeDailyLog = (try? box.decode(Bool.self, forKey: .nudgeDailyLog)) ?? false
         haptics = (try? box.decode(Bool.self, forKey: .haptics)) ?? true
         sfx = (try? box.decode(Bool.self, forKey: .sfx)) ?? true
@@ -114,6 +122,8 @@ enum BackupCodec {
             userName: snapshot.userName,
             privacy: snapshot.privacy,
             homeLayout: snapshot.homeLayout,
+            people: snapshot.people,
+            events: snapshot.events,
             nudgeDailyLog: snapshot.nudgeDailyLog,
             haptics: snapshot.haptics,
             sfx: snapshot.sfx
@@ -154,6 +164,29 @@ enum BackupCodec {
         var snapshot = WalletSnapshot()
         snapshot.cards = cards
         snapshot.tx = transactions
+        
+        var restoredPeople = backup.people ?? []
+        // Recover lost people from splits if the backup predates the people array fix
+        if restoredPeople.isEmpty {
+            var recovered: [String: Person] = [:]
+            for tx in transactions {
+                if let split = tx.split {
+                    for part in split.parts {
+                        if recovered[part.personId] == nil {
+                            recovered[part.personId] = Person(
+                                id: part.personId,
+                                name: part.name,
+                                color: SplitMath.nextColor(existing: Array(recovered.values))
+                            )
+                        }
+                    }
+                }
+            }
+            restoredPeople = Array(recovered.values)
+        }
+        
+        snapshot.people = restoredPeople
+        snapshot.events = backup.events ?? []
         snapshot.dismissedNotices = backup.dismissedNotices
         snapshot.activeId = cards.first?.id ?? ""
         snapshot.userName = backup.userName

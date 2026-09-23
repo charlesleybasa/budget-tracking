@@ -1,0 +1,391 @@
+/*
+ * Slide to confirm that somebody paid you back.
+ *
+ * A tap is the wrong gesture for this: it moves real money into a real card, and a wallet
+ * that credits itself because a pocket brushed the screen is worse than one that asks for a
+ * deliberate drag. The character's excitement rises with the thumb, so the gesture has a
+ * reason to be slow.
+ */
+
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+@media (min-width: 600px) {
+  .layer {
+    align-items: center;
+  }
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 11, 12, 0.55);
+  backdrop-filter: blur(3px);
+  cursor: pointer;
+  animation: settleFade 0.22s var(--ease-out) both;
+}
+
+.panel {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: var(--paper);
+  border-radius: 28px 28px 0 0;
+  padding: 0 20px calc(20px + var(--screen-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: settleRise 0.34s var(--ease-spring) both;
+}
+
+@media (min-width: 600px) {
+  .panel {
+    border-radius: 28px;
+    margin: 0 20px;
+    padding-bottom: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .backdrop {
+    animation: settleFade 0.01s both;
+  }
+}
+
+@keyframes settleFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes settleRise {
+  from {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.grabberRow {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 0;
+}
+
+.grabber {
+  width: 34px;
+  height: 4px;
+  border-radius: 3px;
+  background: var(--line-1);
+}
+
+/* the character */
+
+.stage {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+/*
+ * The glow behind the character brightens with the drag, so the screen itself warms up as
+ * the gesture completes rather than only the sprite changing.
+ */
+.glow {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  width: 190px;
+  height: 190px;
+  transform: translateX(-50%);
+  border-radius: 100px;
+  background: radial-gradient(circle, rgba(255, 202, 40, 0.55), rgba(255, 202, 40, 0) 68%);
+  opacity: var(--settle-glow, 0);
+  transition: opacity 0.12s linear;
+  pointer-events: none;
+}
+
+.character {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  background-image: url("/settle-slider.png");
+  background-repeat: no-repeat;
+  /* 4 columns x 2 rows, so one cell is 400% x 200% of the element. */
+  background-size: 400% 200%;
+  image-rendering: auto;
+}
+
+/* Frame table, mirroring public/sprite-studio/cute-eyes-slider/cute-eyes-slider.css. */
+.character[data-frame="0"] { background-position: 0 0; }
+.character[data-frame="1"] { background-position: 33.333333% 0; }
+.character[data-frame="2"] { background-position: 66.666667% 0; }
+.character[data-frame="3"] { background-position: 100% 0; }
+.character[data-frame="4"] { background-position: 0 100%; }
+.character[data-frame="5"] { background-position: 33.333333% 100%; }
+.character[data-frame="6"] { background-position: 66.666667% 100%; }
+.character[data-frame="7"] { background-position: 100% 100%; }
+
+/* copy */
+
+.who {
+  margin-top: 2px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  text-align: center;
+}
+
+.amount {
+  margin-top: 4px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.amountPeso {
+  font-size: 22px;
+  color: var(--green);
+}
+
+.amountValue {
+  font-size: 40px;
+}
+
+.into {
+  margin-top: 4px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted-1);
+  text-align: center;
+  max-width: 30ch;
+  text-wrap: pretty;
+}
+
+.into strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/*
+ * Where the money lands. A row rather than a sentence, because it is a decision: you can pay
+ * with GCash and be handed cash back, and a repayment forced into the wrong pocket leaves two
+ * cards disagreeing with what is actually in them.
+ */
+.landing {
+  margin-top: 12px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border-radius: 16px;
+  background: var(--sand-1);
+  padding: 9px 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s var(--ease-out);
+}
+
+.landing:disabled {
+  cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .landing:not(:disabled):hover {
+    background: var(--sand-hover);
+  }
+}
+
+.landingThumb {
+  width: 44px;
+  height: 29px;
+  border-radius: 7px;
+  overflow: hidden;
+  flex: none;
+  position: relative;
+}
+
+.landingMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.landingLabel {
+  display: block;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.landingNick {
+  display: block;
+  margin-top: 2px;
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.2;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.landingChange {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--blue);
+}
+
+/* the track */
+
+.track {
+  position: relative;
+  margin-top: 16px;
+  width: 100%;
+  height: 62px;
+  border-radius: 100px;
+  background: var(--sand-1);
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.track:active {
+  cursor: grabbing;
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 100px;
+  background: linear-gradient(90deg, #0b8f6a, #12b184);
+  transform-origin: left center;
+  transform: scaleX(var(--settle-p, 0));
+}
+
+.trackLabel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 46px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--muted-1);
+  pointer-events: none;
+  /* Fades out as the thumb travels, so it never fights the fill for the same pixels. */
+  opacity: calc(1 - var(--settle-p, 0) * 1.6);
+}
+
+.trackDone {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Centred in the space the thumb has NOT reached, so the two never overlap. */
+  padding-right: 46px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  color: #fff;
+  pointer-events: none;
+  /*
+   * Arrives late on purpose. Ramping it in from the halfway mark put the word under the
+   * thumb exactly where the thumb was, and "Got it b(o)ck" is not a confirmation.
+   */
+  opacity: calc(var(--settle-p, 0) * 5 - 4);
+}
+
+.thumb {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 52px;
+  height: 52px;
+  border-radius: 100px;
+  background: var(--paper);
+  box-shadow: 0 2px 10px rgba(11, 11, 12, 0.18);
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  transform: translateX(var(--settle-x, 0px));
+}
+
+.thumbSettling {
+  transition: transform 0.32s var(--ease-spring);
+}
+
+/* the way out */
+
+.cancel {
+  margin-top: 12px;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--muted-1);
+  cursor: pointer;
+  background: transparent;
+  padding: 12px 16px;
+  border-radius: 100px;
+  min-height: 44px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cancel:hover {
+    background: var(--sand-1);
+    color: var(--ink);
+  }
+}
+
+/*
+ * Dragging is not available to everyone. The button is the same commitment in one press, and
+ * it is always present rather than being a fallback that only appears on failure.
+ */
+.assist {
+  margin-top: 2px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--blue);
+  cursor: pointer;
+  background: transparent;
+  padding: 10px 14px;
+  border-radius: 100px;
+  min-height: 40px;
+}

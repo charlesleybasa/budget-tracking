@@ -13,15 +13,15 @@ struct ScreenTitle: View {
                 Text(eyebrow.uppercased())
                     .font(AppFont.outfit(10.5, weight: .semibold, relativeTo: .caption2))
                     .tracking(1.4)
-                    .foregroundStyle(dark ? Color.white.opacity(0.42) : Tokens.muted2)
+                    .foregroundStyle(Tokens.muted2)
             }
             Text(title)
                 .font(AppFont.outfit(30, weight: .black, relativeTo: .largeTitle))
-                .foregroundStyle(dark ? .white : Tokens.ink)
+                .foregroundStyle(Tokens.textPrimary)
             if let subtitle {
                 Text(subtitle)
                     .font(AppFont.outfit(13.5, relativeTo: .subheadline))
-                    .foregroundStyle(dark ? Color.white.opacity(0.48) : Tokens.muted1)
+                    .foregroundStyle(Tokens.muted1)
                     .lineSpacing(3)
             }
         }
@@ -42,17 +42,17 @@ struct TransactionRowView: View {
             HStack(spacing: 12) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(transaction.amount > 0 ? Tokens.greenPale : Color(hex: "#fff0ef"))
+                        .fill(transaction.amount > 0 ? Tokens.greenTint : Color(hex: transaction.cat.colorHex).opacity(0.16))
                     Image(systemName: icon)
                         .font(.system(size: 17, weight: .bold))
-                        .foregroundStyle(transaction.amount > 0 ? Tokens.green : Color(hex: transaction.cat.colorHex))
+                        .foregroundStyle(transaction.amount > 0 ? Tokens.positive : Tokens.glyph(hex: transaction.cat.colorHex))
                 }
                 .frame(width: 46, height: 46)
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(transaction.merchant)
                         .font(AppFont.outfit(15, weight: .bold, relativeTo: .subheadline))
-                        .foregroundStyle(Tokens.ink)
+                        .foregroundStyle(Tokens.text)
                         .lineLimit(1)
                     HStack(spacing: 5) {
                         Text(transaction.cat.rawValue)
@@ -71,7 +71,7 @@ struct TransactionRowView: View {
                 Spacer(minLength: 8)
                 Text("\(transaction.amount > 0 ? "+" : "−")₱\(MoneyFormat.amount(transaction.amount))")
                     .font(AppFont.outfit(15, weight: .bold, relativeTo: .subheadline))
-                    .foregroundStyle(transaction.amount > 0 ? Tokens.green : Tokens.ink)
+                    .foregroundStyle(transaction.amount > 0 ? Tokens.positive : Tokens.text)
                     .contentTransition(.numericText())
             }
             .contentShape(Rectangle())
@@ -110,13 +110,13 @@ struct CardPickerLabel: View {
                     Text(caption.uppercased())
                         .font(AppFont.outfit(9.5, weight: .semibold, relativeTo: .caption2))
                         .tracking(1)
-                        .foregroundStyle(dark ? Color.white.opacity(0.42) : Tokens.muted2)
+                        .foregroundStyle(Tokens.muted2)
                     Text(card.nick)
                         .font(AppFont.outfit(14.5, weight: .bold, relativeTo: .subheadline))
-                        .foregroundStyle(dark ? .white : Tokens.ink)
+                        .foregroundStyle(Tokens.textPrimary)
                     Text("₱\(MoneyFormat.amount(card.bal)) available")
                         .font(AppFont.outfit(11.5, relativeTo: .caption))
-                        .foregroundStyle(dark ? Color.white.opacity(0.46) : Tokens.muted1)
+                        .foregroundStyle(Tokens.muted1)
                 }
             } else {
                 Text("Choose a card")
@@ -125,10 +125,10 @@ struct CardPickerLabel: View {
             Spacer()
             Image(systemName: "chevron.up.chevron.down")
                 .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(dark ? Color.white.opacity(0.42) : Tokens.muted2)
+                .foregroundStyle(Tokens.muted2)
         }
         .padding(13)
-        .background(dark ? Tokens.dark2 : Tokens.sand1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .background(dark ? Tokens.dark2 : Tokens.dark1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 }
 
@@ -139,7 +139,7 @@ struct ProgressRingView: View {
 
     var body: some View {
         ZStack {
-            Circle().stroke(Tokens.sand3, lineWidth: 9)
+            Circle().stroke(Tokens.dark3, lineWidth: 9)
             Circle()
                 .trim(from: 0, to: min(1, max(0, progress)))
                 .stroke(tint, style: StrokeStyle(lineWidth: 9, lineCap: .round))
@@ -147,7 +147,7 @@ struct ProgressRingView: View {
                 .animation(Tokens.easeSpring(0.72), value: progress)
             Text(label)
                 .font(AppFont.outfit(15, weight: .black, relativeTo: .subheadline))
-                .foregroundStyle(Tokens.ink)
+                .foregroundStyle(Tokens.text)
                 .minimumScaleFactor(0.6)
         }
     }
@@ -165,7 +165,7 @@ struct EmptyMascotView: View {
                 .frame(width: compact ? 86 : 112, height: compact ? 86 : 112)
             Text(title)
                 .font(AppFont.outfit(compact ? 17 : 20, weight: .black, relativeTo: .title3))
-                .foregroundStyle(Tokens.ink)
+                .foregroundStyle(Tokens.text)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
             Text(bodyText)
@@ -202,7 +202,7 @@ struct PhotoResourceView: View {
 
     var body: some View {
         ResourceImage(reference: reference, contentMode: .fit)
-            .background(Tokens.sand1)
+            .background(Tokens.dark1)
     }
 }
 
@@ -221,5 +221,17 @@ extension View {
     func animatedAmountScrubbing(value: Double, font: Font) -> some View {
         AnimatedAmount(amount: value, font: font)
             .animation(Tokens.easeOut(0.52), value: value)
+    }
+}
+
+// MARK: - Navigation Gesture
+extension UINavigationController: @retroactive UIGestureRecognizerDelegate {
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        interactivePopGestureRecognizer?.delegate = self
+    }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
     }
 }

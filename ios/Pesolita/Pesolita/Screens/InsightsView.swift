@@ -10,7 +10,7 @@ struct InsightsView: View {
 
     var body: some View {
         ZStack {
-            Tokens.ink.ignoresSafeArea()
+            Tokens.background.ignoresSafeArea()
             VStack(spacing: 0) {
                 header
                 ScrollView {
@@ -32,7 +32,7 @@ struct InsightsView: View {
 
                         Text("Where it went")
                             .font(AppFont.outfit(15, weight: .bold, relativeTo: .headline))
-                            .foregroundStyle(Tokens.ink)
+                            .foregroundStyle(Tokens.text)
                             .padding(.top, 22)
 
                         if totals.isEmpty { emptyBreakdown }
@@ -41,12 +41,21 @@ struct InsightsView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 20)
                     .padding(.bottom, 112)
+                    .trackScrollOffset()
                 }
-                .background(.white)
+                .coordinateSpace(name: "scroll")
+                .background(Tokens.background)
                 .scrollIndicators(.hidden)
             }
         }
-        .preferredColorScheme(.light)
+        .onPreferenceChange(ScrollOffsetKey.self) { value in
+            let isDown = value < -20
+            if store.isScrolledDown != isDown {
+                withAnimation(.snappy(duration: 0.35)) {
+                    store.isScrolledDown = isDown
+                }
+            }
+        }
     }
 
     private var header: some View {
@@ -72,7 +81,7 @@ struct InsightsView: View {
                     } label: {
                         Text(option.label)
                             .font(AppFont.outfit(12.5, weight: .semibold, relativeTo: .caption))
-                            .foregroundStyle(period == option ? Tokens.ink : .white.opacity(0.6))
+                            .foregroundStyle(period == option ? Tokens.onAccent : Tokens.text)
                             .frame(maxWidth: .infinity, minHeight: 32)
                             .background(period == option ? Tokens.accent : .clear, in: Capsule())
                     }
@@ -81,32 +90,32 @@ struct InsightsView: View {
             }
             .padding(3)
             .frame(height: 38)
-            .background(.white.opacity(0.1), in: Capsule())
+            .background(Tokens.dark2, in: Capsule())
             .padding(.top, 14)
 
             insightCard.padding(.top, 18)
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(Tokens.text)
         .padding(.horizontal, 20)
         .padding(.top, 4)
         .padding(.bottom, 22)
-        .background(Tokens.ink, in: UnevenRoundedRectangle(bottomLeadingRadius: 26, bottomTrailingRadius: 26))
+        .background(Tokens.background, in: UnevenRoundedRectangle(bottomLeadingRadius: 26, bottomTrailingRadius: 26))
     }
 
     private var insightCard: some View {
         let copy = insightCopy
         return ZStack(alignment: .topTrailing) {
             Circle()
-                .fill(Tokens.ink.opacity(0.1))
+                .fill(Tokens.onAccent.opacity(0.1))
                 .frame(width: 132, height: 132)
                 .offset(x: 30, y: -34)
             VStack(alignment: .leading, spacing: 0) {
                 Text(kicker)
-                    .font(AppFont.outfit(10.5, weight: .semibold, relativeTo: .caption2)).tracking(1.25).foregroundStyle(Tokens.ink.opacity(0.5))
+                    .font(AppFont.outfit(10.5, weight: .semibold, relativeTo: .caption2)).tracking(1.25).foregroundStyle(Tokens.onAccent.opacity(0.62))
                 Text(copy.head)
-                    .font(AppFont.outfit(22, weight: .black, relativeTo: .title2)).tracking(-0.7).foregroundStyle(Tokens.ink).padding(.top, 8)
+                    .font(AppFont.outfit(22, weight: .black, relativeTo: .title2)).tracking(-0.7).foregroundStyle(Tokens.onAccent).padding(.top, 8)
                 Text(copy.body)
-                    .font(AppFont.outfit(12.5, relativeTo: .caption)).foregroundStyle(Tokens.ink.opacity(0.66)).lineSpacing(2.5).padding(.top, 8).frame(maxWidth: 255, alignment: .leading)
+                    .font(AppFont.outfit(12.5, relativeTo: .caption)).foregroundStyle(Tokens.onAccent.opacity(0.72)).lineSpacing(2.5).padding(.top, 8).frame(maxWidth: 255, alignment: .leading)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 18)
@@ -134,19 +143,19 @@ struct InsightsView: View {
         VStack(alignment: .leading, spacing: 0) {
             Text(label)
                 .font(AppFont.outfit(10.5, weight: .medium, relativeTo: .caption2)).tracking(0.95)
-                .foregroundStyle(dark ? .white.opacity(0.45) : Tokens.muted2)
+                .foregroundStyle(dark ? Tokens.bgBase.opacity(0.62) : Tokens.muted2)
                 .lineLimit(1).minimumScaleFactor(0.75)
             Text(value)
                 .font(AppFont.outfit(21, weight: .bold, relativeTo: .title3)).tracking(-0.6)
-                .foregroundStyle(dark ? .white : Tokens.ink).padding(.top, 8).lineLimit(1).minimumScaleFactor(0.65)
+                .foregroundStyle(dark ? Tokens.bgBase : Tokens.textPrimary).padding(.top, 8).lineLimit(1).minimumScaleFactor(0.65)
             Text(subtitle)
-                .font(AppFont.outfit(11, relativeTo: .caption)).foregroundStyle(dark ? .white.opacity(0.45) : Tokens.muted2)
+                .font(AppFont.outfit(11, relativeTo: .caption)).foregroundStyle(dark ? Tokens.bgBase.opacity(0.62) : Tokens.muted2)
                 .padding(.top, 5).lineLimit(1)
         }
         .padding(.horizontal, 15)
         .padding(.vertical, 14)
         .frame(maxWidth: .infinity, minHeight: 89, alignment: .leading)
-        .background(dark ? Tokens.ink : Tokens.sand1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .background(dark ? Tokens.textPrimary : Tokens.fill, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
     private var emptyBreakdown: some View {
@@ -156,7 +165,7 @@ struct InsightsView: View {
                     .frame(width: 88, height: 88)
                     .padding(.bottom, 8)
                 Text("Nothing logged yet.")
-                    .font(AppFont.outfit(15, weight: .bold, relativeTo: .subheadline)).foregroundStyle(Tokens.ink)
+                    .font(AppFont.outfit(15, weight: .bold, relativeTo: .subheadline)).foregroundStyle(Tokens.text)
                 Text("Once you start logging, this shows where it actually goes.")
                     .font(AppFont.outfit(12.5, relativeTo: .caption)).foregroundStyle(Tokens.muted2).padding(.top, 5)
             } else {
@@ -168,7 +177,7 @@ struct InsightsView: View {
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 12)
         .padding(.vertical, store.snapshot.tx.isEmpty ? 18 : 30)
-        .background(Tokens.sand1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .background(Tokens.dark1, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .padding(.top, 14)
     }
 
@@ -194,7 +203,7 @@ struct InsightsView: View {
                 }
             }
         }
-        .foregroundStyle(Tokens.ink)
+        .foregroundStyle(Tokens.text)
         .padding(.top, 12)
     }
 }

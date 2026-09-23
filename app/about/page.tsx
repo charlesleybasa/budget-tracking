@@ -201,12 +201,12 @@ export default function AboutPage() {
         <div className={styles.bandInner}>
           <h2 className={styles.bandH2}>We could not read your money if we wanted to.</h2>
           <p className={styles.bandBody}>
-            Pesolita has no server. It makes no network requests, ships no analytics and
-            contains no third-party code at all. Everything you type is stored on your own
-            device, and there is no copy of it anywhere else.
+            Pesolita works without a server. It ships no analytics and no ads, and everything
+            you type is stored on your own device. The only copy anywhere else is the one you
+            choose to make — a backup file, or Pesolita Pro&apos;s optional Google backup.
           </p>
           <div className={styles.bandList}>
-            <span className={styles.bandChip}>No account</span>
+            <span className={styles.bandChip}>No account needed</span>
             <span className={styles.bandChip}>No bank login</span>
             <span className={styles.bandChip}>No analytics</span>
             <span className={styles.bandChip}>No ads</span>
@@ -234,7 +234,7 @@ export default function AboutPage() {
       <footer className={styles.footer}>
         <div className={styles.footerInner}>
           <div className={styles.footerNote}>
-            Pesolita — a manual budget wallet. Your numbers never leave your device.
+            Pesolita — a manual budget wallet. Your numbers stay on your device unless you back them up.
           </div>
           <div className={styles.footerLinks}>
             <Link href="/privacy" className={styles.navLink}>
