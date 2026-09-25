@@ -67,3 +67,13 @@ create policy "pesolita media: owner deletes" on storage.objects
 -- brings the wallet back but not its photos. Run it once most users have updated.
 --
 -- update storage.buckets set public = false where id = 'media';
+--
+-- Applied 2026-09-25, together with removing the two policies from the original setup that
+-- left photos open whatever the bucket setting ("Media is publicly accessible": anyone could
+-- read; "Users can upload media": anyone could upload):
+--
+-- drop policy if exists "Media is publicly accessible" on storage.objects;
+-- drop policy if exists "Users can upload media" on storage.objects;
+--
+-- Verified: media bucket public = false, and no storage.objects policy grants anon/public.
+-- To undo the bucket change: update storage.buckets set public = true where id = 'media';
