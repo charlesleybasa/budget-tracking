@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Pesolita keeps your wallet on your device. Only if you turn on Pesolita Pro backup is a copy stored in the cloud, under your Google sign-in.",
 };
 
-const UPDATED = "23 September 2026";
+const UPDATED = "25 September 2026";
 // Published deliberately: App Review may email this, and the support URL has to offer a
 // real way to get in touch.
 const CONTACT = "charlesleyb24@gmail.com";
@@ -55,9 +55,8 @@ export default function PrivacyPage() {
         <p className={styles.body}>
           This is used only to back up and restore your wallet. It is never used for
           advertising, never sold and never shared. It is stored with our database and storage
-          provider, Supabase, and sign-in is handled by Google. Photos are stored at private,
-          hard-to-guess web addresses rather than behind your sign-in, so avoid attaching images
-          you would not want anyone else to see.
+          provider, Supabase, and sign-in is handled by Google. Photos, QR codes and receipts
+          are kept in a private folder that only your own sign-in can open.
         </p>
         <p className={styles.body}>
           Signing out stops backup; your wallet stays on your phone and the backup stays in the
