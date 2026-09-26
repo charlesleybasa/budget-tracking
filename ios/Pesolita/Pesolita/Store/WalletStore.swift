@@ -214,6 +214,13 @@ final class WalletStore {
                 path = [.transfer]
             } else if launchArguments.contains("--route=editor") {
                 openEditor(cardID: snapshot.activeId)
+                if launchArguments.contains("--demo-templates") {
+                    // Video ads: tap Templates, then the picker flicks through the designs.
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .seconds(1.2))
+                        setEditorMode(.templates)
+                    }
+                }
             } else if launchArguments.contains("--route=event") {
                 path = [.event(snapshot.events.first?.id ?? "")]
             } else if launchArguments.contains("--route=people") {
@@ -238,8 +245,33 @@ final class WalletStore {
                     }
                 }
             }
+            if launchArguments.contains("--sheet=coffee") {
+                // Video ads: log a ₱180 coffee key by key, then save it.
+                openTransaction(.withdraw)
+                clearSplitDraft()
+                sheetEventID = nil
+                noteDraft = "Coffee"
+                categoryDraft = .food
+                amountDraft = ""
+                Task { @MainActor in
+                    try? await Task.sleep(for: .seconds(1.2))
+                    for key in ["1", "8", "0"] {
+                        pressKey(key)
+                        try? await Task.sleep(for: .seconds(0.35))
+                    }
+                    try? await Task.sleep(for: .seconds(0.7))
+                    saveTransaction()
+                }
+            }
             if launchArguments.contains("--settle") {
                 askSettle(personID: "p-jr")
+            }
+            if launchArguments.contains("--demo-theme") {
+                // Video ads: dark, then light, the way the Settings switch does it.
+                Task { @MainActor in
+                    try? await Task.sleep(for: .seconds(2.2))
+                    snapshot.appTheme = .light
+                }
             }
             return
         }

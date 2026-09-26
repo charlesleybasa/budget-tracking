@@ -159,6 +159,17 @@ struct HomeView: View {
         .scrollTargetBehavior(.viewAligned(limitBehavior: .always))
         .scrollPosition(id: $scrollID, anchor: .leading)
         .onChange(of: scrollID) { _, id in if let id { store.setActiveCard(id) } }
+        #if DEBUG
+        .task {
+            // Video ads only: swipe through the cards the way a thumb would.
+            guard StoreCapture.active, ProcessInfo.processInfo.arguments.contains("--demo-swipe") else { return }
+            try? await Task.sleep(for: .seconds(1.4))
+            for card in store.snapshot.cards.dropFirst() {
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.88)) { scrollID = card.id }
+                try? await Task.sleep(for: .seconds(0.95))
+            }
+        }
+        #endif
         .frame(height: layout.cardSize.height)
         .offset(y: cardsDealt ? 0 : 54)
         .scaleEffect(cardsDealt ? 1 : 0.94)

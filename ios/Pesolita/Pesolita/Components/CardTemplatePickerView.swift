@@ -82,6 +82,17 @@ struct CardTemplatePickerView: View {
                 .foregroundStyle(Tokens.muted2)
         }
         .onAppear { focusedID = selectedID ?? templates.first?.id }
+        #if DEBUG
+        .task {
+            // Video ads only: flick through the designs.
+            guard StoreCapture.active, ProcessInfo.processInfo.arguments.contains("--demo-templates") else { return }
+            try? await Task.sleep(for: .seconds(1.0))
+            for template in templates.prefix(12) {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.9)) { focusedID = template.id }
+                try? await Task.sleep(for: .seconds(0.5))
+            }
+        }
+        #endif
     }
 }
 
