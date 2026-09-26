@@ -11,6 +11,26 @@ rendered in `curious/`: **A2, B2, B3, C2**. The other five need the people shots
 | **B. Parang totoong wallet** (the pretty wallet) | B1 AI | B2 ✓ | B3 ✓ |
 | **C. Bayaran kita bukas** (the friend who owes you) | C1 AI | C2 ✓ | C3 AI |
 
+## Status (27 Sep 2026): all nine rendered
+
+Every variant now has real actors and a voice. The people shots were made in Google Vids
+(Omni, **portrait**, 720p, 10 s) in the Drive project "Untitled video", with two recurring
+characters so the ads feel like one campaign: **Mika** (Filipina, mid-twenties, mustard-yellow
+hoodie) and **Paolo** (Filipino, mid-twenties, white t-shirt). The actors speak their own
+Taglish lines on camera ("Sahod na!", "Bayaran kita bukas, promise!", "Boracay na tayo!",
+"Bayad na!", "Ngayon, alam ko na kung saan napupunta."). The narrator is Vids voiceover
+**Kaci**, one take, English-led Taglish: Vids refused a mostly Tagalog script ("doesn't support
+this language"). App scenes carry the narrator; people scenes carry the actor; the music
+ducks under both.
+
+Local sources (untracked, ~90 MB): `veo/curious/<name>.mp4` (cut from one Vids export,
+`vids-export.mp4`) and `voiceover/vo-curious.wav`. Line timings are in `VO` in
+`curious_ad.py`; they came from a word-timed transcript (faster-whisper).
+
+Vids tips learned: pick **Portrait** in the clip settings chip, not just the project; avoid
+the phrase "smartphone video" (Omni drew one clip inside a phone mockup); clips can't be
+downloaded one by one, so insert each as its own scene and export the project once.
+
 ## Make the shots in Google Vids (free)
 
 Same as the beach ad: Vids → **Generate video** (the Omni model) → paste a prompt below → save
