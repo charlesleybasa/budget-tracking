@@ -9,6 +9,23 @@
         "dev"
       ],
       "port": 3000
+    },
+    {
+      "name": "pesolita-film",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "--prefix",
+        "ios/Pesolita/StoreAssets/ads/film",
+        "remotion",
+        "studio",
+        "ios/Pesolita/StoreAssets/ads/film/src/index.ts",
+        "--public-dir",
+        "ios/Pesolita/StoreAssets/ads/film/public",
+        "--port",
+        "3123",
+        "--no-open"
+      ],
+      "port": 3123
     }
   ]
 }
